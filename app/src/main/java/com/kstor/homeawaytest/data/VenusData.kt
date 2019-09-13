@@ -1,12 +1,12 @@
 package com.kstor.homeawaytest.data
 
-class VenusData(
+data class VenusData(
     val venues: List<Venue>,
     val citCenterlat:Double,
     val citCenterlng:Double
 )
 
-class Venue(
+data class Venue(
     val id: String,
     val name: String,
     val categories: List<VenueCategory>,
@@ -15,7 +15,7 @@ class Venue(
     var lng: Double? = null
 )
 
-class VenueCategory(
+data class VenueCategory(
     val id: String,
     val name: String,
     val iconPath: String

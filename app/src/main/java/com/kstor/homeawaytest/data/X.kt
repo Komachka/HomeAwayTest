@@ -1,5 +1,7 @@
 package com.kstor.homeawaytest.data
 
+
+import android.util.Log
 import com.kstor.homeawaytest.data.network.model.NetworkCategory
 import com.kstor.homeawaytest.data.network.model.NetworkVenue
 import com.kstor.homeawaytest.data.network.model.NetworkVenuesModel
@@ -34,6 +36,11 @@ fun mapToCategory(categories: List<NetworkCategory>): List<VenueCategory> {
         .map {
             VenueCategory(it.id!!, it.name!!, it.icon!!.prefix + it.icon!!.suffix)
         }
+}
+
+fun log(message:String)
+{
+    Log.d("MainActivity", message)
 }
 
 
