@@ -10,12 +10,12 @@ data class NetworkVenuesModel(
 
 data class Response(
     @Expose
-    var venues: List<Venue>? = null,
+    var venues: List<NetworkVenue>? = null,
     @Expose
     var geocode: Geocode? = null
 )
 
-data class Venue(
+data class NetworkVenue(
     @Expose
     var id: String? = null,
     @Expose
@@ -25,7 +25,7 @@ data class Venue(
     @Expose
     var location: Location? = null,
     @Expose
-    var categories: List<Category>? = null,
+    var categories: List<NetworkCategory>? = null,
     @Expose
     var verified: Boolean? = null,
     @Expose
@@ -71,7 +71,7 @@ data class Location(
     var neighborhood: String? = null
 )
 
-data class Category(
+data class NetworkCategory(
     @Expose
     var id: String? = null,
     @Expose

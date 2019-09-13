@@ -11,3 +11,7 @@ const val NEAR_QUERY_PARAM = "near"
 const val SEARCH_QUERY_PARAM = "query"
 const val V_QUERY_PARAM = "v"
 const val LIMIT_QUERY_PARAM = "limit"
+
+
+const val NEAR  = "Seattle,+WA"
+const val V  = "20180401"
