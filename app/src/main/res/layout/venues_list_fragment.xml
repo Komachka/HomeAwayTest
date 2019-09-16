@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".view.VenuesListFragment">
 
-
     <EditText
         android:id="@+id/queryEditText"
         android:layout_width="0dp"
