@@ -14,8 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 
 import com.kstor.homeawaytest.R
-import com.kstor.homeawaytest.data.BASE_URL
-import com.kstor.homeawaytest.data.log
+import com.kstor.homeawaytest.data.*
 import com.kstor.homeawaytest.data.network.RemoteData
 import com.kstor.homeawaytest.data.network.VenuesRepositoryImp
 import com.kstor.homeawaytest.data.network.VenuesService
@@ -75,7 +74,7 @@ class VenuesListFragment : Fragment() {
             }
             .observeOn(Schedulers.io())
             .flatMap {
-                repo.getClosedVenuses(10, it)
+                repo.getClosedVenuses(LOAD_LIMIT, it)
             }
             .observeOn(AndroidSchedulers.mainThread())
             .map {
@@ -121,7 +120,7 @@ class VenuesListFragment : Fragment() {
                 queryEditText.removeTextChangedListener(textWatcher)
             }
         }
-        return textChangeObservable.filter { it.length >= 2 }.debounce(1000, TimeUnit.MILLISECONDS)
+        return textChangeObservable.filter { it.length >= MIN_INPUT_LENGTH }.debounce(LOADING_TIMEOUT, TimeUnit.MILLISECONDS)
     }
 
 
