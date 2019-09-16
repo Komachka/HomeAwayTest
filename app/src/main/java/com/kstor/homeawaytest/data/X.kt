@@ -18,7 +18,7 @@ private fun createListOfCategories(venues: List<NetworkVenue>?, centerLat: Doubl
             Venue().apply {
                 id = it.id
                 name = it.name
-                categories = mapToCategory(it.categories!!)
+                categories = mapToCategory(it.categories)
                 address = it.location?.address
                 distance = calcDistance(it.location?.lat, it.location?.lng, centerLat, centerLng)
                 lat = it.location?.lat ?: 0.0
@@ -52,11 +52,12 @@ private fun Double.toRadians(): Double {
     return this * Math.PI / HALF_OF_CIRCLE_DEGREE
 }
 
-private fun mapToCategory(categories: List<NetworkCategory>): List<VenueCategory> {
-    return categories
-        .map {
-            VenueCategory(it.id, it.name, it.icon?.prefix + SIZE_32 + it.icon?.suffix)
-        }
+private fun mapToCategory(categories: List<NetworkCategory>?): List<VenueCategory> {
+    return categories?.let {
+        it.map { VenueCategory(it.id, it.name, it.icon?.prefix + SIZE_32 + it.icon?.suffix) }
+    }?: emptyList()
+
+
 }
 
 fun log(message: String) {
