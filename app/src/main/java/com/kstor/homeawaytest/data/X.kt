@@ -13,36 +13,38 @@ fun NetworkVenuesModel.mapToVenuesData(): VenusData {
 }
 
 private fun createListOfCategories(venues: List<NetworkVenue>?, centerLat: Double, centerLng: Double): List<Venue> {
-    venues?.let { venues ->
-        return venues.filter {
-            (it.id != null && it.name != null && it.categories != null && it.location != null &&
-                    it.location!!.address != null && it.location!!.lat != null && it.location!!.lat != null)
-        }
-            .map {
-                Venue(
-                    it.id!!,
-                    it.name!!,
-                    mapToCategory(it.categories!!),
-                    it.location!!.address!!,
-                    calcDistance(it.location!!.lat!!, it.location!!.lng!!, centerLat, centerLng),
-                    it.location!!.lat!!,
-                    it.location!!.lng!!
-                )
+    return venues?.let {
+        it.map {
+            Venue().apply {
+                id = it.id
+                name = it.name
+                categories = mapToCategory(it.categories!!)
+                address = it.location?.address
+                distance = calcDistance(it.location?.lat, it.location?.lng, centerLat, centerLng)
+                lat = it.location?.lat ?: 0.0
+                lng = it.location?.lng ?: 0.0
             }
-    }
-    return emptyList()
+        }
+    }?: emptyList<Venue>()
 }
 
-fun calcDistance(lat: Double, lng: Double, centerLat: Double, centerLng: Double): Int {
-    val φ1 = lat.toRadians()
-    val φ2 = centerLat.toRadians()
-    val Δφ = (centerLat - lat).toRadians()
-    val Δλ = (centerLng - lng).toRadians()
-    val a = sin(Δφ / 2) * sin(Δφ / 2) +
-            cos(φ1) * cos(φ2) *
-            sin(Δλ / 2) * sin(Δλ / 2)
-    val c = 2 * atan2(sqrt(a), sqrt(1 - a))
-    val d = RADIUS * c
+fun calcDistance(lat: Double?, lng: Double?, centerLat: Double, centerLng: Double): Int {
+    var d = 0.0
+    lat?.let {lat ->
+        lng?.let {lng ->
+            val φ1 = lat.toRadians()
+            val φ2 = centerLat.toRadians()
+            val Δφ = (centerLat - lat).toRadians()
+
+            val Δλ = (centerLng - lng).toRadians()
+            val a = sin(Δφ / 2) * sin(Δφ / 2) +
+                    cos(φ1) * cos(φ2) *
+                    sin(Δλ / 2) * sin(Δλ / 2)
+            val c = 2 * atan2(sqrt(a), sqrt(1 - a))
+            d = RADIUS * c
+        }
+    }
+
     return d.roundToInt()
 }
 
@@ -51,12 +53,9 @@ private fun Double.toRadians(): Double {
 }
 
 private fun mapToCategory(categories: List<NetworkCategory>): List<VenueCategory> {
-    return categories.filter {
-        (it.id != null && it.name != null && it.icon != null && it.icon!!.prefix != null &&
-                it.icon!!.prefix != null)
-    }
+    return categories
         .map {
-            VenueCategory(it.id!!, it.name!!, it.icon!!.prefix + SIZE_32 + it.icon!!.suffix)
+            VenueCategory(it.id, it.name, it.icon?.prefix + SIZE_32 + it.icon?.suffix)
         }
 }
 

@@ -7,17 +7,17 @@ data class VenusData(
 )
 
 data class Venue(
-    val id: String,
-    val name: String,
-    val categories: List<VenueCategory>,
-    val address: String,
-    val distance: Int,
-    val lat: Double,
-    val lng: Double
+    var id: String?=null,
+    var name: String?=null,
+    var categories: List<VenueCategory>?=null,
+    var address: String?=null,
+    var distance: Int?=null,
+    var lat: Double?=null,
+    var lng: Double?=null
 )
 
 data class VenueCategory(
-    val id: String,
-    val name: String,
+    var id: String?,
+    var name: String?,
     val iconPath: String
 )

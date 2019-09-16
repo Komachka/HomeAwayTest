@@ -20,9 +20,11 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), Image
     inner class ItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         fun bind(venue: Venue) {
             view.venuesNameNameTextView.text = venue.name
-            view.venuesCategory.text = venue.categories.joinToString { it.name }
+            view.venuesCategory.text = venue.categories?.let { category -> category.joinToString{ it.name?:"" } }
             view.venuesNameAdressTextView.text = venue.address
-            view.venuesPlaceImgView.loadImage(venue.categories[0].iconPath)
+            venue.categories?.get(0)?.iconPath?.let {
+                view.venuesPlaceImgView.loadImage(it)
+            }
             view.venuesDistanceFromCenterTextView.text = "${venue.distance} m"
         }
     }
