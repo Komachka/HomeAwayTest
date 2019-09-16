@@ -8,7 +8,9 @@
     tools:context=".view.VenuesListFragment">
 
 
-    <Button
+    <ImageButton
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_search_black_24dp"
         android:id="@+id/searchButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,7 +28,8 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/searchButton"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
         android:layout_toStartOf="@id/searchButton"
         android:inputType="text"
         android:lines="1"
@@ -36,18 +39,16 @@
         app:layout_constraintTop_toTopOf="@+id/searchButton" />
 
     <androidx.recyclerview.widget.RecyclerView
+        app:layout_constrainedHeight="true"
         android:id="@+id/list"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/queryEditText"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
-        android:scrollbars="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/queryEditText"
+        android:layout_marginTop="8dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/queryEditText"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         tools:listitem="@layout/list_item" />
 
     <ProgressBar
@@ -66,7 +67,7 @@
 
 
 
-    <!--<com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -74,7 +75,7 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/ic_map_black_24dp" />-->
+        android:src="@drawable/ic_map_black_24dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

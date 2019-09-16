@@ -11,8 +11,9 @@ data class Venue(
     val name: String,
     val categories: List<VenueCategory>,
     val address: String,
+    val distance:Int,
     val lat: Double,
-    var lng: Double? = null
+    val lng: Double
 )
 
 data class VenueCategory(

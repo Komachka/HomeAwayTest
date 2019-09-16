@@ -54,7 +54,7 @@ class VenuesListFragment : Fragment() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }*/
-        Toast.makeText(context, "list fragment ", Toast.LENGTH_LONG).show()
+
 
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -67,7 +67,6 @@ class VenuesListFragment : Fragment() {
         val repo : VenuesRepositoryImp = VenuesRepositoryImp(remoteData)
 
         list.apply {
-            setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
             adapter = VenuesListAdapter()
         }
@@ -87,7 +86,6 @@ class VenuesListFragment : Fragment() {
             }
             .subscribe { venuesItem->
                 log(venuesItem.toString())
-                log("size ${venuesItem.size}")
                 (list.adapter as VenuesListAdapter).updateData(venuesItem)
             }
 

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.Venue
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_item.view.*
 
 class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>()
@@ -25,10 +26,11 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     {
         fun bind(venue:Venue)
         {
-           //view.venuesPlaceImgView
             view.venuesNameNameTextView.text = venue.name
             view.venuesCategory.text = venue.categories.joinToString { it.name }
-            view.venuesDistanceFromCenterTextView.text = "${venue.lat} ${venue.lng}"
+            view.venuesNameAdressTextView.text = venue.address
+            Picasso.get().load(venue.categories[0].iconPath).into(view.venuesPlaceImgView)
+            view.venuesDistanceFromCenterTextView.text = "${venue.distance} m"
         }
     }
 
