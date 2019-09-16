@@ -29,7 +29,7 @@ private fun createListOfCategories(venues: List<NetworkVenue>?): List<Venue> {
     return emptyList()
 }
 
-fun mapToCategory(categories: List<NetworkCategory>): List<VenueCategory> {
+private fun mapToCategory(categories: List<NetworkCategory>): List<VenueCategory> {
     return categories.filter {
         (it.id != null && it.name != null && it.icon != null && it.icon!!.prefix != null
                 && it.icon!!.prefix != null) }
