@@ -25,13 +25,13 @@ private fun createListOfCategories(venues: List<NetworkVenue>?, centerLat: Doubl
                 lng = it.location?.lng ?: 0.0
             }
         }
-    }?: emptyList<Venue>()
+    } ?: emptyList<Venue>()
 }
 
 fun calcDistance(lat: Double?, lng: Double?, centerLat: Double, centerLng: Double): Int {
     var d = 0.0
-    lat?.let {lat ->
-        lng?.let {lng ->
+    lat?.let { lat ->
+        lng?.let { lng ->
             val φ1 = lat.toRadians()
             val φ2 = centerLat.toRadians()
             val Δφ = (centerLat - lat).toRadians()
@@ -55,9 +55,7 @@ private fun Double.toRadians(): Double {
 private fun mapToCategory(categories: List<NetworkCategory>?): List<VenueCategory> {
     return categories?.let {
         it.map { VenueCategory(it.id, it.name, it.icon?.prefix + SIZE_32 + it.icon?.suffix) }
-    }?: emptyList()
-
-
+    } ?: emptyList()
 }
 
 fun log(message: String) {
