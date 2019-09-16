@@ -25,7 +25,7 @@ private fun createListOfCategories(venues: List<NetworkVenue>?, centerLat: Doubl
                 lng = it.location?.lng ?: 0.0
             }
         }
-    } ?: emptyList<Venue>()
+    } ?: emptyList()
 }
 
 fun calcDistance(lat: Double?, lng: Double?, centerLat: Double, centerLng: Double): Int {
@@ -44,7 +44,6 @@ fun calcDistance(lat: Double?, lng: Double?, centerLat: Double, centerLng: Doubl
             d = RADIUS * c
         }
     }
-
     return d.roundToInt()
 }
 
