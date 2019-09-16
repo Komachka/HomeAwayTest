@@ -16,5 +16,5 @@ interface VenuesService {
         @Query(SEARCH_QUERY_PARAM) query: String,
         @Query(V_QUERY_PARAM) v: String,
         @Query(LIMIT_QUERY_PARAM) limit: Int
-    ): Single<NetworkVenuesModel>
+    ): Observable<NetworkVenuesModel>
 }

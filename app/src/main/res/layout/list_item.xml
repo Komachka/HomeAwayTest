@@ -17,9 +17,10 @@
       app:layout_constraintTop_toTopOf="@+id/venuesNameNameTextView" />
 
   <TextView
+      android:textAlignment="center"
       android:id="@+id/venuesCategory"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      android:layout_width="80dp"
+      android:layout_height="0dp"
       android:layout_marginStart="8dp"
       android:layout_marginTop="2dp"
       app:layout_constraintStart_toStartOf="parent"
