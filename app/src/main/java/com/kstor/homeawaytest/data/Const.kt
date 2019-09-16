@@ -23,4 +23,4 @@ const val V  = "20180401"
 const val CENTER_LAT = 47.6062
 const val CENTER_LNG = -122.3321
 
-const val RADIUS = 6371e3 // metres
+const val RADIUS = 6378 * 1000 // metres
