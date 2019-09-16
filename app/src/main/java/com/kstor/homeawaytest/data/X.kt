@@ -23,7 +23,7 @@ private fun createListOfCategories(venues: List<NetworkVenue>?): List<Venue> {
                     mapToCategory(it.categories!!),
                     it.location!!.address!!,
                     it.location!!.lat!!,
-                    it.location!!.lat!!)
+                    it.location!!.lng!!)
         }
     }
     return emptyList()

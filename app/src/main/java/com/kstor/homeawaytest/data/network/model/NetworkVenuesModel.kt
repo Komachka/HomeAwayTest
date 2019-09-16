@@ -41,7 +41,7 @@ data class NetworkVenue(
     @Expose
     var hasPerk: Boolean? = null,
     @Expose
-    var venuePage: String? = null
+    var venuePage: Any? = null
 )
 
 data class Location(

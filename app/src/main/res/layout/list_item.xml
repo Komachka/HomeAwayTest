@@ -1,12 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-  <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+
+  <ImageView
+      android:id="@+id/venuesPlaceImgView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:src="@drawable/ic_launcher_background"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+  <TextView
+      android:id="@+id/venuesNameNameTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="20dp"
+      android:layout_marginTop="24dp"
+      app:layout_constraintStart_toEndOf="@+id/venuesPlaceImgView"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:text="Name" />
+
+
+  <!--<TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/textView"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
@@ -18,15 +38,35 @@
     android:minHeight="?android:attr/listPreferredItemHeightSmall"
     android:paddingStart="?android:attr/listPreferredItemPaddingStart"
     android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-    android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+    android:textAppearance="?android:attr/textAppearanceListItemSmall" />-->
+
+  <TextView
+      android:id="@+id/venuesCategory"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp"
+      app:layout_constraintStart_toStartOf="@+id/venuesNameNameTextView"
+      app:layout_constraintTop_toBottomOf="@+id/venuesNameNameTextView"
+      tools:text="Category" />
+
+  <TextView
+      android:id="@+id/venuesDistanceFromCenterTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="12dp"
+      app:layout_constraintStart_toStartOf="@+id/venuesCategory"
+      app:layout_constraintTop_toBottomOf="@+id/venuesCategory"
+      tools:text="Distance" />
 
   <ImageButton
-    android:id="@+id/imageFavorite"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintRight_toRightOf="parent"
-    android:padding="16dp"
-    app:srcCompat="@drawable/abc_vector_test"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
+      android:background="@android:color/transparent"
+      android:id="@+id/imageFavorite"
+      android:layout_width="20dp"
+      android:layout_height="20dp"
+      android:layout_marginTop="8dp"
+      android:layout_marginRight="8dp"
+      android:padding="16dp"
+      android:src="@drawable/ic_favorite_border_black_24dp"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

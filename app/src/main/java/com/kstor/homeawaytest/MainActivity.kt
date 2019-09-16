@@ -29,30 +29,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
 
-        val service = retrofit.create(VenuesService::class.java)
-        val remoteData = RemoteData(service)
-        val repo : VenuesRepositoryImp = VenuesRepositoryImp(remoteData)
-        repo.getClosedVenuses(10, "coffe")
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnError {
-                log(it.toString())
-            }
-            .map {
-                it.venues
-            }
-            .doOnError {
-                log(it.toString())
-            }
-            .subscribe { venuesItem->
-                log(venuesItem.toString())
-            }
 
     }
 
