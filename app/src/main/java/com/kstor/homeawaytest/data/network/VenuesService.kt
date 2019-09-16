@@ -3,7 +3,6 @@ package com.kstor.homeawaytest.data.network
 import com.kstor.homeawaytest.data.*
 import com.kstor.homeawaytest.data.network.model.NetworkVenuesModel
 import io.reactivex.Observable
-import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 

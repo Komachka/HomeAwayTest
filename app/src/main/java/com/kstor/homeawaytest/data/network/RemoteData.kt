@@ -6,10 +6,8 @@ import com.kstor.homeawaytest.data.NEAR
 import com.kstor.homeawaytest.data.V
 import com.kstor.homeawaytest.data.network.model.NetworkVenuesModel
 import io.reactivex.Observable
-import io.reactivex.Single
 
-class RemoteData(private val venuesService: VenuesService)
-{
+class RemoteData(private val venuesService: VenuesService) {
     fun closedVenuses(limit: Int, query: String): Observable<NetworkVenuesModel> {
         return venuesService.getVenusesNetworkData(
             CLIENT_ID,
@@ -20,5 +18,4 @@ class RemoteData(private val venuesService: VenuesService)
             limit
         )
     }
-
 }

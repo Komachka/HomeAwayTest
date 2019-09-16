@@ -9,23 +9,18 @@ import com.kstor.homeawaytest.data.Venue
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_item.view.*
 
-class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>()
-{
+class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val venues= mutableListOf<Venue>()
+    private val venues = mutableListOf<Venue>()
 
-
-    fun updateData(venues: List<Venue>)
-    {
+    fun updateData(venues: List<Venue>) {
         this.venues.clear()
         this.venues.addAll(venues)
         notifyDataSetChanged()
     }
 
-    inner class ItemViewHolder(private val view:View):RecyclerView.ViewHolder(view)
-    {
-        fun bind(venue:Venue)
-        {
+    inner class ItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+        fun bind(venue: Venue) {
             view.venuesNameNameTextView.text = venue.name
             view.venuesCategory.text = venue.categories.joinToString { it.name }
             view.venuesNameAdressTextView.text = venue.address
@@ -33,8 +28,6 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             view.venuesDistanceFromCenterTextView.text = "${venue.distance} m"
         }
     }
-
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false))
@@ -45,5 +38,4 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as ItemViewHolder).bind(venues[position])
     }
-
 }

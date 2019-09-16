@@ -1,18 +1,17 @@
 package com.kstor.homeawaytest.view
 
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.*
 import com.kstor.homeawaytest.data.network.RemoteData
@@ -21,18 +20,19 @@ import com.kstor.homeawaytest.data.network.VenuesService
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 import kotlinx.android.synthetic.main.venues_list_fragment.*
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
 class VenuesListFragment : Fragment() {
 
     private lateinit var viewModel: VenuesListViewModel
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.venues_list_fragment, container, false)
@@ -43,7 +43,6 @@ class VenuesListFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(VenuesListViewModel::class.java)
         // TODO: Use the ViewModel
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -67,7 +66,6 @@ class VenuesListFragment : Fragment() {
             adapter = VenuesListAdapter()
         }
 
-
         createTextChangeObservable().observeOn(AndroidSchedulers.mainThread())
             .doOnNext {
                 showProgress()
@@ -87,7 +85,6 @@ class VenuesListFragment : Fragment() {
                 log(venuesItem.toString())
                 (list.adapter as VenuesListAdapter).updateData(venuesItem)
             }
-
     }
 
     private fun showProgress() {
@@ -97,7 +94,6 @@ class VenuesListFragment : Fragment() {
     private fun hideProgress() {
         progressBar.visibility = GONE
     }
-
 
     private fun createTextChangeObservable(): Observable<String> {
         val textChangeObservable = Observable.create<String> { emitter ->
@@ -122,6 +118,4 @@ class VenuesListFragment : Fragment() {
         }
         return textChangeObservable.filter { it.length >= MIN_INPUT_LENGTH }.debounce(LOADING_TIMEOUT, TimeUnit.MILLISECONDS)
     }
-
-
 }
