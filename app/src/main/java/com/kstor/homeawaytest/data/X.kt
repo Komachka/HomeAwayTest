@@ -48,7 +48,7 @@ fun calcDistance(lat: Double, lng: Double, centerLat: Double, centerLng: Double)
 }
 
 private fun Double.toRadians(): Double {
-    return this * Math.PI / 180
+    return this * Math.PI / HALF_OF_CIRCLE_DEGREE
 }
 
 private fun mapToCategory(categories: List<NetworkCategory>): List<VenueCategory> {

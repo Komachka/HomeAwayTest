@@ -24,3 +24,4 @@ const val CENTER_LAT = 47.6062
 const val CENTER_LNG = -122.3321
 
 const val RADIUS = 6378 * 1000 // metres
+const val HALF_OF_CIRCLE_DEGREE = 180
