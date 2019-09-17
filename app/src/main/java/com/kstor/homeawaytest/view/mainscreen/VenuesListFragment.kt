@@ -99,20 +99,29 @@ class VenuesListFragment : Fragment(), VenuesMapper {
 
     private fun saveCityCenterData(venusData: VenusData?) {
         val settings: SharedPreferences? = context?.getSharedPreferences(PERSISTENT_STORAGE_NAME, Context.MODE_PRIVATE)
+
         settings?.edit()?.let { editor ->
+
             venusData?.citCenterlat?.let {
+                log("here")
                 val latData = settings.getFloat("lat", 0.0F)
-                if (latData != 0.0F && latData != it.toFloat()) {
+                log("latData $latData")
+                if (latData == 0.0F && latData != it.toFloat()) {
+                    log("latData $latData")
+                    log(it.toFloat().toString())
                     editor.putFloat("lat", it.toFloat())
+                    editor.apply()
                 }
             }
             venusData?.citCenterlng?.let {
                 val lngData = settings.getFloat("lng", 0.0F)
-                if (lngData != 0.0F && lngData != it.toFloat()) {
+                if (lngData == 0.0F && lngData != it.toFloat()) {
+                    log(it.toFloat().toString())
                     editor.putFloat("lng", it.toFloat())
+                    editor.apply()
                 }
             }
-            editor.apply()
+
         }
     }
 
@@ -142,7 +151,7 @@ class VenuesListFragment : Fragment(), VenuesMapper {
             }
             queryEditText.addTextChangedListener(textWatcher)
             emitter.setCancellable {
-                queryEditText.removeTextChangedListener(textWatcher)
+                queryEditText?.removeTextChangedListener(textWatcher)
             }
         }
         return textChangeObservable.filter { it.length >= MIN_INPUT_LENGTH }.debounce(LOADING_TIMEOUT, TimeUnit.MILLISECONDS)

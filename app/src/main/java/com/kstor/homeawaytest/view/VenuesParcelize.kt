@@ -10,7 +10,8 @@ data class VenuesParcelize(
     var address: String? = null,
     var distance: Int,
     var lat: Double,
-    var lng: Double
+    var lng: Double,
+    var isFavorite:Boolean = false
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
@@ -19,7 +20,8 @@ data class VenuesParcelize(
         parcel.readString(),
         parcel.readInt(),
         parcel.readDouble(),
-        parcel.readDouble()
+        parcel.readDouble(),
+        parcel.readBoolean()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -30,6 +32,7 @@ data class VenuesParcelize(
         parcel.writeInt(distance)
         parcel.writeDouble(lat)
         parcel.writeDouble(lng)
+        parcel.writeBoolean(isFavorite)
     }
 
     override fun describeContents(): Int {
