@@ -11,7 +11,7 @@ data class VenuesParcelize(
     var distance: Int,
     var lat: Double,
     var lng: Double,
-    var isFavorite:Boolean = false
+    var isFavorite: Boolean = false
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),

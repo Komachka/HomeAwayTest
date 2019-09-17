@@ -1,7 +1,5 @@
 package com.kstor.homeawaytest.view.mainscreen
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -19,6 +17,7 @@ import com.kstor.homeawaytest.data.*
 import com.kstor.homeawaytest.data.network.RemoteData
 import com.kstor.homeawaytest.data.network.VenuesRepositoryImp
 import com.kstor.homeawaytest.data.network.VenuesService
+import com.kstor.homeawaytest.data.sp.SharedPreferenceData
 import com.kstor.homeawaytest.view.VenuesMapper
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -32,6 +31,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class VenuesListFragment : Fragment(), VenuesMapper {
 
     private lateinit var viewModel: VenuesListViewModel
+    private lateinit var preferencesManager: SharedPreferenceData
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,6 +48,10 @@ class VenuesListFragment : Fragment(), VenuesMapper {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        context?.let {
+            preferencesManager = SharedPreferenceData(it.applicationContext)
+        }
 
         fab.setOnClickListener { view ->
         }
@@ -67,7 +71,8 @@ class VenuesListFragment : Fragment(), VenuesMapper {
             adapter = VenuesListAdapter()
             (adapter as VenuesListAdapter).detailsOnClickListener = { venue ->
                 map(venue)?.let {
-                    val action = VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(it)
+                    val action =
+                        VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(it)
                     Navigation.findNavController(view).navigate(action)
                 }
             }
@@ -98,30 +103,10 @@ class VenuesListFragment : Fragment(), VenuesMapper {
     }
 
     private fun saveCityCenterData(venusData: VenusData?) {
-        val settings: SharedPreferences? = context?.getSharedPreferences(PERSISTENT_STORAGE_NAME, Context.MODE_PRIVATE)
-
-        settings?.edit()?.let { editor ->
-
-            venusData?.citCenterlat?.let {
-                log("here")
-                val latData = settings.getFloat("lat", 0.0F)
-                log("latData $latData")
-                if (latData == 0.0F && latData != it.toFloat()) {
-                    log("latData $latData")
-                    log(it.toFloat().toString())
-                    editor.putFloat("lat", it.toFloat())
-                    editor.apply()
-                }
+        if (::preferencesManager.isInitialized) {
+            venusData?.let {
+                preferencesManager.setCityCenterInfo(it.citCenterlat, it.citCenterlng)
             }
-            venusData?.citCenterlng?.let {
-                val lngData = settings.getFloat("lng", 0.0F)
-                if (lngData == 0.0F && lngData != it.toFloat()) {
-                    log(it.toFloat().toString())
-                    editor.putFloat("lng", it.toFloat())
-                    editor.apply()
-                }
-            }
-
         }
     }
 
@@ -154,6 +139,7 @@ class VenuesListFragment : Fragment(), VenuesMapper {
                 queryEditText?.removeTextChangedListener(textWatcher)
             }
         }
-        return textChangeObservable.filter { it.length >= MIN_INPUT_LENGTH }.debounce(LOADING_TIMEOUT, TimeUnit.MILLISECONDS)
+        return textChangeObservable.filter { it.length >= MIN_INPUT_LENGTH }
+            .debounce(LOADING_TIMEOUT, TimeUnit.MILLISECONDS)
     }
 }
