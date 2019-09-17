@@ -1,4 +1,4 @@
-package com.kstor.homeawaytest.view
+package com.kstor.homeawaytest.view.mainscreen
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,9 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.Venue
+import com.kstor.homeawaytest.view.ImageLoader
 import kotlinx.android.synthetic.main.list_item.view.*
 
-class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ImageLoader {
+class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
+    ImageLoader {
 
     private val venues = mutableListOf<Venue>()
     fun updateData(venues: List<Venue>) {
