@@ -12,13 +12,12 @@ interface VenuesMapper {
                 requireNotNull(venues.id),
                 requireNotNull(venues.name),
                 requireNotNull(map(venues.categories)),
-                requireNotNull(venues.address),
+                venues.address,
                 requireNotNull(venues.distance),
                 requireNotNull(venues.lat),
                 requireNotNull(venues.lng)
-
             )
-        } catch (e: IllegalStateException) {
+        } catch (e: IllegalArgumentException) {
             log(e.message!!)
             null
         }
@@ -28,14 +27,13 @@ interface VenuesMapper {
         return categories?.let {
             try {
                 categories.map {
-
                     VenuesCategoryParcelize(
                         requireNotNull(it.id),
                         requireNotNull(it.name),
                         requireNotNull(it.iconPath)
                     )
                 }
-            } catch (e: java.lang.IllegalStateException) {
+            } catch (e: IllegalArgumentException) {
                 log(e.message!!)
                 null
             }
