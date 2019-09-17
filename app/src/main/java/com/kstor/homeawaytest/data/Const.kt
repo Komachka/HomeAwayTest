@@ -27,3 +27,5 @@ const val CENTER_LNG = -122.3321
 
 const val RADIUS = 6378 * 1000 // metres
 const val HALF_OF_CIRCLE_DEGREE = 180
+
+const val PERSISTENT_STORAGE_NAME = "city_center"

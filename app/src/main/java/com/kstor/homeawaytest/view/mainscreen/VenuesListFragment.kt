@@ -1,5 +1,7 @@
 package com.kstor.homeawaytest.view.mainscreen
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,13 +12,14 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.*
 import com.kstor.homeawaytest.data.network.RemoteData
 import com.kstor.homeawaytest.data.network.VenuesRepositoryImp
 import com.kstor.homeawaytest.data.network.VenuesService
+import com.kstor.homeawaytest.view.VenuesMapper
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -26,7 +29,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
-class VenuesListFragment : Fragment() {
+class VenuesListFragment : Fragment(), VenuesMapper {
 
     private lateinit var viewModel: VenuesListViewModel
 
@@ -47,8 +50,6 @@ class VenuesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
         }
 
         val retrofit = Retrofit.Builder()
@@ -64,6 +65,12 @@ class VenuesListFragment : Fragment() {
         list.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = VenuesListAdapter()
+            (adapter as VenuesListAdapter).detailsOnClickListener = { venue ->
+                map(venue)?.let {
+                    val action = VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(it)
+                    Navigation.findNavController(view).navigate(action)
+                }
+            }
         }
 
         createTextChangeObservable().observeOn(AndroidSchedulers.mainThread())
@@ -74,17 +81,39 @@ class VenuesListFragment : Fragment() {
             .flatMap {
                 repo.getClosedVenuses(LOAD_LIMIT, it)
             }
-            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext {
+                saveCityCenterData(it)
+            }
             .map {
                 it.venues
             }.doOnError {
                 log(it.toString())
             }
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe { venuesItem ->
                 hideProgress()
                 log(venuesItem.toString())
                 (list.adapter as VenuesListAdapter).updateData(venuesItem)
             }
+    }
+
+    private fun saveCityCenterData(venusData: VenusData?) {
+        val settings: SharedPreferences? = context?.getSharedPreferences(PERSISTENT_STORAGE_NAME, Context.MODE_PRIVATE)
+        settings?.edit()?.let { editor ->
+            venusData?.citCenterlat?.let {
+                val latData = settings.getFloat("lat", 0.0F)
+                if (latData != 0.0F && latData != it.toFloat()) {
+                    editor.putFloat("lat", it.toFloat())
+                }
+            }
+            venusData?.citCenterlng?.let {
+                val lngData = settings.getFloat("lng", 0.0F)
+                if (lngData != 0.0F && lngData != it.toFloat()) {
+                    editor.putFloat("lng", it.toFloat())
+                }
+            }
+            editor.apply()
+        }
     }
 
     private fun showProgress() {

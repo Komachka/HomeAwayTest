@@ -12,10 +12,10 @@ fun NetworkVenuesModel.mapToVenuesData(): VenusData {
     return VenusData(createListOfCategories(this.response?.venues, centerLat, centerLng), centerLat, centerLng)
 }
 
-private fun createListOfCategories(venues: List<NetworkVenue>?, centerLat: Double, centerLng: Double): List<Venue> {
+private fun createListOfCategories(venues: List<NetworkVenue>?, centerLat: Double, centerLng: Double): List<Venues> {
     return venues?.let {
         it.map {
-            Venue().apply {
+            Venues().apply {
                 id = it.id
                 name = it.name
                 categories = mapToCategory(it.categories)
@@ -51,9 +51,9 @@ private fun Double.toRadians(): Double {
     return this * Math.PI / HALF_OF_CIRCLE_DEGREE
 }
 
-private fun mapToCategory(categories: List<NetworkCategory>?): List<VenueCategory> {
+private fun mapToCategory(categories: List<NetworkCategory>?): List<VenuesCategory> {
     return categories?.let {
-        it.map { VenueCategory(it.id, it.name, it.icon?.prefix + SIZE_32 + it.icon?.suffix) }
+        it.map { VenuesCategory(it.id, it.name, it.icon?.prefix + SIZE_32 + it.icon?.suffix) }
     } ?: emptyList()
 }
 
