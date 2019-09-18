@@ -1,8 +1,10 @@
 package com.kstor.homeawaytest.view
 
-import com.kstor.homeawaytest.data.Venues
-import com.kstor.homeawaytest.data.VenuesCategory
 import com.kstor.homeawaytest.data.log
+import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.domain.model.VenuesCategory
+import com.kstor.homeawaytest.domain.model.VenuesCategoryParcelize
+import com.kstor.homeawaytest.domain.model.VenuesParcelize
 
 interface VenuesMapper {
 

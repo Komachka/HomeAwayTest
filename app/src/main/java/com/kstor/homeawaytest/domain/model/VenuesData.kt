@@ -1,4 +1,4 @@
-package com.kstor.homeawaytest.data
+package com.kstor.homeawaytest.domain.model
 
 data class VenusData(
     val venues: List<Venues>,

@@ -5,10 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.kstor.homeawaytest.R
+import com.kstor.homeawaytest.data.repos.StaticMapRepositoryImpl
 import com.kstor.homeawaytest.data.sp.SharedPreferenceData
+import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
 import com.kstor.homeawaytest.view.ImageLoader
 import kotlinx.android.synthetic.main.detail_fragment.*
 
@@ -26,11 +29,16 @@ class DetailFragment : Fragment(), ImageLoader {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         context?.let { context ->
-            viewModel = ViewModelProviders.of(this, DetailViewModelFactory(SharedPreferenceData(context))).get(DetailViewModel::class.java)
+            val repository = StaticMapRepositoryImpl(SharedPreferenceData(context))
+            val useCase = GenerateStaticMapUrlUseCase(repository)
+            viewModel = ViewModelProviders.of(this, DetailViewModelFactory(useCase)).get(DetailViewModel::class.java)
         }
         arguments?.let {
             val venues = DetailFragmentArgs.fromBundle(it).venues
-            mapIv.loadImage(viewModel.createStaticMapUrl(venues))
+            viewModel.createStaticMapUrl(venues)
+            viewModel.staticMapUrlLiveData.observe(this, Observer { path ->
+                mapIv.loadImage(path)
+            })
             toolbar.apply {
                 title = venues.name
             }

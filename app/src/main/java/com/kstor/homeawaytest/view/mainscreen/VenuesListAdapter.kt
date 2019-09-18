@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.kstor.homeawaytest.R
-import com.kstor.homeawaytest.data.Venues
+import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.ImageLoader
 import kotlinx.android.synthetic.main.list_item.view.*
 

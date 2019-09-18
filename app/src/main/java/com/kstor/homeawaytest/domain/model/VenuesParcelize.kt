@@ -1,4 +1,4 @@
-package com.kstor.homeawaytest.view
+package com.kstor.homeawaytest.domain.model
 
 import android.os.Parcel
 import android.os.Parcelable

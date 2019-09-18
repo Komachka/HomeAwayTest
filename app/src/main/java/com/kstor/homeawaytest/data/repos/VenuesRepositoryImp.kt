@@ -1,7 +1,8 @@
-package com.kstor.homeawaytest.data.network
+package com.kstor.homeawaytest.data.repos
 
-import com.kstor.homeawaytest.data.VenusData
 import com.kstor.homeawaytest.data.mapToVenuesData
+import com.kstor.homeawaytest.data.network.RemoteData
+import com.kstor.homeawaytest.domain.model.VenusData
 import io.reactivex.Observable
 
 class VenuesRepositoryImp(

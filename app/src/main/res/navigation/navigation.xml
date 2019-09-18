@@ -21,6 +21,6 @@
         tools:layout="@layout/detail_fragment" >
         <argument
             android:name="venues"
-            app:argType="com.kstor.homeawaytest.view.VenuesParcelize" />
+            app:argType="com.kstor.homeawaytest.domain.model.VenuesParcelize" />
     </fragment>
 </navigation>

@@ -4,12 +4,21 @@ import android.util.Log
 import com.kstor.homeawaytest.data.network.model.NetworkCategory
 import com.kstor.homeawaytest.data.network.model.NetworkVenue
 import com.kstor.homeawaytest.data.network.model.NetworkVenuesModel
+import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.domain.model.VenuesCategory
+import com.kstor.homeawaytest.domain.model.VenusData
 import kotlin.math.*
 
 fun NetworkVenuesModel.mapToVenuesData(): VenusData {
     val centerLat = response?.geocode?.feature?.geometry?.center?.lat ?: CENTER_LAT
     val centerLng = response?.geocode?.feature?.geometry?.center?.lng ?: CENTER_LNG
-    return VenusData(createListOfCategories(this.response?.venues, centerLat, centerLng), centerLat, centerLng)
+    return VenusData(
+        createListOfCategories(
+            this.response?.venues,
+            centerLat,
+            centerLng
+        ), centerLat, centerLng
+    )
 }
 
 private fun createListOfCategories(venues: List<NetworkVenue>?, centerLat: Double, centerLng: Double): List<Venues> {
@@ -53,10 +62,26 @@ private fun Double.toRadians(): Double {
 
 private fun mapToCategory(categories: List<NetworkCategory>?): List<VenuesCategory> {
     return categories?.let {
-        it.map { VenuesCategory(it.id, it.name, it.icon?.prefix + SIZE_32 + it.icon?.suffix) }
+        it.map {
+            VenuesCategory(
+                it.id,
+                it.name,
+                it.icon?.prefix + SIZE_32 + it.icon?.suffix
+            )
+        }
     } ?: emptyList()
 }
 
 fun log(message: String) {
     Log.d("MainActivity", message)
+}
+
+fun countZoom(distance: Int): Int {
+    return when (distance) {
+        in 0..100 -> 17
+        in 100..500 -> 15
+        in 500..2000 -> 13
+        in 2000..4000 -> 12
+        else -> 10
+    }
 }
