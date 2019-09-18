@@ -31,10 +31,11 @@ class DetailFragment : Fragment(), ImageLoader {
         context?.let { context ->
             val repository = StaticMapRepositoryImpl(SharedPreferenceData(context))
             val useCase = GenerateStaticMapUrlUseCase(repository)
-            viewModel = ViewModelProviders.of(this, DetailViewModelFactory(useCase)).get(DetailViewModel::class.java)
+            viewModel = ViewModelProviders.of(this, DetailViewModelFactory(useCase))
+                .get(DetailViewModel::class.java)
         }
-        arguments?.let {
-            val venues = DetailFragmentArgs.fromBundle(it).venues
+        arguments?.let { bundle ->
+            val venues = DetailFragmentArgs.fromBundle(bundle).venues
             viewModel.createStaticMapUrl(venues)
             viewModel.staticMapUrlLiveData.observe(this, Observer { path ->
                 mapIv.loadImage(path)
@@ -43,10 +44,16 @@ class DetailFragment : Fragment(), ImageLoader {
                 title = venues.name
             }
             venuesNameNameTextView.text = venues.name
-            venuesCategory.text = venues.categories?.let { category -> category.joinToString { it.name ?: "" } }
+            venuesCategory.text =
+                venues.categories?.let { category -> category.joinToString { it.name ?: "" } }
             venuesNameAdressTextView.text = venues.address
-            venues.categories?.get(0)?.iconPath?.let {
-                venuesPlaceImgView.loadImage(it)
+            venues.categories?.let {
+                if (it.isNotEmpty()) {
+                    it[0].iconPath?.let { path ->
+                        venuesPlaceImgView.loadImage(path)
+                    }
+                }
+
             }
             venuesDistanceFromCenterTextView.text = "${venues.distance} m"
             fabFavorite.setIfFavorite(venues.isFavorite)

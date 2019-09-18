@@ -33,7 +33,7 @@
         app:defaultNavHost="true"
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/navigation"
-        tools:layout_editor_absoluteX="0dp" />
+        tools:layout_editor_absoluteX="@dimen/zero_size" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

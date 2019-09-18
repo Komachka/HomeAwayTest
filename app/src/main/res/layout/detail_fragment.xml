@@ -9,7 +9,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="@dimen/toolbar_height"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         >
 
@@ -51,9 +51,11 @@
             <ImageView
                 android:background="@color/colorPrimary"
                 android:id="@+id/venuesPlaceImgView"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_launcher_background"
+                android:layout_width="@dimen/image_size"
+                android:layout_height="@dimen/image_size"
+                android:padding="@dimen/default_padding"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_place_black_24dp"
                 app:layout_constraintEnd_toEndOf="@+id/venuesCategory"
                 app:layout_constraintStart_toStartOf="@+id/venuesCategory"
                 app:layout_constraintTop_toTopOf="@+id/venuesNameNameTextView" />
@@ -62,7 +64,7 @@
                 android:textAlignment="center"
                 android:id="@+id/venuesCategory"
                 android:layout_width="80dp"
-                android:layout_height="0dp"
+                android:layout_height="@dimen/zero_size"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="2dp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -71,7 +73,7 @@
 
             <TextView
                 android:id="@+id/venuesNameNameTextView"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/zero_size"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="24dp"
@@ -84,9 +86,9 @@
 
             <TextView
                 android:id="@+id/venuesNameAdressTextView"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/zero_size"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/default_margin"
                 android:textSize="14dp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -99,7 +101,7 @@
                 android:id="@+id/venuesDistanceFromCenterTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/default_margin"
                 app:layout_constraintStart_toStartOf="@+id/venuesNameAdressTextView"
                 app:layout_constraintTop_toBottomOf="@+id/venuesNameAdressTextView"
                 tools:text="Distance" />

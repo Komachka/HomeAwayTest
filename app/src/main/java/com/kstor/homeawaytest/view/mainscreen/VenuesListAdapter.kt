@@ -21,28 +21,41 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
         notifyDataSetChanged()
     }
 
-    inner class ItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    inner class ItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view),
+        View.OnClickListener {
 
         init {
             view.setOnClickListener(this)
         }
+
         override fun onClick(item: View) {
-                detailsOnClickListener.invoke(venues[adapterPosition])
+            detailsOnClickListener.invoke(venues[adapterPosition])
         }
 
         fun bind(venue: Venues) {
             view.venuesNameNameTextView.text = venue.name
-            view.venuesCategory.text = venue.categories?.let { category -> category.joinToString { it.name ?: "" } }
+            view.venuesCategory.text =
+                venue.categories?.let { category -> category.joinToString { it.name ?: "" } }
             view.venuesNameAdressTextView.text = venue.address
-            venue.categories?.get(0)?.iconPath?.let {
-                view.venuesPlaceImgView.loadImage(it)
-            }
             view.venuesDistanceFromCenterTextView.text = "${venue.distance} m"
+            venue.categories?.let {
+                if (it.isNotEmpty()) {
+                    it[0].iconPath.let {
+                        view.venuesPlaceImgView.loadImage(it)
+                    }
+                }
+            }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false))
+        return ItemViewHolder(
+            LayoutInflater.from(parent.context).inflate(
+                R.layout.list_item,
+                parent,
+                false
+            )
+        )
     }
 
     override fun getItemCount() = venues.size
