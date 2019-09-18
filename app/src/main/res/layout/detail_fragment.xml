@@ -63,9 +63,9 @@
             <TextView
                 android:textAlignment="center"
                 android:id="@+id/venuesCategory"
-                android:layout_width="80dp"
+                android:layout_width="@dimen/categories_width"
                 android:layout_height="@dimen/zero_size"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="@dimen/default_margin"
                 android:layout_marginTop="2dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/venuesPlaceImgView"
