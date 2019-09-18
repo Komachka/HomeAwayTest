@@ -63,16 +63,6 @@ class VenuesListFragment : Fragment(), VenuesMapper {
         fab.setOnClickListener { view ->
         }
 
-        /*val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val service = retrofit.create(VenuesService::class.java)
-        val remoteData = RemoteData(service)
-        val repo: VenuesRepository = VenuesRepositoryImp(remoteData)*/
-
         list.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = VenuesListAdapter()

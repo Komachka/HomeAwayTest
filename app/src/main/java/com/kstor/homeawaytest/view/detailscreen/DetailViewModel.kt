@@ -7,8 +7,10 @@ import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
 import com.kstor.homeawaytest.domain.model.VenuesParcelize
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class DetailViewModel(private val useCase: GenerateStaticMapUrlUseCase) : ViewModel() {
+class DetailViewModel @Inject constructor (
+    private val useCase: GenerateStaticMapUrlUseCase) : ViewModel() {
 
     val staticMapUrlLiveData = MutableLiveData<String>()
 
@@ -22,7 +24,7 @@ class DetailViewModel(private val useCase: GenerateStaticMapUrlUseCase) : ViewMo
     }
 }
 
-class DetailViewModelFactory(private val useCase: GenerateStaticMapUrlUseCase) : ViewModelProvider.Factory {
+/*class DetailViewModelFactory(private val useCase: GenerateStaticMapUrlUseCase) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass.isAssignableFrom(DetailViewModel::class.java)) {
@@ -31,4 +33,4 @@ class DetailViewModelFactory(private val useCase: GenerateStaticMapUrlUseCase) :
             throw IllegalArgumentException("ViewModel Not Found")
         }
     }
-}
+}*/
