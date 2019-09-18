@@ -27,3 +27,27 @@ const val CENTER_LNG = -122.3321
 
 const val RADIUS = 6378 * 1000 // metres
 const val HALF_OF_CIRCLE_DEGREE = 180
+
+const val PERSISTENT_STORAGE_NAME = "city_center"
+const val PERSISTENT_STORAGE_KEY_LAT = "lat"
+const val PERSISTENT_STORAGE_KEY_LNG = "lng"
+const val PERSISTENT_STORAGE_DEF_VAL = 0.0F
+
+typealias LAT = Double
+typealias LNG = Double
+
+const val API_KEY = "AIzaSyC6SflSVpRXbS2qbY0P7yJ1THGl-dOJiUQ"
+const val STATIC_MAP_BASE_URL = "https://maps.googleapis.com/maps/api/staticmap?"
+
+const val colour1 = "blue"
+const val colour2 = "green"
+
+const val CENTER = "center"
+const val ZOOM = "zoom"
+const val SIZE = "size"
+const val MAPTYPE = "maptype"
+const val MARKERS = "markers"
+const val KEY = "key"
+
+const val IMAGE_SIZE = "600x350"
+const val MAP_TYPE_TERRIAN = "terrian"

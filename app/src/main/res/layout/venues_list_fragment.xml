@@ -5,16 +5,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.VenuesListFragment">
+    tools:context=".view.mainscreen.VenuesListFragment">
 
     <EditText
         android:id="@+id/queryEditText"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/zero_size"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/fab_margin"
         android:drawableStart="@drawable/ic_search_black_24dp"
         android:hint="@string/what_are_you_looking_for"
         android:inputType="text"
@@ -26,9 +26,9 @@
     <androidx.recyclerview.widget.RecyclerView
         app:layout_constrainedHeight="true"
         android:id="@+id/list"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/zero_size"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/default_margin"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/queryEditText"

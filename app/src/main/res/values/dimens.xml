@@ -1,4 +1,14 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="default_margin">8dp</dimen>
+    <dimen name="zero_size">0dp</dimen>
+    <dimen name="toolbar_height">400dp</dimen>
+    <dimen name="image_size">50dp</dimen>
+    <dimen name="default_padding">4dp</dimen>
+    <dimen name="categories_width">80dp</dimen>
+    <dimen name="name_start_margin">40dp</dimen>
+    <dimen name="name_top_margin">24dp</dimen>
+    <dimen name="name_fields_text_size">18sp</dimen>
+    <dimen name="reqular_text_size">14sp</dimen>
+
 </resources>

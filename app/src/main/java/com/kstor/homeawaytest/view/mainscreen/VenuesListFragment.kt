@@ -1,4 +1,4 @@
-package com.kstor.homeawaytest.view
+package com.kstor.homeawaytest.view.mainscreen
 
 import android.os.Bundle
 import android.text.Editable
@@ -10,13 +10,16 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.*
 import com.kstor.homeawaytest.data.network.RemoteData
-import com.kstor.homeawaytest.data.network.VenuesRepositoryImp
 import com.kstor.homeawaytest.data.network.VenuesService
+import com.kstor.homeawaytest.data.repos.VenuesRepositoryImp
+import com.kstor.homeawaytest.data.sp.SharedPreferenceData
+import com.kstor.homeawaytest.domain.model.VenusData
+import com.kstor.homeawaytest.view.VenuesMapper
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -26,9 +29,10 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
-class VenuesListFragment : Fragment() {
+class VenuesListFragment : Fragment(), VenuesMapper {
 
     private lateinit var viewModel: VenuesListViewModel
+    private lateinit var preferencesManager: SharedPreferenceData
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,9 +50,11 @@ class VenuesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        context?.let {
+            preferencesManager = SharedPreferenceData(it.applicationContext)
+        }
+
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
         }
 
         val retrofit = Retrofit.Builder()
@@ -64,6 +70,13 @@ class VenuesListFragment : Fragment() {
         list.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = VenuesListAdapter()
+            (adapter as VenuesListAdapter).detailsOnClickListener = { venue ->
+                map(venue)?.let {
+                    val action =
+                        VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(it)
+                    Navigation.findNavController(view).navigate(action)
+                }
+            }
         }
 
         createTextChangeObservable().observeOn(AndroidSchedulers.mainThread())
@@ -74,17 +87,28 @@ class VenuesListFragment : Fragment() {
             .flatMap {
                 repo.getClosedVenuses(LOAD_LIMIT, it)
             }
-            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext {
+                saveCityCenterData(it)
+            }
             .map {
                 it.venues
             }.doOnError {
                 log(it.toString())
             }
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe { venuesItem ->
                 hideProgress()
                 log(venuesItem.toString())
                 (list.adapter as VenuesListAdapter).updateData(venuesItem)
             }
+    }
+
+    private fun saveCityCenterData(venusData: VenusData?) {
+        if (::preferencesManager.isInitialized) {
+            venusData?.let {
+                preferencesManager.setCityCenterInfo(it.citCenterlat, it.citCenterlng)
+            }
+        }
     }
 
     private fun showProgress() {
@@ -113,9 +137,10 @@ class VenuesListFragment : Fragment() {
             }
             queryEditText.addTextChangedListener(textWatcher)
             emitter.setCancellable {
-                queryEditText.removeTextChangedListener(textWatcher)
+                queryEditText?.removeTextChangedListener(textWatcher)
             }
         }
-        return textChangeObservable.filter { it.length >= MIN_INPUT_LENGTH }.debounce(LOADING_TIMEOUT, TimeUnit.MILLISECONDS)
+        return textChangeObservable.filter { it.length >= MIN_INPUT_LENGTH }
+            .debounce(LOADING_TIMEOUT, TimeUnit.MILLISECONDS)
     }
 }
