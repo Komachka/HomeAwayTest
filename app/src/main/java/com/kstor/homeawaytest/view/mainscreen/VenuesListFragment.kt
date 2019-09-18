@@ -1,5 +1,6 @@
 package com.kstor.homeawaytest.view.mainscreen
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,27 +13,26 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.*
-import com.kstor.homeawaytest.data.network.RemoteData
-import com.kstor.homeawaytest.data.network.VenuesService
-import com.kstor.homeawaytest.data.repos.VenuesRepositoryImp
 import com.kstor.homeawaytest.data.sp.SharedPreferenceData
+import com.kstor.homeawaytest.domain.VenuesRepository
 import com.kstor.homeawaytest.domain.model.VenusData
 import com.kstor.homeawaytest.view.VenuesMapper
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 import kotlinx.android.synthetic.main.venues_list_fragment.*
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 
 class VenuesListFragment : Fragment(), VenuesMapper {
 
     private lateinit var viewModel: VenuesListViewModel
     private lateinit var preferencesManager: SharedPreferenceData
+
+    @Inject lateinit var repo: VenuesRepository
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,8 +42,14 @@ class VenuesListFragment : Fragment(), VenuesMapper {
         return inflater.inflate(R.layout.venues_list_fragment, container, false)
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (activity?.application as App).homeAwayComponents.inject(this)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         viewModel = ViewModelProviders.of(this).get(VenuesListViewModel::class.java)
         // TODO: Use the ViewModel
     }
@@ -57,7 +63,7 @@ class VenuesListFragment : Fragment(), VenuesMapper {
         fab.setOnClickListener { view ->
         }
 
-        val retrofit = Retrofit.Builder()
+        /*val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
@@ -65,7 +71,7 @@ class VenuesListFragment : Fragment(), VenuesMapper {
 
         val service = retrofit.create(VenuesService::class.java)
         val remoteData = RemoteData(service)
-        val repo = VenuesRepositoryImp(remoteData)
+        val repo: VenuesRepository = VenuesRepositoryImp(remoteData)*/
 
         list.apply {
             layoutManager = LinearLayoutManager(context)

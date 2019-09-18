@@ -1,0 +1,16 @@
+package com.kstor.homeawaytest.data.di
+
+import com.kstor.homeawaytest.data.network.RemoteData
+import com.kstor.homeawaytest.data.repos.VenuesRepositoryImp
+import com.kstor.homeawaytest.domain.VenuesRepository
+import dagger.Module
+import dagger.Provides
+import javax.inject.Singleton
+
+@Module
+class RepositoryModule {
+
+    @Provides
+    @Singleton
+    fun provideVenusRepository(remoteData: RemoteData): VenuesRepository = VenuesRepositoryImp(remoteData)
+}

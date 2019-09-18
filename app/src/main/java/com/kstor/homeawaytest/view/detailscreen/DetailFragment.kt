@@ -53,7 +53,6 @@ class DetailFragment : Fragment(), ImageLoader {
                         venuesPlaceImgView.loadImage(path)
                     }
                 }
-
             }
             venuesDistanceFromCenterTextView.text = "${venues.distance} m"
             fabFavorite.setIfFavorite(venues.isFavorite)
