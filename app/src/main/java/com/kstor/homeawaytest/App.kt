@@ -12,7 +12,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        homeAwayComponents = init(this)
+        homeAwayComponents = init()
     }
 
     private fun init(): AppComponent {
