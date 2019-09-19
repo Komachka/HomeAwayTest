@@ -3,6 +3,7 @@ package com.kstor.homeawaytest
 import android.app.Application
 import com.kstor.homeawaytest.data.di.NetworkModule
 import com.kstor.homeawaytest.data.di.RepositoryModule
+import com.kstor.homeawaytest.data.di.SharedPrefModule
 import com.kstor.homeawaytest.view.AppModule
 import com.kstor.homeawaytest.view.di.PresentersModule
 
@@ -21,6 +22,7 @@ class App : Application() {
             .networkModule(NetworkModule())
             .repositoryModule(RepositoryModule())
             .presentersModule(PresentersModule())
+            .sharedPrefModule(SharedPrefModule())
             .build()
     }
 }

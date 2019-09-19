@@ -50,8 +50,6 @@ dependencies {
     ktlint "com.pinterest:ktlint:0.34.2"
     implementation 'com.google.dagger:dagger:2.24'
     kapt 'com.google.dagger:dagger-compiler:2.11'
-
-
     testImplementation 'com.nhaarman:mockito-kotlin-kt1.1:1.5.0'
 }
 
