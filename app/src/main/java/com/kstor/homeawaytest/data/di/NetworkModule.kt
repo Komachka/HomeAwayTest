@@ -19,17 +19,18 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideVenuesService(retrofit: Retrofit) = retrofit.create(VenuesService::class.java)
+    fun provideVenuesService(retrofit: Retrofit): VenuesService = retrofit.create(VenuesService::class.java)
 
     @Singleton
     @Provides
-    fun provideOkHttpClient() = OkHttpClient.Builder().build()
+    fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder().build()
 
     @Singleton
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient) =
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
         Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(okHttpClient)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
