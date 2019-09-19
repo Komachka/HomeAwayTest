@@ -10,7 +10,6 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kstor.homeawaytest.App
@@ -18,21 +17,27 @@ import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.*
 import com.kstor.homeawaytest.data.sp.SharedPreferenceData
 import com.kstor.homeawaytest.domain.VenuesRepository
-import com.kstor.homeawaytest.domain.model.VenusData
+import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.VenuesMapper
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.venues_list_fragment.*
 
-class VenuesListFragment : Fragment(), VenuesMapper {
+class VenuesListFragment : Fragment(), VenuesMapper, VenuesListView {
 
-    private lateinit var viewModel: VenuesListViewModel
+    override fun displayVenues(results: List<Venues>) {
+        (list.adapter as VenuesListAdapter).updateData(results)
+    }
+
     private lateinit var preferencesManager: SharedPreferenceData
 
-    @Inject lateinit var repo: VenuesRepository
+    @Inject
+    lateinit var repo: VenuesRepository
+
+    @Inject
+    lateinit var presenter: VenuesListPresenter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,15 +52,8 @@ class VenuesListFragment : Fragment(), VenuesMapper {
         (activity?.application as App).homeAwayComponents.inject(this)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        viewModel = ViewModelProviders.of(this).get(VenuesListViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        presenter.setView(this)
         context?.let {
             preferencesManager = SharedPreferenceData(it.applicationContext)
         }
@@ -79,39 +77,16 @@ class VenuesListFragment : Fragment(), VenuesMapper {
             .doOnNext {
                 showProgress()
             }
-            .observeOn(Schedulers.io())
-            .flatMap {
-                repo.getClosedVenuses(LOAD_LIMIT, it)
-            }
-            .doOnNext {
-                saveCityCenterData(it)
-            }
-            .map {
-                it.venues
-            }.doOnError {
-                log(it.toString())
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { venuesItem ->
-                hideProgress()
-                log(venuesItem.toString())
-                (list.adapter as VenuesListAdapter).updateData(venuesItem)
+            .subscribe {
+                presenter.getVenues(it)
             }
     }
 
-    private fun saveCityCenterData(venusData: VenusData?) {
-        if (::preferencesManager.isInitialized) {
-            venusData?.let {
-                preferencesManager.setCityCenterInfo(it.citCenterlat, it.citCenterlng)
-            }
-        }
-    }
-
-    private fun showProgress() {
+    override fun showProgress() {
         progressBar.visibility = VISIBLE
     }
 
-    private fun hideProgress() {
+    override fun hideProgress() {
         progressBar.visibility = GONE
     }
 

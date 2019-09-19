@@ -15,10 +15,11 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideVenusRepository(remoteData: RemoteData): VenuesRepository = VenuesRepositoryImp(remoteData)
+    fun provideVenusRepository(remoteData: RemoteData, seredPrefData: SharedPreferenceData): VenuesRepository =
+        VenuesRepositoryImp(remoteData, seredPrefData)
 
     @Provides
     @Singleton
-    fun provideStaticMapRepository(seredPrefData: SharedPreferenceData): StaticMapRepository
-            = StaticMapRepositoryImpl(seredPrefData)
+    fun provideStaticMapRepository(seredPrefData: SharedPreferenceData): StaticMapRepository =
+            StaticMapRepositoryImpl(seredPrefData)
 }
