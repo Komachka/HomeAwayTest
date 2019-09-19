@@ -11,7 +11,7 @@ class VenuesRepositoryImp(
     private val remoteData: RemoteData,
     private val preferenceData: SharedPreferenceData
 ) : VenuesRepository {
-    override fun getClosedVenuses(limit: Int, query: String): Observable<VenusData> {
+    override fun getClosestVenuses(limit: Int, query: String): Observable<VenusData> {
         return remoteData.closedVenues(limit, query).map<VenusData> {
             val venuesData = it.mapToVenuesData()
             preferenceData.setCityCenterInfo(venuesData.citCenterlat, venuesData.citCenterlat)

@@ -11,5 +11,5 @@ class SharedPrefModule {
 
     @Provides
     @Singleton
-    fun provideSharedPrefDara(context: Context) = SharedPreferenceData(context)
+    fun provideSharedPrefData(context: Context) = SharedPreferenceData(context)
 }

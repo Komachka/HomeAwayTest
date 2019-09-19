@@ -8,6 +8,6 @@ import javax.inject.Inject
 class VenuesUseCase @Inject constructor(private val repository: VenuesRepository) {
 
     fun loadVenuesData(query: String): Observable<VenusData> {
-        return repository.getClosedVenuses(LOAD_LIMIT, query)
+        return repository.getClosestVenuses(LOAD_LIMIT, query)
     }
 }
