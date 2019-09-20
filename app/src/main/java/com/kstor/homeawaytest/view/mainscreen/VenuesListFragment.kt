@@ -1,5 +1,6 @@
 package com.kstor.homeawaytest.view.mainscreen
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,31 +9,66 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.*
-import com.kstor.homeawaytest.data.network.RemoteData
-import com.kstor.homeawaytest.data.network.VenuesService
-import com.kstor.homeawaytest.data.repos.VenuesRepositoryImp
-import com.kstor.homeawaytest.data.sp.SharedPreferenceData
-import com.kstor.homeawaytest.domain.model.VenusData
+import com.kstor.homeawaytest.domain.VenuesUseCase
+import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.view.BaseFragment
 import com.kstor.homeawaytest.view.VenuesMapper
 import io.reactivex.Observable
+import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 import kotlinx.android.synthetic.main.venues_list_fragment.*
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 
-class VenuesListFragment : Fragment(), VenuesMapper {
+class VenuesListFragment : BaseFragment(), VenuesMapper, VenuesListView {
 
-    private lateinit var viewModel: VenuesListViewModel
-    private lateinit var preferencesManager: SharedPreferenceData
+    @Inject
+    lateinit var useCases: VenuesUseCase
+    lateinit var presenter: VenuesListPresenter
+
+    override fun setUp() {
+        presenter = VenuesListPresenterImpl(useCases, Schedulers.io(), AndroidSchedulers.mainThread())
+        (presenter as VenuesListPresenterImpl).attachView(this)
+
+        fab.setOnClickListener { view ->
+        }
+
+        list.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = VenuesListAdapter()
+            (adapter as VenuesListAdapter).detailsOnClickListener = { venue ->
+                map(venue)?.let {
+                    view?.let { view ->
+                        val action =
+                            VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(it)
+                        Navigation.findNavController(view).navigate(action)
+                    }
+                }
+            }
+        }
+
+        createTextChangeObservable().observeOn(AndroidSchedulers.mainThread())
+            .doOnNext {
+                showProgress()
+            }
+            .subscribe {
+                presenter.getVenues(it)
+            }
+    }
+
+    override fun destroy() {
+        (presenter as VenuesListPresenterImpl).detachView()
+    }
+
+    override fun displayVenues(results: List<Venues>) {
+        (list.adapter as VenuesListAdapter).updateData(results)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,80 +78,16 @@ class VenuesListFragment : Fragment(), VenuesMapper {
         return inflater.inflate(R.layout.venues_list_fragment, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(VenuesListViewModel::class.java)
-        // TODO: Use the ViewModel
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (activity?.application as App).homeAwayComponents.inject(this)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-        context?.let {
-            preferencesManager = SharedPreferenceData(it.applicationContext)
-        }
-
-        fab.setOnClickListener { view ->
-        }
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val service = retrofit.create(VenuesService::class.java)
-        val remoteData = RemoteData(service)
-        val repo = VenuesRepositoryImp(remoteData)
-
-        list.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = VenuesListAdapter()
-            (adapter as VenuesListAdapter).detailsOnClickListener = { venue ->
-                map(venue)?.let {
-                    val action =
-                        VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(it)
-                    Navigation.findNavController(view).navigate(action)
-                }
-            }
-        }
-
-        createTextChangeObservable().observeOn(AndroidSchedulers.mainThread())
-            .doOnNext {
-                showProgress()
-            }
-            .observeOn(Schedulers.io())
-            .flatMap {
-                repo.getClosedVenuses(LOAD_LIMIT, it)
-            }
-            .doOnNext {
-                saveCityCenterData(it)
-            }
-            .map {
-                it.venues
-            }.doOnError {
-                log(it.toString())
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { venuesItem ->
-                hideProgress()
-                log(venuesItem.toString())
-                (list.adapter as VenuesListAdapter).updateData(venuesItem)
-            }
-    }
-
-    private fun saveCityCenterData(venusData: VenusData?) {
-        if (::preferencesManager.isInitialized) {
-            venusData?.let {
-                preferencesManager.setCityCenterInfo(it.citCenterlat, it.citCenterlng)
-            }
-        }
-    }
-
-    private fun showProgress() {
+    override fun showProgress() {
         progressBar.visibility = VISIBLE
     }
 
-    private fun hideProgress() {
+    override fun hideProgress() {
         progressBar.visibility = GONE
     }
 
