@@ -9,33 +9,66 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.*
-import com.kstor.homeawaytest.data.sp.SharedPreferenceData
-import com.kstor.homeawaytest.domain.VenuesRepository
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.view.BaseFragment
 import com.kstor.homeawaytest.view.VenuesMapper
 import io.reactivex.Observable
+import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.venues_list_fragment.*
 
-class VenuesListFragment : Fragment(), VenuesMapper, VenuesListView {
+class VenuesListFragment : BaseFragment(), VenuesMapper, VenuesListView {
+
+    @Inject
+    lateinit var useCases: VenuesUseCase
+    lateinit var presenter: VenuesListPresenter
+
+    override fun setUp() {
+        presenter = VenuesListPresenterImpl(useCases, Schedulers.io(), AndroidSchedulers.mainThread())
+        (presenter as VenuesListPresenterImpl).attachView(this)
+
+        fab.setOnClickListener { view ->
+        }
+
+        list.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = VenuesListAdapter()
+            (adapter as VenuesListAdapter).detailsOnClickListener = { venue ->
+                map(venue)?.let {
+                    view?.let { view ->
+                        val action =
+                            VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(it)
+                        Navigation.findNavController(view).navigate(action)
+                    }
+                }
+            }
+        }
+
+        createTextChangeObservable().observeOn(AndroidSchedulers.mainThread())
+            .doOnNext {
+                showProgress()
+            }
+            .subscribe {
+                presenter.getVenues(it)
+            }
+    }
+
+    override fun destroy() {
+        (presenter as VenuesListPresenterImpl).detachView()
+    }
 
     override fun displayVenues(results: List<Venues>) {
         (list.adapter as VenuesListAdapter).updateData(results)
     }
-
-    @Inject
-    lateinit var useCases: VenuesUseCase
-
-    lateinit var presenter: VenuesListPresenterImpl
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,34 +81,6 @@ class VenuesListFragment : Fragment(), VenuesMapper, VenuesListView {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (activity?.application as App).homeAwayComponents.inject(this)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        presenter = VenuesListPresenterImpl(useCases)
-        presenter.atachView(this)
-
-        fab.setOnClickListener { view ->
-        }
-
-        list.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = VenuesListAdapter()
-            (adapter as VenuesListAdapter).detailsOnClickListener = { venue ->
-                map(venue)?.let {
-                    val action =
-                        VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(it)
-                    Navigation.findNavController(view).navigate(action)
-                }
-            }
-        }
-
-        createTextChangeObservable().observeOn(AndroidSchedulers.mainThread())
-            .doOnNext {
-                showProgress()
-            }
-            .subscribe {
-                presenter.getVenues(it)
-            }
     }
 
     override fun showProgress() {

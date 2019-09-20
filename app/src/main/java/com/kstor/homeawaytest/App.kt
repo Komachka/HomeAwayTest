@@ -6,7 +6,6 @@ import com.kstor.homeawaytest.data.di.RepositoryModule
 import com.kstor.homeawaytest.data.di.SharedPrefModule
 import com.kstor.homeawaytest.view.AppModule
 
-
 class App : Application() {
 
     lateinit var homeAwayComponents: AppComponent

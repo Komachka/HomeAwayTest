@@ -6,9 +6,7 @@ import com.kstor.homeawaytest.data.di.SharedPrefModule
 import com.kstor.homeawaytest.view.AppModule
 import com.kstor.homeawaytest.view.detailscreen.DetailFragment
 import com.kstor.homeawaytest.view.mainscreen.VenuesListFragment
-import dagger.Binds
 import dagger.Component
-import dagger.Provides
 import javax.inject.Singleton
 
 @Singleton

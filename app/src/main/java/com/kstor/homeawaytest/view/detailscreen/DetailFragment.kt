@@ -5,19 +5,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
+import com.kstor.homeawaytest.view.BaseFragment
 import com.kstor.homeawaytest.view.ImageLoader
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.detail_fragment.*
 
-class DetailFragment : Fragment(), ImageLoader, DetailsView {
+class DetailFragment : BaseFragment(), ImageLoader, DetailsView {
 
     lateinit var presenter: DetailsPresenterImpl
-    @Inject lateinit var useCase: GenerateStaticMapUrlUseCase
+    @Inject
+    lateinit var useCase: GenerateStaticMapUrlUseCase
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,9 +34,9 @@ class DetailFragment : Fragment(), ImageLoader, DetailsView {
         (activity?.application as App).homeAwayComponents.inject(this)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        presenter = DetailsPresenterImpl(useCase)
-        presenter.atachView(this)
+    override fun setUp() {
+        presenter = DetailsPresenterImpl(useCase, Schedulers.io(), AndroidSchedulers.mainThread())
+        presenter.attachView(this)
         arguments?.let { bundle ->
             val venues = DetailFragmentArgs.fromBundle(bundle).venues
             presenter.createStaticMapUrl(venues)
@@ -53,8 +55,12 @@ class DetailFragment : Fragment(), ImageLoader, DetailsView {
                 }
             }
             venuesDistanceFromCenterTextView.text = "${venues.distance} m"
-            fabFavorite.setIfFavorite(venues.isFavorite)
+            presenter.setFavorite(venues)
         }
+    }
+
+    override fun destroy() {
+        presenter.detachView()
     }
 
     override fun loadMap(url: String?) {
@@ -62,10 +68,8 @@ class DetailFragment : Fragment(), ImageLoader, DetailsView {
             mapIv.loadImage(path)
         }
     }
-    private fun FloatingActionButton.setIfFavorite(isFavorite: Boolean) {
-        if (isFavorite)
-            setImageResource(R.drawable.ic_favorite_black_24dp)
-        else
-            setImageResource(R.drawable.ic_favorite_border_black_24dp)
+
+    override fun setIfFavorite(resFavorites: Int) {
+        fabFavorite.setImageResource(resFavorites)
     }
 }
