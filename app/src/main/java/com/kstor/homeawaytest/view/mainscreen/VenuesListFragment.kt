@@ -33,11 +33,11 @@ class VenuesListFragment : Fragment(), VenuesMapper, VenuesListView {
 
     private lateinit var preferencesManager: SharedPreferenceData
 
-    @Inject
-    lateinit var repo: VenuesRepository
+    /*@Inject
+    lateinit var repo: VenuesRepository*/
 
     @Inject
-    lateinit var presenter: VenuesListPresenter
+    lateinit var presenter: VenuesListPresenterImpl
 
     override fun onCreateView(
         inflater: LayoutInflater,

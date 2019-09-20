@@ -6,6 +6,7 @@ import com.kstor.homeawaytest.view.detailscreen.DetailsPresenter
 import com.kstor.homeawaytest.view.detailscreen.DetailsPresenterImpl
 import com.kstor.homeawaytest.view.mainscreen.VenuesListPresenter
 import com.kstor.homeawaytest.view.mainscreen.VenuesListPresenterImpl
+import com.kstor.homeawaytest.view.mainscreen.VenuesListView
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -19,6 +20,6 @@ class PresentersModule {
 
     @Provides
     @Singleton
-    fun provideVenuesListPresenter(useCase: VenuesUseCase): VenuesListPresenter =
-        VenuesListPresenterImpl(useCase)
+    fun provideVenuesListPresenter(useCase: VenuesUseCase, view: VenuesListView): VenuesListPresenterImpl =
+        VenuesListPresenterImpl(useCase, view)
 }
