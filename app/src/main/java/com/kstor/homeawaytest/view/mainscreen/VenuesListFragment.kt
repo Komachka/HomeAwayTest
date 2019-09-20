@@ -17,6 +17,7 @@ import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.*
 import com.kstor.homeawaytest.data.sp.SharedPreferenceData
 import com.kstor.homeawaytest.domain.VenuesRepository
+import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.VenuesMapper
 import io.reactivex.Observable
@@ -31,12 +32,9 @@ class VenuesListFragment : Fragment(), VenuesMapper, VenuesListView {
         (list.adapter as VenuesListAdapter).updateData(results)
     }
 
-    private lateinit var preferencesManager: SharedPreferenceData
-
-    /*@Inject
-    lateinit var repo: VenuesRepository*/
-
     @Inject
+    lateinit var useCases: VenuesUseCase
+
     lateinit var presenter: VenuesListPresenterImpl
 
     override fun onCreateView(
@@ -53,10 +51,8 @@ class VenuesListFragment : Fragment(), VenuesMapper, VenuesListView {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        presenter.setView(this)
-        context?.let {
-            preferencesManager = SharedPreferenceData(it.applicationContext)
-        }
+        presenter = VenuesListPresenterImpl(useCases)
+        presenter.atachView(this)
 
         fab.setOnClickListener { view ->
         }

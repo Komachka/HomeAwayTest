@@ -9,13 +9,15 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
+import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
 import com.kstor.homeawaytest.view.ImageLoader
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.detail_fragment.*
 
 class DetailFragment : Fragment(), ImageLoader, DetailsView {
 
-    @Inject lateinit var presenter: DetailsPresenter
+    lateinit var presenter: DetailsPresenterImpl
+    @Inject lateinit var useCase: GenerateStaticMapUrlUseCase
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,7 +33,8 @@ class DetailFragment : Fragment(), ImageLoader, DetailsView {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        presenter.setView(this)
+        presenter = DetailsPresenterImpl(useCase)
+        presenter.atachView(this)
         arguments?.let { bundle ->
             val venues = DetailFragmentArgs.fromBundle(bundle).venues
             presenter.createStaticMapUrl(venues)

@@ -2,6 +2,7 @@ package com.kstor.homeawaytest.view.di
 
 import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
 import com.kstor.homeawaytest.domain.VenuesUseCase
+import com.kstor.homeawaytest.view.BasePresentor
 import com.kstor.homeawaytest.view.detailscreen.DetailsPresenter
 import com.kstor.homeawaytest.view.detailscreen.DetailsPresenterImpl
 import com.kstor.homeawaytest.view.mainscreen.VenuesListPresenter
@@ -11,7 +12,7 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-@Module
+/*@Module
 class PresentersModule {
     @Provides
     @Singleton
@@ -20,6 +21,7 @@ class PresentersModule {
 
     @Provides
     @Singleton
-    fun provideVenuesListPresenter(useCase: VenuesUseCase, view: VenuesListView): VenuesListPresenterImpl =
-        VenuesListPresenterImpl(useCase, view)
-}
+    fun provideVenuesListPresenter(useCase: VenuesUseCase) =
+        VenuesListPresenterImpl(useCase)
+
+}*/
