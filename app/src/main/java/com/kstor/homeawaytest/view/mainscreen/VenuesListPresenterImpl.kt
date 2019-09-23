@@ -1,9 +1,10 @@
 package com.kstor.homeawaytest.view.mainscreen
 
-import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.view.BasePresentor
+import com.kstor.homeawaytest.view.BaseView
 import io.reactivex.Scheduler
+import io.reactivex.rxkotlin.subscribeBy
 
 class VenuesListPresenterImpl(
     private val useCase: VenuesUseCase,
@@ -17,13 +18,16 @@ class VenuesListPresenterImpl(
             .map {
                 it.venues
             }
-            .doOnError {
-                log(it.toString())
-            }
             .observeOn(mainScheduler)
-            .subscribe {
-                (view as VenuesListView).hideProgress()
-                (view as VenuesListView).displayVenues(it)
-            }
+            .subscribeBy(
+                onNext = {
+                    view?.hideProgress()
+                    view?.displayVenues(it)
+                }, onError = {
+                    (view as BaseView).showError(it)
+                }, onComplete = {
+                    println("Complete")
+                }
+            )
     }
 }

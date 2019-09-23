@@ -6,13 +6,13 @@ import com.kstor.homeawaytest.data.network.model.NetworkVenue
 import com.kstor.homeawaytest.data.network.model.NetworkVenuesModel
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.domain.model.VenuesCategory
-import com.kstor.homeawaytest.domain.model.VenusData
+import com.kstor.homeawaytest.domain.model.VenuesData
 import kotlin.math.*
 
-fun NetworkVenuesModel.mapToVenuesData(): VenusData {
+fun NetworkVenuesModel.mapToVenuesData(): VenuesData {
     val centerLat = response?.geocode?.feature?.geometry?.center?.lat ?: CENTER_LAT
     val centerLng = response?.geocode?.feature?.geometry?.center?.lng ?: CENTER_LNG
-    return VenusData(
+    return VenuesData(
         createListOfCategories(
             this.response?.venues,
             centerLat,
