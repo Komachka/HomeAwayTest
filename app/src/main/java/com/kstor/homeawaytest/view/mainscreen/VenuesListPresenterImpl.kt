@@ -4,8 +4,6 @@ import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.view.BasePresentor
 import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
 class VenuesListPresenterImpl(
     private val useCase: VenuesUseCase,
