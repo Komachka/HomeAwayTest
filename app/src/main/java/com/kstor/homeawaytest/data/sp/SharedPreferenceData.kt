@@ -3,8 +3,9 @@ package com.kstor.homeawaytest.data.sp
 import android.content.Context
 import android.content.SharedPreferences
 import com.kstor.homeawaytest.data.*
+import javax.inject.Inject
 
-class SharedPreferenceData(val context: Context) {
+class SharedPreferenceData @Inject constructor (val context: Context) {
     private val preference: SharedPreferences = context.applicationContext.getSharedPreferences(
         PERSISTENT_STORAGE_NAME,
         Context.MODE_PRIVATE

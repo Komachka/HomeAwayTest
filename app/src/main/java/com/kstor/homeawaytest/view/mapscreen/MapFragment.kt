@@ -1,6 +1,6 @@
 package com.kstor.homeawaytest.view.mapscreen
 
-import androidx.lifecycle.ViewModelProviders
+
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,9 +15,18 @@ import com.google.android.gms.maps.model.MarkerOptions
 
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.log
+import com.kstor.homeawaytest.view.BaseFragment
 
 
-class MapFragment : Fragment(), OnMapReadyCallback {
+class MapFragment : BaseFragment(), OnMapReadyCallback {
+    override fun setUp() {
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+    }
+
+    override fun destroy() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun onMapReady(googleMap: GoogleMap?) {
         val sydney = LatLng(-34.0, 151.0)
@@ -31,9 +40,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         googleMap?.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 
-    companion object {
-        fun newInstance() = MapFragment()
-    }
+
 
 
 
@@ -44,15 +51,5 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         return inflater.inflate(R.layout.fragment_map, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
 
-
-    }
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
-    }
 }
