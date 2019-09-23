@@ -51,6 +51,7 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:2.1.0"
     implementation "com.squareup.picasso:picasso:2.71828"
     ktlint "com.pinterest:ktlint:0.34.2"
+    implementation 'com.google.android.gms:play-services-maps:16.1.0'
 }
 
 task ktlint(type: JavaExec, group: "verification") {
