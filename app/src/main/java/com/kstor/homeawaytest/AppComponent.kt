@@ -6,6 +6,7 @@ import com.kstor.homeawaytest.data.di.SharedPrefModule
 import com.kstor.homeawaytest.view.AppModule
 import com.kstor.homeawaytest.view.detailscreen.DetailFragment
 import com.kstor.homeawaytest.view.mainscreen.VenuesListFragment
+import com.kstor.homeawaytest.view.mapscreen.MapFragment
 import dagger.Component
 import javax.inject.Singleton
 
@@ -19,4 +20,5 @@ interface AppComponent {
     fun inject(target: MainActivity)
     fun inject(target: VenuesListFragment)
     fun inject(target: DetailFragment)
+    fun inject(mapFragment: MapFragment)
 }
