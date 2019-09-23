@@ -20,6 +20,7 @@ import com.kstor.homeawaytest.view.BaseFragment
 import com.kstor.homeawaytest.view.VenuesMapper
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -32,7 +33,8 @@ class VenuesListFragment : BaseFragment(), VenuesMapper, VenuesListView {
     lateinit var presenter: VenuesListPresenter
 
     override fun setUp() {
-        presenter = VenuesListPresenterImpl(useCases, Schedulers.io(), AndroidSchedulers.mainThread())
+        presenter =
+            VenuesListPresenterImpl(useCases, Schedulers.io(), AndroidSchedulers.mainThread())
         (presenter as VenuesListPresenterImpl).attachView(this)
 
         fab.setOnClickListener { view ->
@@ -56,62 +58,66 @@ class VenuesListFragment : BaseFragment(), VenuesMapper, VenuesListView {
             .doOnNext {
                 showProgress()
             }
-            .subscribe {
-                presenter.getVenues(it)
-            }
-    }
+            .subscribeBy(
+                onError = {
+                    showError(it)
+                },
+                onNext = {
+                    presenter.getVenues(it)
+                })
+}
 
-    override fun destroy() {
-        (presenter as VenuesListPresenterImpl).detachView()
-    }
+override fun destroy() {
+    (presenter as VenuesListPresenterImpl).detachView()
+}
 
-    override fun displayVenues(results: List<Venues>) {
-        (list.adapter as VenuesListAdapter).updateData(results)
-    }
+override fun displayVenues(results: List<Venues>) {
+    (list.adapter as VenuesListAdapter).updateData(results)
+}
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.venues_list_fragment, container, false)
-    }
+override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+): View? {
+    return inflater.inflate(R.layout.venues_list_fragment, container, false)
+}
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (activity?.application as App).homeAwayComponents.inject(this)
-    }
+override fun onAttach(context: Context) {
+    super.onAttach(context)
+    (activity?.application as App).homeAwayComponents.inject(this)
+}
 
-    override fun showProgress() {
-        progressBar.visibility = VISIBLE
-    }
+override fun showProgress() {
+    progressBar.visibility = VISIBLE
+}
 
-    override fun hideProgress() {
-        progressBar.visibility = GONE
-    }
+override fun hideProgress() {
+    progressBar.visibility = GONE
+}
 
-    private fun createTextChangeObservable(): Observable<String> {
-        val textChangeObservable = Observable.create<String> { emitter ->
+private fun createTextChangeObservable(): Observable<String> {
+    val textChangeObservable = Observable.create<String> { emitter ->
 
-            val textWatcher = object : TextWatcher {
-                override fun afterTextChanged(s: Editable?) = Unit
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) = Unit
+        val textWatcher = object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) = Unit
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) = Unit
 
-                override fun onTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                    s?.toString()?.let { emitter.onNext(it) }
-                }
-            }
-            queryEditText.addTextChangedListener(textWatcher)
-            emitter.setCancellable {
-                queryEditText?.removeTextChangedListener(textWatcher)
+            override fun onTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                s?.toString()?.let { emitter.onNext(it) }
             }
         }
-        return textChangeObservable.filter { it.length >= MIN_INPUT_LENGTH }
-            .debounce(LOADING_TIMEOUT, TimeUnit.MILLISECONDS)
+        queryEditText.addTextChangedListener(textWatcher)
+        emitter.setCancellable {
+            queryEditText?.removeTextChangedListener(textWatcher)
+        }
     }
+    return textChangeObservable.filter { it.length >= MIN_INPUT_LENGTH }
+        .debounce(LOADING_TIMEOUT, TimeUnit.MILLISECONDS)
+}
 }
