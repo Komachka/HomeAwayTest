@@ -19,7 +19,7 @@ import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class VenuesListPresentorTest {
+class VenuesListPresenterTest {
 
     companion object {
         const val TEST_QUERY = ""
@@ -58,7 +58,7 @@ class VenuesListPresentorTest {
 
     private fun createPresenterWithoutView(): VenuesListPresenterImpl {
         val data = VenuesData(venuesList, 0.0, 0.0)
-        val goodResult = Observable.just(data)
+        val goodResult = Observable.just(data).firstOrError()
         `when`(useCaseResultWithData.loadVenuesData(TEST_QUERY)).thenReturn(goodResult)
         presenterNoView = VenuesListPresenterImpl(useCaseResultWithData, ioScheduler, mainScheduler)
         return presenter
@@ -66,7 +66,7 @@ class VenuesListPresentorTest {
 
     private fun createBaseTestPresenter(): VenuesListPresenterImpl {
         val data = VenuesData(venuesList, 0.0, 0.0)
-        val goodResult = Observable.just(data)
+        val goodResult = Observable.just(data).firstOrError()
         `when`(useCaseResultWithData.loadVenuesData(TEST_QUERY)).thenReturn(goodResult)
         presenter = VenuesListPresenterImpl(useCaseResultWithData, ioScheduler, mainScheduler)
         presenter.attachView(view)
@@ -74,7 +74,7 @@ class VenuesListPresentorTest {
     }
 
     private fun createPresenterWithError(): VenuesListPresenterImpl {
-        val badResult = Observable.error<VenuesData>(error)
+        val badResult = Observable.error<VenuesData>(error).firstOrError()
         `when`(useCaseResultWithError.loadVenuesData(TEST_QUERY)).thenReturn(badResult)
         presenterWithError =
             VenuesListPresenterImpl(useCaseResultWithError, ioScheduler, mainScheduler)

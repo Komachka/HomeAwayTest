@@ -14,7 +14,7 @@ class VenuesListPresenterImpl(
     VenuesListPresenter, BasePresentor<VenuesListView>() {
 
     override fun getVenues(query: String) {
-        useCase.loadVenuesData(query).subscribeOn(iOScheduler)
+        useCase.loadVenuesData(query).toObservable().subscribeOn(iOScheduler)
             .map {
                 it.venues
             }
