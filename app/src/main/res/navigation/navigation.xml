@@ -30,5 +30,9 @@
         android:id="@+id/mapFragment"
         android:name="com.kstor.homeawaytest.view.mapscreen.MapFragment"
         android:label="fragment_map"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map" >
+        <argument
+            android:name="query"
+            app:argType="string" />
+    </fragment>
 </navigation>

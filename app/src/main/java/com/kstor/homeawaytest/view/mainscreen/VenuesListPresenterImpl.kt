@@ -17,6 +17,9 @@ class VenuesListPresenterImpl(
     private val mainScheduler: Scheduler
 ) :
     VenuesListPresenter, BasePresentor<VenuesListView>() {
+
+    private var query = ""
+
     override fun navigateToDetailsScreen(view: View, venuesParcelize: VenuesParcelize) {
         val action =
             VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(venuesParcelize)
@@ -24,10 +27,11 @@ class VenuesListPresenterImpl(
     }
 
     override fun navigateToMapScreen(view: View) {
-        Navigation.findNavController(view).navigate(VenuesListFragmentDirections.actionVenuesListFragmentToMapFragment())
+        Navigation.findNavController(view).navigate(VenuesListFragmentDirections.actionVenuesListFragmentToMapFragment(query))
     }
 
     override fun getVenues(query: String) {
+        this.query = query
         useCase.loadVenuesData(query).subscribeOn(iOScheduler)
             .map {
                 it.venues

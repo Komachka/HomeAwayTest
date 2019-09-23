@@ -3,7 +3,6 @@ package com.kstor.homeawaytest.view.mapscreen
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +20,6 @@ import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.domain.model.VenusData
 import com.kstor.homeawaytest.view.BaseFragment
-import com.kstor.homeawaytest.view.BasePresentor
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -70,13 +68,16 @@ class MapFragment : BaseFragment(), OnMapReadyCallback, MapView {
     override fun setUp() {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-        mapPresentor = MapPresentorImpl(useCases, Schedulers.io(), AndroidSchedulers.mainThread())
-        (mapPresentor as MapPresentorImpl).attachView(this)
-        mapPresentor.getVenues("coffe") // late we will take it from database
+        mapPresentor = MapPresenterImpl(useCases, Schedulers.io(), AndroidSchedulers.mainThread())
+        (mapPresentor as MapPresenterImpl).attachView(this)
+        arguments?.let {
+            mapPresentor.getVenues(MapFragmentArgs.fromBundle(it).query)
+        }
+
     }
 
     override fun destroy() {
-        (mapPresentor as MapPresentorImpl).detachView()
+        (mapPresentor as MapPresenterImpl).detachView()
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {

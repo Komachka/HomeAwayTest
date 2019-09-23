@@ -8,7 +8,7 @@ import com.kstor.homeawaytest.view.BasePresentor
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.subscribeBy
 
-class MapPresentorImpl(private val venuesListUseCase: VenuesUseCase,
+class MapPresenterImpl(private val venuesListUseCase: VenuesUseCase,
                        private val iOScheduler: Scheduler,
                        private val mainScheduler: Scheduler
 ) : MapPresenter, BasePresentor<MapView>() {
