@@ -1,22 +1,20 @@
 package com.kstor.homeawaytest
 
-import com.kstor.homeawaytest.data.network.RemoteData
-import com.kstor.homeawaytest.data.network.VenuesService
-import io.reactivex.Observable
-import org.junit.Assert
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import com.kstor.homeawaytest.data.CLIENT_ID
 import com.kstor.homeawaytest.data.CLIENT_SECRET
 import com.kstor.homeawaytest.data.NEAR
 import com.kstor.homeawaytest.data.V
+import com.kstor.homeawaytest.data.network.RemoteData
+import com.kstor.homeawaytest.data.network.VenuesService
 import com.kstor.homeawaytest.data.network.model.*
+import io.reactivex.Observable
 import org.junit.Before
-
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.Mockito.`when`
+import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
 class RemoteDataTest {
@@ -39,15 +37,13 @@ class RemoteDataTest {
             ERROR_QUERY, V, LIMIT
         )
     }
-    private lateinit var error:Throwable
+    private lateinit var error: Throwable
 
     @InjectMocks
     lateinit var remoteData: RemoteData
 
-
     @Before
-    fun setup()
-    {
+    fun setup() {
         error = Throwable("Some Error occurred")
         mockGetVenuesNetworkData()
         mockGetVenuesErrorData()
@@ -174,42 +170,37 @@ class RemoteDataTest {
         )
     }
 
-
     @Test
-    fun remote_data_return_error()
-    {
-        val testObserver = remoteData.closedVenues(Companion.LIMIT, Companion.ERROR_QUERY).test()
+    fun remote_data_return_error() {
+        val testObserver = remoteData.closedVenues(LIMIT, ERROR_QUERY).test()
         testObserver.awaitTerminalEvent()
         testObserver.assertError {
             it == error
         }
     }
 
-
     @Test
     fun remote_data_is_not_null_and_without_errors() {
-        val testObserver = remoteData.closedVenues(Companion.LIMIT, Companion.QUERY).test()
+        val testObserver = remoteData.closedVenues(LIMIT, QUERY).test()
         testObserver.awaitTerminalEvent()
         testObserver.assertNoErrors()
             .assertValue {
-                model->
+                model ->
                 model.response != null
             }
     }
 
     @Test
-    fun remote_data_responce_has_venues_list()
-    {
+    fun remote_data_responce_has_venues_list() {
         val testObserver = remoteData.closedVenues(Companion.LIMIT, Companion.QUERY).test()
         testObserver.awaitTerminalEvent()
         testObserver
             .assertValue {
-                    model->
+                    model ->
                 val list = model.response?.venues
                 list != null && list.isNotEmpty()
             }
     }
-
 
     @Test
     fun remote_data_responce_has_venues_list_with_correct_data() {

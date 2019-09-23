@@ -55,7 +55,7 @@ data class Icon(
     var suffix: String? = null
 )
 
-data class Geocode (
+data class Geocode(
     var what: String? = null,
     var where: String? = null,
     var feature: Feature? = null,
@@ -85,7 +85,7 @@ data class Coordinate(
     var lng: Double? = null
 )
 
-data class Bounds (
+data class Bounds(
     var ne: Coordinate? = null,
     var sw: Coordinate? = null
 )

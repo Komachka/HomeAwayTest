@@ -4,10 +4,9 @@ import com.kstor.homeawaytest.data.network.RemoteData
 import com.kstor.homeawaytest.data.network.model.*
 import com.kstor.homeawaytest.data.repos.VenuesRepositoryImp
 import com.kstor.homeawaytest.data.sp.SharedPreferenceData
-import com.kstor.homeawaytest.domain.VenuesRepository
 import com.kstor.homeawaytest.domain.model.Venues
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.Observables
+import java.util.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -16,7 +15,6 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.lenient
 import org.mockito.junit.MockitoJUnitRunner
-import java.util.*
 
 @RunWith(MockitoJUnitRunner::class)
 class VenuesRepositoryTest {
@@ -36,7 +34,6 @@ class VenuesRepositoryTest {
     @Before
     fun setup() {
         repo = createRepoWithData()
-
     }
 
     private fun createRepoWithData(): VenuesRepositoryImp {
@@ -155,8 +152,7 @@ class VenuesRepositoryTest {
     }
 
     @Test
-    fun repository_return_valid_data()
-    {
+    fun repository_return_valid_data() {
         repo.getClosestVenuses(LIMIT, QUERY).test()
             .assertNoErrors()
             .assertValue {
@@ -167,8 +163,5 @@ class VenuesRepositoryTest {
                     .toList()
                     .blockingGet() == listOf("Storyville Coffee Company", "Anchorhead Coffee Co")
             }
-
     }
-
-
 }

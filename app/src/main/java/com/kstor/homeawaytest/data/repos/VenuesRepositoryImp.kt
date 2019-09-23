@@ -5,7 +5,6 @@ import com.kstor.homeawaytest.data.network.RemoteData
 import com.kstor.homeawaytest.data.sp.SharedPreferenceData
 import com.kstor.homeawaytest.domain.VenuesRepository
 import com.kstor.homeawaytest.domain.model.VenuesData
-import io.reactivex.Observable
 import io.reactivex.Single
 
 class VenuesRepositoryImp(
