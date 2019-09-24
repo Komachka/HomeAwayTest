@@ -26,7 +26,6 @@ class VenuesUseCaseTest {
         private const val ERROR = "error"
         private const val lat = 47.60621
         private const val lng = -122.33207
-
     }
 
     @Mock
@@ -84,14 +83,12 @@ class VenuesUseCaseTest {
                         -122.33469499761385
                     )
 
-                )
-            ,
+                ),
                 lat, lng)).firstOrError()
     }
 
     @Test
-    fun on_load_venues_data_get_valid_venues_data()
-    {
+    fun on_load_venues_data_get_valid_venues_data() {
         useCase.loadVenuesData(QUERY).test()
             .assertNoErrors()
             .assertValue {
@@ -102,8 +99,7 @@ class VenuesUseCaseTest {
     }
 
     @Test
-    fun on_load_venues_data_get_error()
-    {
+    fun on_load_venues_data_get_error() {
         useCase.loadVenuesData(ERROR).test()
             .assertError {
                 it == error

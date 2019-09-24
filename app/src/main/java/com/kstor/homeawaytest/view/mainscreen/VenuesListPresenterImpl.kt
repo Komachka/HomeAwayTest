@@ -2,7 +2,6 @@ package com.kstor.homeawaytest.view.mainscreen
 
 import android.view.View
 import androidx.navigation.Navigation
-
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.domain.model.VenuesParcelize
@@ -11,7 +10,6 @@ import com.kstor.homeawaytest.view.BaseView
 import com.kstor.homeawaytest.view.VenuesMapper
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.rxkotlin.subscribeBy
-
 
 class VenuesListPresenterImpl(
     private val useCase: VenuesUseCase,

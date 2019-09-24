@@ -18,8 +18,6 @@ import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.domain.model.VenuesData
 import com.kstor.homeawaytest.view.BaseFragment
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class MapFragment : BaseFragment(), OnMapReadyCallback, MapView {
@@ -28,7 +26,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback, MapView {
     lateinit var mapPresenter: MapPresenter
 
     @Inject
-    lateinit var schedulerProvider:SchedulerProvider
+    lateinit var schedulerProvider: SchedulerProvider
 
     @Inject
     lateinit var useCases: VenuesUseCase

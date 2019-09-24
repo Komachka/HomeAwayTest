@@ -10,10 +10,8 @@ import com.kstor.homeawaytest.view.BaseView
 import com.kstor.homeawaytest.view.RxPresentor
 import com.kstor.homeawaytest.view.VenuesMapper
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
-
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
-
 
 class MapPresenterImpl(
     private val venuesListUseCase: VenuesUseCase,
@@ -39,7 +37,7 @@ class MapPresenterImpl(
                 view?.showCenterOnTheMap(it)
             }
             .map { it.venues }
-            .subscribeBy (
+            .subscribeBy(
                 onError = {
                     (view as BaseView).showError(it)
                 },
@@ -64,5 +62,4 @@ class MapPresenterImpl(
     override fun onDispoce() {
         compositeDisposable.clear()
     }
-
 }

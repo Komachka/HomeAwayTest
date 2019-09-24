@@ -1,6 +1,5 @@
 package com.kstor.homeawaytest.view.mainscreen
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -48,7 +47,6 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
             (adapter as VenuesListAdapter).detailsOnClickListener = { venue ->
                 view?.let {
                     presenter.navigateToDetailScreen(it, venue)
-
                 }
             }
         }
@@ -100,11 +98,9 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
         fab.visibility = VISIBLE
     }
 
-
     override fun hideMupButn() {
         fab.visibility = INVISIBLE
     }
-
 
     private fun createTextChangeObservable(): Observable<String> {
         val textChangeObservable = Observable.create<String> { emitter ->
@@ -130,5 +126,4 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
         return textChangeObservable.filter { it.length >= MIN_INPUT_LENGTH }
             .debounce(LOADING_TIMEOUT, TimeUnit.MILLISECONDS)
     }
-
 }

@@ -37,7 +37,7 @@ class MapPresenterTest {
 
     private lateinit var schedulerProvider: SchedulerProvider
 
-    private lateinit var venuesData:VenuesData
+    private lateinit var venuesData: VenuesData
     private lateinit var venuesList: List<Venues>
     private lateinit var venuesMap: Map<LatLng, Venues>
     private lateinit var error: Throwable
@@ -55,8 +55,8 @@ class MapPresenterTest {
         )
         venuesData = VenuesData(venuesList, 0.0, 0.0)
         venuesMap = mapOf(
-            LatLng(venuesList.first().lat!!,venuesList.first().lng!!) to venuesList.first(),
-            LatLng(venuesList.last().lat!!,venuesList.last().lng!!) to venuesList.last()
+            LatLng(venuesList.first().lat!!, venuesList.first().lng!!) to venuesList.first(),
+            LatLng(venuesList.last().lat!!, venuesList.last().lng!!) to venuesList.last()
         )
         error = Throwable("Something wrong")
         schedulerProvider = TestSchedulerProvider(Schedulers.trampoline())
