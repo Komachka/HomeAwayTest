@@ -15,6 +15,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
@@ -86,6 +87,8 @@ class VenuesListPresenterTest {
         presenter.getVenues(TEST_QUERY)
         verify(view).hideProgress()
         verify(view).displayVenues(venuesList)
+        verify(view).showMupButn()
+        Mockito.verifyZeroInteractions(view)
     }
 
     @Test
@@ -93,11 +96,13 @@ class VenuesListPresenterTest {
         presenterNoView.detachView()
         presenterNoView.getVenues(TEST_QUERY)
         verify(view, never()).displayVenues(venuesList)
+        Mockito.verifyZeroInteractions(view)
     }
 
     @Test
     fun show_error_if_use_case_return_error() {
         presenterWithError.getVenues(TEST_QUERY)
         verify(view).showError(error)
+        Mockito.verifyZeroInteractions(view)
     }
 }
