@@ -51,6 +51,7 @@ dependencies {
     implementation 'com.google.dagger:dagger:2.24'
     kapt 'com.google.dagger:dagger-compiler:2.11'
     testImplementation 'com.nhaarman:mockito-kotlin-kt1.1:1.5.0'
+    testImplementation "org.mockito:mockito-inline:+"
 }
 
 task ktlint(type: JavaExec, group: "verification") {

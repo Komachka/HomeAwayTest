@@ -1,31 +1,57 @@
 package com.kstor.homeawaytest.view.mainscreen
 
-import com.kstor.homeawaytest.data.log
+import android.view.View
+import androidx.navigation.Navigation
 import com.kstor.homeawaytest.domain.VenuesUseCase
+import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.BasePresentor
-import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.kstor.homeawaytest.view.BaseView
+import com.kstor.homeawaytest.view.VenuesMapper
+import com.kstor.homeawaytest.view.utils.SchedulerProvider
+import io.reactivex.rxkotlin.subscribeBy
 
 class VenuesListPresenterImpl(
     private val useCase: VenuesUseCase,
-    private val iOScheduler: Scheduler,
-    private val mainScheduler: Scheduler
+    private val schedulerProvider: SchedulerProvider
 ) :
-    VenuesListPresenter, BasePresentor<VenuesListView>() {
+    VenuesListPresenter, BasePresentor<VenuesListView>(), VenuesMapper {
+
+    override fun hideMupButton() {
+        view?.hideMupButn()
+    }
+
+    override fun showError(throwable: Throwable) {
+        view?.showError(throwable)
+    }
+
+    override fun showProgress() {
+        view?.showProgress()
+    }
 
     override fun getVenues(query: String) {
-        useCase.loadVenuesData(query).subscribeOn(iOScheduler)
+        useCase.loadVenuesData(query).toObservable().subscribeOn(schedulerProvider.io())
             .map {
                 it.venues
             }
-            .doOnError {
-                log(it.toString())
-            }
-            .observeOn(mainScheduler)
-            .subscribe {
-                (view as VenuesListView).hideProgress()
-                (view as VenuesListView).displayVenues(it)
-            }
+            .observeOn(schedulerProvider.ui())
+            .subscribeBy(
+                onNext = {
+                    view?.hideProgress()
+                    view?.displayVenues(it)
+                    view?.showMupButn()
+                }, onError = {
+                    (view as BaseView).showError(it)
+                }, onComplete = {
+                    println("Complete")
+                }
+            )
+    }
+
+    override fun navigateToDetailScreen(view: View, venue: Venues) {
+        map(venue)?.let {
+            val action =
+                VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(it)
+            Navigation.findNavController(view).navigate(action)
+        }
     }
 }

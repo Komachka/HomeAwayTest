@@ -1,6 +1,6 @@
 package com.kstor.homeawaytest.domain.model
 
-data class VenusData(
+data class VenuesData(
     val venues: List<Venues>,
     val citCenterlat: Double,
     val citCenterlng: Double

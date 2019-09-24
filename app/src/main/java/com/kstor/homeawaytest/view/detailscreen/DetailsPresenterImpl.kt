@@ -4,12 +4,11 @@ import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
 import com.kstor.homeawaytest.domain.model.VenuesParcelize
 import com.kstor.homeawaytest.view.BasePresentor
-import io.reactivex.Scheduler
+import com.kstor.homeawaytest.view.utils.SchedulerProvider
 
 class DetailsPresenterImpl(
     private val useCase: GenerateStaticMapUrlUseCase,
-    private val iOScheduler: Scheduler,
-    private val mainScheduler:Scheduler
+    private val schedulerProvider: SchedulerProvider
 
 ) : DetailsPresenter, BasePresentor<DetailsView>() {
 
@@ -20,8 +19,8 @@ class DetailsPresenterImpl(
 
     override fun createStaticMapUrl(venues: VenuesParcelize) {
         useCase.createStaticMapUrl(venues)
-            .subscribeOn(iOScheduler)
-            .observeOn(mainScheduler)
+            .subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.ui())
             .subscribe {
                 (view as DetailsView).loadMap(it)
             }
