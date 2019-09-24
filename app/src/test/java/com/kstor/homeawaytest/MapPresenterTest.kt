@@ -98,7 +98,7 @@ class MapPresenterTest {
     }
 
     @Test
-    fun does_not_show_venues_list_if_view_is_not_attached_to_presenter() {
+    fun does_not_show_venues_on_map_if_view_is_not_attached_to_presenter() {
         presenterNoView.detachView()
         presenterNoView.getVenues(TEST_QUERY)
         verify(view, never()).showVenuesOnTheMap(venuesMap)
