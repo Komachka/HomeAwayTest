@@ -1,10 +1,11 @@
 package com.kstor.homeawaytest
 
+import com.google.android.gms.maps.model.LatLng
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.domain.model.VenuesData
-import com.kstor.homeawaytest.view.mainscreen.VenuesListPresenterImpl
-import com.kstor.homeawaytest.view.mainscreen.VenuesListView
+import com.kstor.homeawaytest.view.mapscreen.MapPresenterImpl
+import com.kstor.homeawaytest.view.mapscreen.MapView
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import com.kstor.homeawaytest.view.utils.TestSchedulerProvider
 import com.nhaarman.mockito_kotlin.never
@@ -21,7 +22,7 @@ import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class VenuesListPresenterTest {
+class MapPresenterTest {
 
     companion object {
         const val TEST_QUERY = ""
@@ -32,22 +33,30 @@ class VenuesListPresenterTest {
     @Mock
     lateinit var useCaseResultWithError: VenuesUseCase
     @Mock
-    private lateinit var view: VenuesListView
+    private lateinit var view: MapView
 
     private lateinit var schedulerProvider: SchedulerProvider
 
+    private lateinit var venuesData:VenuesData
     private lateinit var venuesList: List<Venues>
+    private lateinit var venuesMap: Map<LatLng, Venues>
     private lateinit var error: Throwable
 
-    private lateinit var presenter: VenuesListPresenterImpl
-    private lateinit var presenterNoView: VenuesListPresenterImpl
-    private lateinit var presenterWithError: VenuesListPresenterImpl
+    private lateinit var presenter: MapPresenterImpl
+    private lateinit var presenterNoView: MapPresenterImpl
+    private lateinit var presenterWithError: MapPresenterImpl
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
         venuesList = listOf(
-            Venues("1", "Name", null, "Adress", 0, 0.0, 0.0)
+            Venues("1", "Name1", null, "Adress1", 10, 1.0, 2.0),
+            Venues("2", "Name2", null, "Adress2", 20, 2.0, 3.0)
+        )
+        venuesData = VenuesData(venuesList, 0.0, 0.0)
+        venuesMap = mapOf(
+            LatLng(venuesList.first().lat!!,venuesList.first().lng!!) to venuesList.first(),
+            LatLng(venuesList.last().lat!!,venuesList.last().lng!!) to venuesList.last()
         )
         error = Throwable("Something wrong")
         schedulerProvider = TestSchedulerProvider(Schedulers.trampoline())
@@ -56,38 +65,35 @@ class VenuesListPresenterTest {
         presenterWithError = createPresenterWithError()
     }
 
-    private fun createPresenterWithoutView(): VenuesListPresenterImpl {
-        val data = VenuesData(venuesList, 0.0, 0.0)
-        val goodResult = Observable.just(data).firstOrError()
+    private fun createPresenterWithoutView(): MapPresenterImpl {
+        val goodResult = Observable.just(venuesData).firstOrError()
         `when`(useCaseResultWithData.loadVenuesData(TEST_QUERY)).thenReturn(goodResult)
-        presenterNoView = VenuesListPresenterImpl(useCaseResultWithData, schedulerProvider)
+        presenterNoView = MapPresenterImpl(useCaseResultWithData, schedulerProvider)
         return presenterNoView
     }
 
-    private fun createBaseTestPresenter(): VenuesListPresenterImpl {
-        val data = VenuesData(venuesList, 0.0, 0.0)
-        val goodResult = Observable.just(data).firstOrError()
+    private fun createBaseTestPresenter(): MapPresenterImpl {
+        val goodResult = Observable.just(venuesData).firstOrError()
         `when`(useCaseResultWithData.loadVenuesData(TEST_QUERY)).thenReturn(goodResult)
-        presenter = VenuesListPresenterImpl(useCaseResultWithData, schedulerProvider)
+        presenter = MapPresenterImpl(useCaseResultWithData, schedulerProvider)
         presenter.attachView(view)
         return presenter
     }
 
-    private fun createPresenterWithError(): VenuesListPresenterImpl {
+    private fun createPresenterWithError(): MapPresenterImpl {
         val bedResult = Observable.error<VenuesData>(error).firstOrError()
         `when`(useCaseResultWithError.loadVenuesData(TEST_QUERY)).thenReturn(bedResult)
         presenterWithError =
-            VenuesListPresenterImpl(useCaseResultWithError, schedulerProvider)
+            MapPresenterImpl(useCaseResultWithError, schedulerProvider)
         presenterWithError.attachView(view)
         return presenterWithError
     }
 
     @Test
-    fun show_venues_list_after_presenter_call_get_venues() {
+    fun show_venues_on_the_map_and_city_center_after_presenter_call_get_venues() {
         presenter.getVenues(TEST_QUERY)
-        verify(view).hideProgress()
-        verify(view).displayVenues(venuesList)
-        verify(view).showMupButn()
+        verify(view).showCenterOnTheMap(venuesData)
+        verify(view).showVenuesOnTheMap(venuesMap)
         Mockito.verifyZeroInteractions(view)
     }
 
@@ -95,7 +101,7 @@ class VenuesListPresenterTest {
     fun does_not_show_venues_list_if_view_is_not_attached_to_presenter() {
         presenterNoView.detachView()
         presenterNoView.getVenues(TEST_QUERY)
-        verify(view, never()).displayVenues(venuesList)
+        verify(view, never()).showVenuesOnTheMap(venuesMap)
         Mockito.verifyZeroInteractions(view)
     }
 

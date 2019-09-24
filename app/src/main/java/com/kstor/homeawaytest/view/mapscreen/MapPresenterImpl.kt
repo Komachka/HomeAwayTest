@@ -6,9 +6,11 @@ import com.google.android.gms.maps.model.LatLng
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.BasePresentor
+import com.kstor.homeawaytest.view.BaseView
 import com.kstor.homeawaytest.view.RxPresentor
 import com.kstor.homeawaytest.view.VenuesMapper
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
+
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 
@@ -37,10 +39,15 @@ class MapPresenterImpl(
                 view?.showCenterOnTheMap(it)
             }
             .map { it.venues }
-            .subscribeBy {
-               it.createVenuesMap()
-                view?.showVenuesOnTheMap(venuesMap)
-        })
+            .subscribeBy (
+                onError = {
+                    (view as BaseView).showError(it)
+                },
+                onSuccess = {
+                    it.createVenuesMap()
+                    view?.showVenuesOnTheMap(venuesMap)
+                }
+            ))
     }
 
     private fun List<Venues>.createVenuesMap(): Map<LatLng, Venues> {
