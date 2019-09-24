@@ -6,6 +6,7 @@ import com.kstor.homeawaytest.data.repos.VenuesRepositoryImp
 import com.kstor.homeawaytest.data.sp.SharedPreferenceData
 import com.kstor.homeawaytest.domain.model.Venues
 import io.reactivex.Observable
+import io.reactivex.Single
 import java.util.*
 import org.junit.Before
 import org.junit.Test
@@ -37,7 +38,14 @@ class VenuesRepositoryTest {
     }
 
     private fun createRepoWithData(): VenuesRepositoryImp {
-        val correctData = Observable.just(
+        val correctData = createSingleWithCorrectData()
+        `when`(remoteData.closedVenues(LIMIT, QUERY)).thenReturn(correctData)
+        lenient().`when`(preferenceData.setCityCenterInfo(lat, lng)).thenReturn(true)
+        return VenuesRepositoryImp(remoteData, preferenceData)
+    }
+
+    private fun createSingleWithCorrectData(): Single<NetworkVenuesModel> {
+        return Observable.just(
             NetworkVenuesModel(
                 null,
                 Response(
@@ -146,9 +154,6 @@ class VenuesRepositoryTest {
                 )
             )
         ).firstOrError()
-        `when`(remoteData.closedVenues(LIMIT, QUERY)).thenReturn(correctData)
-        lenient().`when`(preferenceData.setCityCenterInfo(lat, lng)).thenReturn(true)
-        return VenuesRepositoryImp(remoteData, preferenceData)
     }
 
     @Test
