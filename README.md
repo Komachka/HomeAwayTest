@@ -9,4 +9,4 @@ compileSdkVersion 29
 minSdkVersion 19
 
 ## Addition dependencies :
-    Google maps, RxJava, Dagger2, Retrofit, Navigation components, Picasso
+    Google maps, RxJava2, Dagger2, Retrofit, Navigation components, Picasso
