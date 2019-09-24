@@ -35,12 +35,12 @@ class MapPresenterImpl(
             }
             .map { it.venues }
             .subscribeBy {
-               it.createMarkersMap()
+               it.createVenuesMap()
                 view?.showVenuesOnTheMap(venuesMap)
         }
     }
 
-    private fun List<Venues>.createMarkersMap(): Map<LatLng, Venues> {
+    private fun List<Venues>.createVenuesMap(): Map<LatLng, Venues> {
         this.forEach {
             it.lat?.let { lat ->
                 it.lng?.let { lng ->
