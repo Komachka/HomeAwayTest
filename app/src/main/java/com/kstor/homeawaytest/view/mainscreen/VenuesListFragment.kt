@@ -9,7 +9,6 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
@@ -19,7 +18,6 @@ import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.BaseFragment
 import com.kstor.homeawaytest.view.VenuesMapper
 import io.reactivex.Observable
-import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit

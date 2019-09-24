@@ -34,5 +34,8 @@
         <argument
             android:name="query"
             app:argType="string" />
+        <action
+            android:id="@+id/action_mapFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
     </fragment>
 </navigation>

@@ -1,9 +1,9 @@
 package com.kstor.homeawaytest.view.mapscreen
 
 import android.view.View
-import com.kstor.homeawaytest.domain.model.VenuesParcelize
+import com.google.android.gms.maps.model.LatLng
 
 interface MapPresenter {
     fun getVenues(query: String)
-    fun navigateToDetailsScreen(view: View, venuesParcelize: VenuesParcelize)
+    fun navigateToDetailsScreen(view: View, position: LatLng)
 }

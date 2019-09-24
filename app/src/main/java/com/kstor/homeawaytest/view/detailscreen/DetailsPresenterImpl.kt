@@ -9,7 +9,7 @@ import io.reactivex.Scheduler
 class DetailsPresenterImpl(
     private val useCase: GenerateStaticMapUrlUseCase,
     private val iOScheduler: Scheduler,
-    private val mainScheduler:Scheduler
+    private val mainScheduler: Scheduler
 
 ) : DetailsPresenter, BasePresentor<DetailsView>() {
 

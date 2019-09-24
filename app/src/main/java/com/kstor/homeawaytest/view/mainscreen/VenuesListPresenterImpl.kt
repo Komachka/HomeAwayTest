@@ -2,14 +2,11 @@ package com.kstor.homeawaytest.view.mainscreen
 
 import android.view.View
 import androidx.navigation.Navigation
-import com.google.android.material.internal.NavigationMenu
 import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.VenuesParcelize
 import com.kstor.homeawaytest.view.BasePresentor
 import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
 class VenuesListPresenterImpl(
     private val useCase: VenuesUseCase,
