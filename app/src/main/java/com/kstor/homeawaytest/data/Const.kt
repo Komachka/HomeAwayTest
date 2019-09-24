@@ -1,0 +1,53 @@
+package com.kstor.homeawaytest.data
+
+const val CLIENT_ID = "FVKVXRRGCLEW0VUADJQVIEHKMWIGURSZV1QM4GUHWVJFT1QT"
+const val CLIENT_SECRET = "LHTQZG3SSVF1PBTIMZUCWV3JX5ED3ZPCICM0LWB4HVFZUUEU"
+
+const val BASE_URL = "https://api.foursquare.com/v2/venues/"
+const val SEARCH_URL = "search?"
+const val CLIENT_ID_QUERY_PARAM = "client_id"
+const val CLIENT_SECRET_QUERY_PARAM = "client_secret"
+const val NEAR_QUERY_PARAM = "near"
+const val SEARCH_QUERY_PARAM = "query"
+const val V_QUERY_PARAM = "v"
+const val LIMIT_QUERY_PARAM = "limit"
+const val LOAD_LIMIT = 15
+const val LOADING_TIMEOUT = 1000L
+const val MIN_INPUT_LENGTH = 2
+
+const val SIZE_32 = "32"
+const val SIZE_44 = "44"
+const val SIZE_64 = "64"
+const val SIZE_88 = "88"
+
+const val NEAR = "Seattle,+WA"
+const val V = "20180401"
+const val CENTER_LAT = 47.6062
+const val CENTER_LNG = -122.3321
+
+const val RADIUS = 6378 * 1000 // metres
+const val HALF_OF_CIRCLE_DEGREE = 180
+
+const val PERSISTENT_STORAGE_NAME = "city_center"
+const val PERSISTENT_STORAGE_KEY_LAT = "lat"
+const val PERSISTENT_STORAGE_KEY_LNG = "lng"
+const val PERSISTENT_STORAGE_DEF_VAL = 0.0F
+
+typealias LAT = Double
+typealias LNG = Double
+
+const val API_KEY = "AIzaSyC6SflSVpRXbS2qbY0P7yJ1THGl-dOJiUQ"
+const val STATIC_MAP_BASE_URL = "https://maps.googleapis.com/maps/api/staticmap?"
+
+const val colour1 = "blue"
+const val colour2 = "green"
+
+const val CENTER = "center"
+const val ZOOM = "zoom"
+const val SIZE = "size"
+const val MAPTYPE = "maptype"
+const val MARKERS = "markers"
+const val KEY = "key"
+
+const val IMAGE_SIZE = "600x350"
+const val MAP_TYPE_TERRIAN = "terrian"
