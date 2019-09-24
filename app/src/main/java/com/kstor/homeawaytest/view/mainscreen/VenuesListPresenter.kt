@@ -8,4 +8,5 @@ interface VenuesListPresenter {
     fun showError(throwable: Throwable)
     fun showProgress()
     fun navigateToDetailScreen(view: View, venue: Venues)
+    fun hideMupButton()
 }

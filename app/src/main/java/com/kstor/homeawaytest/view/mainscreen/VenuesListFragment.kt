@@ -1,13 +1,13 @@
 package com.kstor.homeawaytest.view.mainscreen
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
+import android.view.View.*
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kstor.homeawaytest.App
@@ -54,6 +54,7 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
         createTextChangeObservable().observeOn(AndroidSchedulers.mainThread())
             .doOnNext {
                 presenter.showProgress()
+                presenter.hideMupButton()
             }
             .subscribeBy(
                 onError = {
@@ -62,59 +63,70 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
                 onNext = {
                     presenter.getVenues(it)
                 })
-}
+    }
 
-override fun destroy() {
-    (presenter as VenuesListPresenterImpl).detachView()
-}
+    override fun destroy() {
+        (presenter as VenuesListPresenterImpl).detachView()
+    }
 
-override fun displayVenues(results: List<Venues>) {
-    (list.adapter as VenuesListAdapter).updateData(results)
-}
+    override fun displayVenues(results: List<Venues>) {
+        (list.adapter as VenuesListAdapter).updateData(results)
+    }
 
-override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-): View? {
-    return inflater.inflate(R.layout.venues_list_fragment, container, false)
-}
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.venues_list_fragment, container, false)
+    }
 
-override fun onAttach(context: Context) {
-    super.onAttach(context)
-    (activity?.application as App).homeAwayComponents.inject(this)
-}
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (activity?.application as App).homeAwayComponents.inject(this)
+    }
 
-override fun showProgress() {
-    progressBar.visibility = VISIBLE
-}
+    override fun showProgress() {
+        progressBar.visibility = VISIBLE
+    }
 
-override fun hideProgress() {
-    progressBar.visibility = GONE
-}
+    override fun hideProgress() {
+        progressBar.visibility = GONE
+    }
 
-private fun createTextChangeObservable(): Observable<String> {
-    val textChangeObservable = Observable.create<String> { emitter ->
+    override fun showMupButn() {
+        fab.visibility = VISIBLE
+    }
 
-        val textWatcher = object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) = Unit
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) = Unit
 
-            override fun onTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                s?.toString()?.let { emitter.onNext(it) }
+    override fun hideMupButn() {
+        fab.visibility = INVISIBLE
+    }
+
+
+    private fun createTextChangeObservable(): Observable<String> {
+        val textChangeObservable = Observable.create<String> { emitter ->
+
+            val textWatcher = object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) = Unit
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) = Unit
+
+                override fun onTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                    s?.toString()?.let { emitter.onNext(it) }
+                }
+            }
+            queryEditText.addTextChangedListener(textWatcher)
+            emitter.setCancellable {
+                queryEditText?.removeTextChangedListener(textWatcher)
             }
         }
-        queryEditText.addTextChangedListener(textWatcher)
-        emitter.setCancellable {
-            queryEditText?.removeTextChangedListener(textWatcher)
-        }
+        return textChangeObservable.filter { it.length >= MIN_INPUT_LENGTH }
+            .debounce(LOADING_TIMEOUT, TimeUnit.MILLISECONDS)
     }
-    return textChangeObservable.filter { it.length >= MIN_INPUT_LENGTH }
-        .debounce(LOADING_TIMEOUT, TimeUnit.MILLISECONDS)
-}
+
 }

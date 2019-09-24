@@ -15,6 +15,11 @@ class VenuesListPresenterImpl(
     private val schedulerProvider: SchedulerProvider
 ) :
     VenuesListPresenter, BasePresentor<VenuesListView>(), VenuesMapper {
+
+    override fun hideMupButton() {
+        view?.hideMupButn()
+    }
+
     override fun showError(throwable: Throwable) {
         view?.showError(throwable)
     }
@@ -33,6 +38,7 @@ class VenuesListPresenterImpl(
                 onNext = {
                     view?.hideProgress()
                     view?.displayVenues(it)
+                    view?.showMupButn()
                 }, onError = {
                     (view as BaseView).showError(it)
                 }, onComplete = {

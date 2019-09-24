@@ -7,4 +7,6 @@ interface VenuesListView : BaseView {
     fun displayVenues(results: List<Venues>)
     fun showProgress()
     fun hideProgress()
+    fun showMupButn()
+    fun hideMupButn()
 }
