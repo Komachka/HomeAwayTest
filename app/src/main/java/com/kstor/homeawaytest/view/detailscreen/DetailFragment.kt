@@ -10,6 +10,7 @@ import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
 import com.kstor.homeawaytest.view.BaseFragment
 import com.kstor.homeawaytest.view.ImageLoader
+import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -20,6 +21,8 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView {
     lateinit var presenter: DetailsPresenterImpl
     @Inject
     lateinit var useCase: GenerateStaticMapUrlUseCase
+    @Inject
+    lateinit var schedulerProvider:SchedulerProvider
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,7 +38,7 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView {
     }
 
     override fun setUp() {
-        presenter = DetailsPresenterImpl(useCase, Schedulers.io(), AndroidSchedulers.mainThread())
+        presenter = DetailsPresenterImpl(useCase, schedulerProvider)
         presenter.attachView(this)
         arguments?.let { bundle ->
             val venues = DetailFragmentArgs.fromBundle(bundle).venues

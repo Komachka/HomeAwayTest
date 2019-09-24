@@ -1,6 +1,5 @@
 package com.kstor.homeawaytest
 
-import com.kstor.homeawaytest.data.network.model.*
 import com.kstor.homeawaytest.data.repos.StaticMapRepositoryImpl
 import com.kstor.homeawaytest.data.sp.SharedPreferenceData
 import com.kstor.homeawaytest.domain.model.VenuesCategoryParcelize

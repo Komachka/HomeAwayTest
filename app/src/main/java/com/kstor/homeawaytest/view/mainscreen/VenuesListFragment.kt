@@ -18,6 +18,7 @@ import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.BaseFragment
 import com.kstor.homeawaytest.view.VenuesMapper
+import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
@@ -30,11 +31,14 @@ class VenuesListFragment : BaseFragment(), VenuesMapper, VenuesListView {
 
     @Inject
     lateinit var useCases: VenuesUseCase
+
+    @Inject
+    lateinit var schedulerProvider:SchedulerProvider
     lateinit var presenter: VenuesListPresenter
 
     override fun setUp() {
         presenter =
-            VenuesListPresenterImpl(useCases, Schedulers.io(), AndroidSchedulers.mainThread())
+            VenuesListPresenterImpl(useCases, schedulerProvider)
         (presenter as VenuesListPresenterImpl).attachView(this)
 
         fab.setOnClickListener { view ->
