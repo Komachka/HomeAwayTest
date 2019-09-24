@@ -6,18 +6,20 @@ import com.google.android.gms.maps.model.LatLng
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.BasePresentor
+import com.kstor.homeawaytest.view.RxPresentor
 import com.kstor.homeawaytest.view.VenuesMapper
-import io.reactivex.Scheduler
+import com.kstor.homeawaytest.view.utils.SchedulerProvider
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 
 
 class MapPresenterImpl(
     private val venuesListUseCase: VenuesUseCase,
-    private val iOScheduler: Scheduler,
-    private val mainScheduler: Scheduler
-) : MapPresenter, BasePresentor<MapView>(), VenuesMapper {
+    private val schedulerProvider: SchedulerProvider
+) : MapPresenter, BasePresentor<MapView>(), VenuesMapper, RxPresentor {
 
     private val venuesMap = mutableMapOf<LatLng, Venues>()
+    private val compositeDisposable = CompositeDisposable()
 
     override fun navigateToDetailsScreen(view: View, position: LatLng) {
         venuesMap[position]?.let { venues ->
@@ -28,9 +30,9 @@ class MapPresenterImpl(
     }
 
     override fun getVenues(query: String) {
-        venuesListUseCase.loadVenuesData(query)
-            .subscribeOn(iOScheduler)
-            .observeOn(mainScheduler)
+        compositeDisposable.add(venuesListUseCase.loadVenuesData(query)
+            .subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.ui())
             .doOnSuccess {
                 view?.showCenterOnTheMap(it)
             }
@@ -38,7 +40,7 @@ class MapPresenterImpl(
             .subscribeBy {
                it.createVenuesMap()
                 view?.showVenuesOnTheMap(venuesMap)
-        }
+        })
     }
 
     private fun List<Venues>.createVenuesMap(): Map<LatLng, Venues> {
@@ -51,4 +53,9 @@ class MapPresenterImpl(
         }
         return venuesMap
     }
+
+    override fun onDispoce() {
+        compositeDisposable.clear()
+    }
+
 }
