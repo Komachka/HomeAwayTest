@@ -16,7 +16,7 @@ class MapPresenterImpl(
     private val mainScheduler: Scheduler
 ) : MapPresenter, BasePresentor<MapView>(), VenuesMapper {
 
-    private lateinit var venuesMap: Map<LatLng, Venues>
+    private val venuesMap = mutableMapOf<LatLng, Venues>()
 
     override fun navigateToDetailsScreen(view: View, position: LatLng) {
         venuesMap[position]?.let { venues ->
@@ -35,18 +35,19 @@ class MapPresenterImpl(
             }
             .map { it.venues }
             .subscribeBy {
-                venuesMap = it.createMarkersMap()
+               it.createMarkersMap()
                 view?.showVenuesOnTheMap(venuesMap)
         }
     }
 
     private fun List<Venues>.createMarkersMap(): Map<LatLng, Venues> {
-        return this.filter {
-            it.lat != null && it.lng != null
-        }.map {
-            val lat = it.lat ?: 0.0
-            val lng = it.lng ?: 0.0
-            LatLng(lat, lng) to it
-        }.toMap()
+        this.forEach {
+            it.lat?.let { lat ->
+                it.lng?.let { lng ->
+                    venuesMap.put(LatLng(lat, lng), it)
+                }
+            }
+        }
+        return venuesMap
     }
 }
