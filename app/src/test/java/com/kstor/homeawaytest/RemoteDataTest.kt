@@ -8,6 +8,7 @@ import com.kstor.homeawaytest.data.network.RemoteData
 import com.kstor.homeawaytest.data.network.VenuesService
 import com.kstor.homeawaytest.data.network.model.*
 import io.reactivex.Observable
+import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -57,117 +58,121 @@ class RemoteDataTest {
 
     private fun mockGetVenuesNetworkData() {
         `when`(search.invoke()).thenReturn(
-            Observable.just(
-                NetworkVenuesModel(
-                    null,
-                    Response(
-                        listOf<NetworkVenue>(
-                            NetworkVenue(
-                                "52d456c811d24128cdd7bc8b",
-                                "Storyville Coffee Company",
+            createMockSingle()
+        )
+    }
+
+    private fun createMockSingle(): Single<NetworkVenuesModel> {
+        return Observable.just(
+            NetworkVenuesModel(
+                null,
+                Response(
+                    listOf<NetworkVenue>(
+                        NetworkVenue(
+                            "52d456c811d24128cdd7bc8b",
+                            "Storyville Coffee Company",
+                            null,
+                            Location(
+                                "1001 1st Ave",
+                                "at Madison St",
+                                47.60475923205166,
+                                -122.33636210125788,
                                 null,
-                                Location(
-                                    "1001 1st Ave",
-                                    "at Madison St",
-                                    47.60475923205166,
-                                    -122.33636210125788,
-                                    null,
-                                    "98104",
-                                    "US",
-                                    "Seattle",
-                                    "WA",
-                                    "United States",
-                                    null,
-                                    null
-                                ),
-                                listOf(
-                                    NetworkCategory(
-                                        "4bf58dd8d48988d1e0931735",
-                                        "Coffee Shop",
-                                        "Coffee Shops",
-                                        "Coffee Shop",
-                                        Icon(
-                                            "https://ss3.4sqi.net/img/categories_v2/food/coffeeshop_",
-                                            ".png"
-                                        ),
-                                        true
-                                    )
-                                ),
-                                verified = true,
-                                stats = null,
-                                beenHere = null,
-                                hereNow = null,
-                                referralId = "v-1523913911",
-                                venueChains = null,
-                                hasPerk = null,
-                                venuePage = "https://www.facebook.com/StoryvilleCoffee"
-                            ),
-                            NetworkVenue(
-                                "57e95a82498e0a3995a43e90",
-                                "Anchorhead Coffee Co",
-                                null,
-                                Location(
-                                    "1600 7th Ave Ste 105",
-                                    "Olive Way",
-                                    47.61340942776967,
-                                    -122.33469499761385,
-                                    null,
-                                    "98104",
-                                    "US",
-                                    "Seattle",
-                                    "WA",
-                                    "United States",
-                                    null,
-                                    null
-                                ),
-                                listOf(
-                                    NetworkCategory(
-                                        "4bf58dd8d48988d1e0931735",
-                                        "Coffee Shop",
-                                        "Coffee Shops",
-                                        "Coffee Shop",
-                                        Icon(
-                                            "https://ss3.4sqi.net/img/categories_v2/food/coffeeshop_",
-                                            ".png"
-                                        ),
-                                        true
-                                    )
-                                ),
-                                verified = false,
-                                stats = null,
-                                beenHere = null,
-                                hereNow = null,
-                                referralId = "v-1523913911",
-                                venueChains = null,
-                                hasPerk = null,
-                                venuePage = "https://www.facebook.com/StoryvilleCoffee"
-                            )
-                        ),
-                        Geocode(
-                            feature = Feature(
+                                "98104",
                                 "US",
                                 "Seattle",
-                                "Seattle, WA, United States",
-                                "Seattle, WA, United States",
-                                "<b>Seattle</b>, <b>WA</b>, United States",
-                                7,
-                                "seattle-washington",
-                                "geonameid:5809844",
-                                "72057594043737780",
-                                Geometry(
-                                    Coordinate(47.60621, -122.33207),
-                                    Bounds(
-                                        Coordinate(47.734145, -122.224433),
-                                        Coordinate(47.481719999999996, -122.459696)
-                                    )
+                                "WA",
+                                "United States",
+                                null,
+                                null
+                            ),
+                            listOf(
+                                NetworkCategory(
+                                    "4bf58dd8d48988d1e0931735",
+                                    "Coffee Shop",
+                                    "Coffee Shops",
+                                    "Coffee Shop",
+                                    Icon(
+                                        "https://ss3.4sqi.net/img/categories_v2/food/coffeeshop_",
+                                        ".png"
+                                    ),
+                                    true
+                                )
+                            ),
+                            verified = true,
+                            stats = null,
+                            beenHere = null,
+                            hereNow = null,
+                            referralId = "v-1523913911",
+                            venueChains = null,
+                            hasPerk = null,
+                            venuePage = "https://www.facebook.com/StoryvilleCoffee"
+                        ),
+                        NetworkVenue(
+                            "57e95a82498e0a3995a43e90",
+                            "Anchorhead Coffee Co",
+                            null,
+                            Location(
+                                "1600 7th Ave Ste 105",
+                                "Olive Way",
+                                47.61340942776967,
+                                -122.33469499761385,
+                                null,
+                                "98104",
+                                "US",
+                                "Seattle",
+                                "WA",
+                                "United States",
+                                null,
+                                null
+                            ),
+                            listOf(
+                                NetworkCategory(
+                                    "4bf58dd8d48988d1e0931735",
+                                    "Coffee Shop",
+                                    "Coffee Shops",
+                                    "Coffee Shop",
+                                    Icon(
+                                        "https://ss3.4sqi.net/img/categories_v2/food/coffeeshop_",
+                                        ".png"
+                                    ),
+                                    true
+                                )
+                            ),
+                            verified = false,
+                            stats = null,
+                            beenHere = null,
+                            hereNow = null,
+                            referralId = "v-1523913911",
+                            venueChains = null,
+                            hasPerk = null,
+                            venuePage = "https://www.facebook.com/StoryvilleCoffee"
+                        )
+                    ),
+                    Geocode(
+                        feature = Feature(
+                            "US",
+                            "Seattle",
+                            "Seattle, WA, United States",
+                            "Seattle, WA, United States",
+                            "<b>Seattle</b>, <b>WA</b>, United States",
+                            7,
+                            "seattle-washington",
+                            "geonameid:5809844",
+                            "72057594043737780",
+                            Geometry(
+                                Coordinate(47.60621, -122.33207),
+                                Bounds(
+                                    Coordinate(47.734145, -122.224433),
+                                    Coordinate(47.481719999999996, -122.459696)
                                 )
                             )
                         )
                     )
                 )
             )
-                .firstOrError()
         )
+            .firstOrError()
     }
 
     @Test
