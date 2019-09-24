@@ -5,7 +5,6 @@ import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
 import com.kstor.homeawaytest.domain.model.VenuesParcelize
 import com.kstor.homeawaytest.view.BasePresentor
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
-import io.reactivex.Scheduler
 
 class DetailsPresenterImpl(
     private val useCase: GenerateStaticMapUrlUseCase,

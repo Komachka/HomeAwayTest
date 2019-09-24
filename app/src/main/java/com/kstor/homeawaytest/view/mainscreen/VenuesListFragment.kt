@@ -9,7 +9,6 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
@@ -17,23 +16,21 @@ import com.kstor.homeawaytest.data.*
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.BaseFragment
-import com.kstor.homeawaytest.view.VenuesMapper
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.venues_list_fragment.*
 
-class VenuesListFragment : BaseFragment(), VenuesMapper, VenuesListView {
+class VenuesListFragment : BaseFragment(), VenuesListView {
 
     @Inject
     lateinit var useCases: VenuesUseCase
 
     @Inject
-    lateinit var schedulerProvider:SchedulerProvider
+    lateinit var schedulerProvider: SchedulerProvider
     lateinit var presenter: VenuesListPresenter
 
     override fun setUp() {
@@ -48,12 +45,8 @@ class VenuesListFragment : BaseFragment(), VenuesMapper, VenuesListView {
             layoutManager = LinearLayoutManager(context)
             adapter = VenuesListAdapter()
             (adapter as VenuesListAdapter).detailsOnClickListener = { venue ->
-                map(venue)?.let {
-                    view?.let { view ->
-                        val action =
-                            VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(it)
-                        Navigation.findNavController(view).navigate(action)
-                    }
+                view?.let {
+                    presenter.navigateToDetailScreen(it, venue)
                 }
             }
         }

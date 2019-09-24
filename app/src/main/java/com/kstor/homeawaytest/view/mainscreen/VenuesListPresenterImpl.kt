@@ -1,18 +1,20 @@
 package com.kstor.homeawaytest.view.mainscreen
 
+import android.view.View
+import androidx.navigation.Navigation
 import com.kstor.homeawaytest.domain.VenuesUseCase
+import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.BasePresentor
 import com.kstor.homeawaytest.view.BaseView
+import com.kstor.homeawaytest.view.VenuesMapper
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
-import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.subscribeBy
 
 class VenuesListPresenterImpl(
     private val useCase: VenuesUseCase,
     private val schedulerProvider: SchedulerProvider
 ) :
-    VenuesListPresenter, BasePresentor<VenuesListView>() {
-
+    VenuesListPresenter, BasePresentor<VenuesListView>(), VenuesMapper {
     override fun showError(throwable: Throwable) {
         view?.showError(throwable)
     }
@@ -37,5 +39,13 @@ class VenuesListPresenterImpl(
                     println("Complete")
                 }
             )
+    }
+
+    override fun navigateToDetailScreen(view: View, venue: Venues) {
+        map(venue)?.let {
+            val action =
+                VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(it)
+            Navigation.findNavController(view).navigate(action)
+        }
     }
 }

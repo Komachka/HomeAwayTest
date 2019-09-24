@@ -2,13 +2,11 @@ package com.kstor.homeawaytest.view
 
 import android.app.Application
 import android.content.Context
+import com.kstor.homeawaytest.view.utils.AppSchedulerProvider
+import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
-import com.kstor.homeawaytest.view.utils.AppSchedulerProvider
-import com.kstor.homeawaytest.view.utils.SchedulerProvider
-
-
 
 @Module
 class AppModule(private val app: Application) {

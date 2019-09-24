@@ -11,8 +11,6 @@ import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
 import com.kstor.homeawaytest.view.BaseFragment
 import com.kstor.homeawaytest.view.ImageLoader
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.detail_fragment.*
 
@@ -22,7 +20,7 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView {
     @Inject
     lateinit var useCase: GenerateStaticMapUrlUseCase
     @Inject
-    lateinit var schedulerProvider:SchedulerProvider
+    lateinit var schedulerProvider: SchedulerProvider
 
     override fun onCreateView(
         inflater: LayoutInflater,
