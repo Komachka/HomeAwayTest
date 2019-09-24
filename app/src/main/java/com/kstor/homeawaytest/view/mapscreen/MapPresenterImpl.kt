@@ -10,6 +10,7 @@ import com.kstor.homeawaytest.view.VenuesMapper
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.subscribeBy
 
+
 class MapPresenterImpl(
     private val venuesListUseCase: VenuesUseCase,
     private val iOScheduler: Scheduler,
@@ -30,7 +31,7 @@ class MapPresenterImpl(
         venuesListUseCase.loadVenuesData(query)
             .subscribeOn(iOScheduler)
             .observeOn(mainScheduler)
-            .doOnNext {
+            .doOnSuccess {
                 view?.showCenterOnTheMap(it)
             }
             .map { it.venues }

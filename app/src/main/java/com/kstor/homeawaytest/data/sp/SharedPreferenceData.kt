@@ -1,31 +1,27 @@
 package com.kstor.homeawaytest.data.sp
 
-import android.content.Context
 import android.content.SharedPreferences
 import com.kstor.homeawaytest.data.*
 import javax.inject.Inject
 
-class SharedPreferenceData @Inject constructor (val context: Context) {
-    private val preference: SharedPreferences = context.applicationContext.getSharedPreferences(
-        PERSISTENT_STORAGE_NAME,
-        Context.MODE_PRIVATE
-    )
+class SharedPreferenceData @Inject constructor (private val preference: SharedPreferences) {
+    fun setCityCenterInfo(citCenterlat: Double, citCenterlng: Double): Boolean {
+        return isDataSaved(citCenterlat, PERSISTENT_STORAGE_KEY_LAT) &&
+                isDataSaved(citCenterlng, PERSISTENT_STORAGE_KEY_LNG)
+    }
 
-    fun setCityCenterInfo(citCenterlat: Double, citCenterlng: Double) {
+    private fun isDataSaved(data: Double, key: String): Boolean {
         preference.edit()?.let { editor ->
-            val latData =
-                preference.getFloat(PERSISTENT_STORAGE_KEY_LAT, PERSISTENT_STORAGE_DEF_VAL)
-            if (latData == PERSISTENT_STORAGE_DEF_VAL && latData != citCenterlat.toFloat()) {
-                editor.putFloat(PERSISTENT_STORAGE_KEY_LAT, citCenterlat.toFloat())
+            val storedData =
+                preference.getFloat(key, PERSISTENT_STORAGE_DEF_VAL)
+            if (storedData == PERSISTENT_STORAGE_DEF_VAL && storedData != data.toFloat()) {
+                editor.putFloat(key, data.toFloat())
                 editor.apply()
+                return true
             }
-            val lngData =
-                preference.getFloat(PERSISTENT_STORAGE_KEY_LNG, PERSISTENT_STORAGE_DEF_VAL)
-            if (lngData == PERSISTENT_STORAGE_DEF_VAL && lngData != citCenterlng.toFloat()) {
-                editor.putFloat(PERSISTENT_STORAGE_KEY_LAT, citCenterlng.toFloat())
-                editor.apply()
-            }
+            if (storedData == data.toFloat()) return true
         }
+        return false
     }
 
     fun getCityCenterInfo(): Pair<Float, Float> {

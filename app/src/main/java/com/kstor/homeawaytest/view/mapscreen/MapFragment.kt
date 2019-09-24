@@ -15,7 +15,7 @@ import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.domain.model.VenusData
+import com.kstor.homeawaytest.domain.model.VenuesData
 import com.kstor.homeawaytest.view.BaseFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -29,7 +29,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback, MapView {
     @Inject
     lateinit var useCases: VenuesUseCase
 
-    override fun showCenterOnTheMap(venusData: VenusData) {
+    override fun showCenterOnTheMap(venusData: VenuesData) {
         val sydney = LatLng(venusData.citCenterlat, venusData.citCenterlng)
         myMap?.addMarker(MarkerOptions().position(sydney).title("Sydney"))
         myMap?.moveCamera(CameraUpdateFactory.newLatLng(sydney))

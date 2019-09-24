@@ -2,7 +2,7 @@ package com.kstor.homeawaytest.data.network
 
 import com.kstor.homeawaytest.data.*
 import com.kstor.homeawaytest.data.network.model.NetworkVenuesModel
-import io.reactivex.Observable
+import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -15,5 +15,5 @@ interface VenuesService {
         @Query(SEARCH_QUERY_PARAM) query: String,
         @Query(V_QUERY_PARAM) v: String,
         @Query(LIMIT_QUERY_PARAM) limit: Int
-    ): Observable<NetworkVenuesModel>
+    ): Single<NetworkVenuesModel>
 }

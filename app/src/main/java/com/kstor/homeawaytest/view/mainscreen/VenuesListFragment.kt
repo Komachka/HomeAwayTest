@@ -1,13 +1,13 @@
 package com.kstor.homeawaytest.view.mainscreen
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
+import android.view.View.*
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kstor.homeawaytest.App
@@ -16,22 +16,26 @@ import com.kstor.homeawaytest.data.*
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.BaseFragment
-import com.kstor.homeawaytest.view.VenuesMapper
+import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxkotlin.subscribeBy
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.venues_list_fragment.*
 
-class VenuesListFragment : BaseFragment(), VenuesMapper, VenuesListView {
+class VenuesListFragment : BaseFragment(), VenuesListView {
 
     @Inject
     lateinit var useCases: VenuesUseCase
+
+    @Inject
+    lateinit var schedulerProvider: SchedulerProvider
     lateinit var presenter: VenuesListPresenter
 
     override fun setUp() {
-        presenter = VenuesListPresenterImpl(useCases, Schedulers.io(), AndroidSchedulers.mainThread())
+        presenter =
+            VenuesListPresenterImpl(useCases, schedulerProvider)
         (presenter as VenuesListPresenterImpl).attachView(this)
 
         fab.setOnClickListener { view ->
@@ -42,21 +46,25 @@ class VenuesListFragment : BaseFragment(), VenuesMapper, VenuesListView {
             layoutManager = LinearLayoutManager(context)
             adapter = VenuesListAdapter()
             (adapter as VenuesListAdapter).detailsOnClickListener = { venue ->
-                map(venue)?.let {
-                    view?.let { view ->
-                        presenter.navigateToDetailsScreen(view, it)
-                    }
+                view?.let {
+                    presenter.navigateToDetailScreen(it, venue)
+
                 }
             }
         }
 
         createTextChangeObservable().observeOn(AndroidSchedulers.mainThread())
             .doOnNext {
-                showProgress()
+                presenter.showProgress()
+                presenter.hideMupButton()
             }
-            .subscribe {
-                presenter.getVenues(it)
-            }
+            .subscribeBy(
+                onError = {
+                    presenter.showError(it)
+                },
+                onNext = {
+                    presenter.getVenues(it)
+                })
     }
 
     override fun destroy() {
@@ -88,6 +96,16 @@ class VenuesListFragment : BaseFragment(), VenuesMapper, VenuesListView {
         progressBar.visibility = GONE
     }
 
+    override fun showMupButn() {
+        fab.visibility = VISIBLE
+    }
+
+
+    override fun hideMupButn() {
+        fab.visibility = INVISIBLE
+    }
+
+
     private fun createTextChangeObservable(): Observable<String> {
         val textChangeObservable = Observable.create<String> { emitter ->
 
@@ -112,4 +130,5 @@ class VenuesListFragment : BaseFragment(), VenuesMapper, VenuesListView {
         return textChangeObservable.filter { it.length >= MIN_INPUT_LENGTH }
             .debounce(LOADING_TIMEOUT, TimeUnit.MILLISECONDS)
     }
+
 }
