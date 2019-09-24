@@ -13,6 +13,14 @@ class VenuesListPresenterImpl(
 ) :
     VenuesListPresenter, BasePresentor<VenuesListView>() {
 
+    override fun showError(throwable: Throwable) {
+        view?.showError(throwable)
+    }
+
+    override fun showProgress() {
+        view?.showProgress()
+    }
+
     override fun getVenues(query: String) {
         useCase.loadVenuesData(query).toObservable().subscribeOn(schedulerProvider.io())
             .map {

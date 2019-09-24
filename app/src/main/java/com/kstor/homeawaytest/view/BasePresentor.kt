@@ -10,4 +10,8 @@ abstract class BasePresentor<V> {
     fun detachView() {
         view = null
     }
+
+
+
+
 }

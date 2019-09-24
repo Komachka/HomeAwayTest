@@ -5,11 +5,14 @@ import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.domain.model.VenuesData
 import com.kstor.homeawaytest.view.mainscreen.VenuesListPresenterImpl
 import com.kstor.homeawaytest.view.mainscreen.VenuesListView
+import com.kstor.homeawaytest.view.utils.SchedulerProvider
+import com.kstor.homeawaytest.view.utils.TestSchedulerProvider
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.schedulers.TestScheduler
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -32,8 +35,7 @@ class VenuesListPresenterTest {
     @Mock
     private lateinit var view: VenuesListView
 
-    private lateinit var ioScheduler: Scheduler
-    private lateinit var mainScheduler: Scheduler
+    private lateinit var schedulerProvider: SchedulerProvider
 
     private lateinit var venuesList: List<Venues>
     private lateinit var error: Throwable
@@ -49,8 +51,7 @@ class VenuesListPresenterTest {
             Venues("1", "Name", null, "Adress", 0, 0.0, 0.0)
         )
         error = Throwable("Something wrong")
-        mainScheduler = Schedulers.trampoline()
-        ioScheduler = Schedulers.trampoline()
+        schedulerProvider = TestSchedulerProvider(Schedulers.trampoline())
         presenter = createBaseTestPresenter()
         presenterNoView = createPresenterWithoutView()
         presenterWithError = createPresenterWithError()
@@ -60,7 +61,7 @@ class VenuesListPresenterTest {
         val data = VenuesData(venuesList, 0.0, 0.0)
         val goodResult = Observable.just(data).firstOrError()
         `when`(useCaseResultWithData.loadVenuesData(TEST_QUERY)).thenReturn(goodResult)
-        presenterNoView = VenuesListPresenterImpl(useCaseResultWithData, ioScheduler, mainScheduler)
+        presenterNoView = VenuesListPresenterImpl(useCaseResultWithData, schedulerProvider)
         return presenter
     }
 
@@ -68,7 +69,7 @@ class VenuesListPresenterTest {
         val data = VenuesData(venuesList, 0.0, 0.0)
         val goodResult = Observable.just(data).firstOrError()
         `when`(useCaseResultWithData.loadVenuesData(TEST_QUERY)).thenReturn(goodResult)
-        presenter = VenuesListPresenterImpl(useCaseResultWithData, ioScheduler, mainScheduler)
+        presenter = VenuesListPresenterImpl(useCaseResultWithData, schedulerProvider)
         presenter.attachView(view)
         return presenter
     }
@@ -77,7 +78,7 @@ class VenuesListPresenterTest {
         val badResult = Observable.error<VenuesData>(error).firstOrError()
         `when`(useCaseResultWithError.loadVenuesData(TEST_QUERY)).thenReturn(badResult)
         presenterWithError =
-            VenuesListPresenterImpl(useCaseResultWithError, ioScheduler, mainScheduler)
+            VenuesListPresenterImpl(useCaseResultWithError, schedulerProvider)
         presenterWithError.attachView(view)
         return presenterWithError
     }
@@ -90,7 +91,7 @@ class VenuesListPresenterTest {
     }
 
     @Test
-    fun does_not_show_venues_list_if_view_is_not_attached_to_presentor() {
+    fun does_not_show_venues_list_if_view_is_not_attached_to_presenter() {
         presenterNoView.detachView()
         presenterNoView.getVenues(TEST_QUERY)
         verify(view, never()).displayVenues(venuesList)

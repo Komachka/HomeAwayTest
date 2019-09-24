@@ -60,11 +60,11 @@ class VenuesListFragment : BaseFragment(), VenuesMapper, VenuesListView {
 
         createTextChangeObservable().observeOn(AndroidSchedulers.mainThread())
             .doOnNext {
-                showProgress()
+                presenter.showProgress()
             }
             .subscribeBy(
                 onError = {
-                    showError(it)
+                    presenter.showError(it)
                 },
                 onNext = {
                     presenter.getVenues(it)
