@@ -12,4 +12,6 @@ interface VenuesListPresenter {
     fun showProgress()
     fun navigateToDetailScreen(view: View, venue: Venues)
     fun hideMupButton()
+    fun addToFavorite(venues: Venues)
+    fun getFavorites()
 }

@@ -2,6 +2,7 @@ package com.kstor.homeawaytest.view.mainscreen
 
 import android.view.View
 import androidx.navigation.Navigation
+import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.domain.model.VenuesParcelize
@@ -16,6 +17,31 @@ class VenuesListPresenterImpl(
     private val schedulerProvider: SchedulerProvider
 ) :
     VenuesListPresenter, BasePresentor<VenuesListView>(), VenuesMapper {
+
+    override fun getFavorites() {
+        useCase.getFavorites().subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.ui())
+            .subscribeBy(
+                onSuccess = {
+                    view?.hideProgress()
+                    view?.displayVenues(it)
+                    view?.showMupButn()
+                    log("count ${it.size}")
+                }, onError = {
+                    (view as BaseView).showError(it)
+                }
+            )
+    }
+
+    override fun addToFavorite(venues: Venues) {
+        if (!venues.isFavorite) {
+            venues.isFavorite = true
+            useCase.addToFavorite(venues)
+        } else {
+            log("is already favorite")
+            // useCase.removeFromFavorite(venues)
+        }
+    }
 
     override fun hideMupButton() {
         view?.hideMupButn()
@@ -38,7 +64,8 @@ class VenuesListPresenterImpl(
     }
 
     override fun navigateToMapScreen(view: View) {
-        Navigation.findNavController(view).navigate(VenuesListFragmentDirections.actionVenuesListFragmentToMapFragment(query))
+        Navigation.findNavController(view)
+            .navigate(VenuesListFragmentDirections.actionVenuesListFragmentToMapFragment(query))
     }
 
     override fun getVenues(query: String) {
@@ -50,6 +77,7 @@ class VenuesListPresenterImpl(
                     view?.hideProgress()
                     view?.displayVenues(it)
                     view?.showMupButn()
+                    log("count ${it.size}")
                 }, onError = {
                     (view as BaseView).showError(it)
                 }, onComplete = {

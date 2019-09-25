@@ -1,6 +1,9 @@
 package com.kstor.homeawaytest.data.repos
 
 import com.kstor.homeawaytest.data.db.LocalData
+import com.kstor.homeawaytest.data.db.model.DBVenuesModel
+import com.kstor.homeawaytest.data.log
+import com.kstor.homeawaytest.data.mapToDBVenuesModel
 import com.kstor.homeawaytest.data.mapToListOfVenues
 import com.kstor.homeawaytest.data.mapToVenuesData
 import com.kstor.homeawaytest.data.network.RemoteData
@@ -8,22 +11,60 @@ import com.kstor.homeawaytest.data.sp.SharedPreferenceData
 import com.kstor.homeawaytest.domain.VenuesRepository
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.domain.model.VenuesData
+import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 
 class VenuesRepositoryImp(
     private val remoteData: RemoteData,
     private val preferenceData: SharedPreferenceData,
     private val localData: LocalData
 ) : VenuesRepository {
-    override fun getClosestVenuses(limit: Int, query: String): Observable<List<Venues>> {
 
-        return Observable.concatArray(
-            getLocalData(),
-            getRemoteData(limit, query)
+    override fun removeFromFavorite(venues: Venues) {
+        log("remove")
+    }
+
+    override fun getFavorites(): Single<List<Venues>> {
+        return localData.getFavorites().map {
+            return@map mapToListOfVenues(it)
+        }
+    }
+
+    override fun saveToFavorite(venues: Venues) {
+
+        Completable.fromRunnable {
+            mapToDBVenuesModel(venues)?.let {
+                localData.addToFavorites(it)
+            }
+        }.subscribeOn(Schedulers.io()).observeOn(Schedulers.io()).subscribeBy(
+            onError = { error -> log("error $error") },
+            onComplete = {
+                log("suscess")
+            }
         )
     }
 
-    private fun getLocalData(): Observable<List<Venues>> { return localData.getFavorites().map {
+    override fun getClosestVenuses(limit: Int, query: String): Observable<List<Venues>> {
+        return getRemoteData(limit, query)
+            .flatMap { list ->
+                localData.removeANdSaveVenues(mapToDBVenuesModelList(list))
+                getLocalData()
+            }
+    }
+
+    private fun mapToDBVenuesModelList(list: List<Venues>): List<DBVenuesModel> {
+        val newList = mutableListOf<DBVenuesModel>()
+        list.forEach {
+            mapToDBVenuesModel(it)?.let { newModel -> newList.add(newModel) }
+        }
+        return newList
+    }
+
+    private fun getLocalData(): Observable<List<Venues>> {
+        return localData.getAllVenues().map {
             return@map mapToListOfVenues(it)
         }.toObservable()
     }

@@ -49,7 +49,14 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
                     presenter.navigateToDetailScreen(it, venue)
                 }
             }
+            (adapter as VenuesListAdapter).addToFavoriteClickListener = { venue ->
+                view?.let {
+                    log("add to favorite ${venue.name}")
+                    presenter.addToFavorite(venue)
+                }
+            }
         }
+        presenter.getFavorites()
 
         createTextChangeObservable().observeOn(AndroidSchedulers.mainThread())
             .doOnNext {
@@ -61,6 +68,7 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
                     presenter.showError(it)
                 },
                 onNext = {
+                    (list.adapter as VenuesListAdapter).clearData()
                     presenter.getVenues(it)
                 })
     }

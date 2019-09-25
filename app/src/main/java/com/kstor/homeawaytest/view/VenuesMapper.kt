@@ -19,7 +19,7 @@ interface VenuesMapper {
                 requireNotNull(venues.lat),
                 requireNotNull(venues.lng)
             )
-        } catch (e: IllegalArgumentException) {
+        } catch (e: Throwable) {
             log(e.message!!)
             null
         }

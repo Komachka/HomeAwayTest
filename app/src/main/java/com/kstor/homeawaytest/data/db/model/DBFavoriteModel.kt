@@ -3,8 +3,8 @@ package com.kstor.homeawaytest.data.db.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "venues")
-data class DBVenuesModel(
+@Entity(tableName = "favorite")
+data class DBFavoriteModel(
     @PrimaryKey var id: String,
     val name: String,
     val categoryId: String,
@@ -13,6 +13,5 @@ data class DBVenuesModel(
     val address: String,
     val distance: Int,
     val lat: Double,
-    val lng: Double,
-    var isFavorite: Boolean
+    val lng: Double
 )

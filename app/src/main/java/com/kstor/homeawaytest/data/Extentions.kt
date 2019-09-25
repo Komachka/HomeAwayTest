@@ -1,6 +1,7 @@
 package com.kstor.homeawaytest.data
 
 import android.util.Log
+import com.kstor.homeawaytest.data.db.model.DBFavoriteModel
 import com.kstor.homeawaytest.data.db.model.DBVenuesModel
 import com.kstor.homeawaytest.data.network.model.NetworkCategory
 import com.kstor.homeawaytest.data.network.model.NetworkVenue
@@ -8,6 +9,7 @@ import com.kstor.homeawaytest.data.network.model.NetworkVenuesModel
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.domain.model.VenuesCategory
 import com.kstor.homeawaytest.domain.model.VenuesData
+import java.lang.Exception
 import kotlin.math.*
 
 fun NetworkVenuesModel.mapToVenuesData(): VenuesData {
@@ -33,6 +35,22 @@ fun mapToListOfVenues(list: List<DBVenuesModel>): List<Venues> {
             it.lat, it.lng
         )
     }
+}
+
+fun mapToDBVenuesModel(venues: Venues): DBVenuesModel? {
+        return try {
+            DBVenuesModel(
+                requireNotNull(venues.id),
+                requireNotNull(venues.name),
+                requireNotNull(venues.categories?.id),
+                requireNotNull(venues.categories?.name),
+                requireNotNull(venues.categories?.iconPath),
+                requireNotNull(venues.address),
+                requireNotNull(venues.distance),
+                requireNotNull(venues.lat),
+                requireNotNull(venues.lng),
+                requireNotNull(venues.isFavorite))
+        } catch (e: Exception) { null }
 }
 
 private fun createListOfCategories(venues: List<NetworkVenue>?, centerLat: Double, centerLng: Double): List<Venues> {
@@ -85,6 +103,9 @@ private fun mapToCategory(categories: List<NetworkCategory>?): VenuesCategory? {
         }
     }
 }
+
+fun mapToDBFavoriteModel(venues: DBVenuesModel) =
+    DBFavoriteModel(venues.id, venues.name, venues.categoryId, venues.categoryName, venues.iconPath, venues.address, venues.distance, venues.lat, venues.lng)
 
 fun log(message: String) {
     Log.d("MainActivity", message)

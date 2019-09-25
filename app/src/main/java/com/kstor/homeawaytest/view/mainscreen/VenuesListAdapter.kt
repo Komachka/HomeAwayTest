@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.kstor.homeawaytest.R
+import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.ImageLoader
 import kotlinx.android.synthetic.main.list_item.view.*
@@ -12,11 +13,12 @@ import kotlinx.android.synthetic.main.list_item.view.*
 class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     ImageLoader {
 
-    lateinit var detailsOnClickListener: (venue: Venues) -> Unit
+    lateinit var detailsOnClickListener: (venues: Venues) -> Unit
+    lateinit var addToFavoriteClickListener: (venues: Venues) -> Unit
     private val venues = mutableListOf<Venues>()
 
     fun updateData(venues: List<Venues>) {
-        this.venues.clear()
+        // this.venues.clear()
         this.venues.addAll(venues)
         notifyDataSetChanged()
     }
@@ -26,10 +28,15 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
 
         init {
             view.setOnClickListener(this)
+            view.imageFavorite.setOnClickListener(this)
         }
 
         override fun onClick(item: View) {
-            detailsOnClickListener.invoke(venues[adapterPosition])
+            if (item.id == R.id.imageFavorite) {
+                addToFavoriteClickListener.invoke(venues[adapterPosition])
+                venues[adapterPosition].isFavorite = true
+            } else
+                detailsOnClickListener.invoke(venues[adapterPosition])
         }
 
         fun bind(venue: Venues) {
@@ -43,6 +50,8 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
                         view.venuesPlaceImgView.loadImage(it)
                 }
             }
+            log(venue.name + " " + venue.isFavorite.toString())
+            if (venue.isFavorite) { view.imageFavorite.setImageResource(R.drawable.ic_favorite_black_24dp) } else { view.imageFavorite.setImageResource(R.drawable.ic_favorite_border_black_24dp) }
         }
     }
 
@@ -60,5 +69,9 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as ItemViewHolder).bind(venues[position])
+    }
+
+    fun clearData() {
+        this.venues.clear()
     }
 }
