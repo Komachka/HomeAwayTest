@@ -3,11 +3,13 @@ package com.kstor.homeawaytest.view.mapscreen
 import android.view.View
 import androidx.navigation.Navigation
 import com.google.android.gms.maps.model.LatLng
+import com.kstor.homeawaytest.data.CENTER_LAT
+import com.kstor.homeawaytest.data.CENTER_LNG
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.BasePresentor
 import com.kstor.homeawaytest.view.BaseView
-import com.kstor.homeawaytest.view.RxPresentor
+import com.kstor.homeawaytest.view.RxPresenter
 import com.kstor.homeawaytest.view.VenuesMapper
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
@@ -16,7 +18,11 @@ import io.reactivex.rxkotlin.subscribeBy
 class MapPresenterImpl(
     private val venuesListUseCase: VenuesUseCase,
     private val schedulerProvider: SchedulerProvider
-) : MapPresenter, BasePresentor<MapView>(), VenuesMapper, RxPresentor {
+) : MapPresenter, BasePresentor<MapView>(), VenuesMapper, RxPresenter {
+
+    override fun setUpMapToCityCenter() {
+        view?.showCenterOnTheMap(LatLng(CENTER_LAT, CENTER_LNG))
+    }
 
     private val venuesMap = mutableMapOf<LatLng, Venues>()
     private val compositeDisposable = CompositeDisposable()
@@ -33,15 +39,14 @@ class MapPresenterImpl(
         compositeDisposable.add(venuesListUseCase.loadVenuesData(query)
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
-            .doOnSuccess {
-                view?.showCenterOnTheMap(it)
+            .doOnNext {
+                // view?.showCenterOnTheMap(it)
             }
-            .map { it.venues }
             .subscribeBy(
                 onError = {
                     (view as BaseView).showError(it)
                 },
-                onSuccess = {
+                onNext = {
                     it.createVenuesMap()
                     view?.showVenuesOnTheMap(venuesMap)
                 }
@@ -59,7 +64,7 @@ class MapPresenterImpl(
         return venuesMap
     }
 
-    override fun onDispoce() {
+    override fun onDispose() {
         compositeDisposable.clear()
     }
 }

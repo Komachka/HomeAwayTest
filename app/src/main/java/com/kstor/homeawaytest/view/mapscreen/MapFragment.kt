@@ -15,7 +15,6 @@ import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.domain.model.VenuesData
 import com.kstor.homeawaytest.view.BaseFragment
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import javax.inject.Inject
@@ -31,8 +30,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback, MapView {
     @Inject
     lateinit var useCases: VenuesUseCase
 
-    override fun showCenterOnTheMap(venusData: VenuesData) {
-        val sydney = LatLng(venusData.citCenterlat, venusData.citCenterlng)
+    override fun showCenterOnTheMap(sydney: LatLng) {
         myMap?.addMarker(MarkerOptions().position(sydney).title("Sydney"))
         myMap?.moveCamera(CameraUpdateFactory.newLatLng(sydney))
         myMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 12.0f))
@@ -42,6 +40,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback, MapView {
         venuesMap.forEach {
             addVenuesMarker(it)
         }
+        mapPresenter.setUpMapToCityCenter()
     }
 
     private fun addVenuesMarker(venues: Map.Entry<LatLng, Venues>) {
@@ -65,7 +64,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback, MapView {
 
     override fun destroy() {
         (mapPresenter as MapPresenterImpl).apply {
-            onDispoce()
+            onDispose()
             detachView()
         }
     }

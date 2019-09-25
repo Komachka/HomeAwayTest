@@ -1,6 +1,7 @@
 package com.kstor.homeawaytest.data
 
 import android.util.Log
+import com.kstor.homeawaytest.data.db.model.DBVenuesModel
 import com.kstor.homeawaytest.data.network.model.NetworkCategory
 import com.kstor.homeawaytest.data.network.model.NetworkVenue
 import com.kstor.homeawaytest.data.network.model.NetworkVenuesModel
@@ -19,6 +20,19 @@ fun NetworkVenuesModel.mapToVenuesData(): VenuesData {
             centerLng
         ), centerLat, centerLng
     )
+}
+
+fun mapToListOfVenues(list: List<DBVenuesModel>): List<Venues> {
+    return list.map {
+        Venues(
+            it.id,
+            it.name,
+            VenuesCategory(it.categoryId, it.categoryName, it.iconPath),
+            it.address,
+            it.distance,
+            it.lat, it.lng
+        )
+    }
 }
 
 private fun createListOfCategories(venues: List<NetworkVenue>?, centerLat: Double, centerLng: Double): List<Venues> {
@@ -60,16 +74,16 @@ private fun Double.toRadians(): Double {
     return this * Math.PI / HALF_OF_CIRCLE_DEGREE
 }
 
-private fun mapToCategory(categories: List<NetworkCategory>?): List<VenuesCategory> {
+private fun mapToCategory(categories: List<NetworkCategory>?): VenuesCategory? {
     return categories?.let {
-        it.map {
+        it.first()?.let { category ->
             VenuesCategory(
-                it.id,
-                it.name,
-                it.icon?.prefix + SIZE_32 + it.icon?.suffix
+                category.id,
+                category.name,
+                category.icon?.prefix + SIZE_32 + category.icon?.suffix
             )
         }
-    } ?: emptyList()
+    }
 }
 
 fun log(message: String) {

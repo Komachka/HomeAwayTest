@@ -1,8 +1,8 @@
 package com.kstor.homeawaytest.domain
 
-import com.kstor.homeawaytest.domain.model.VenuesData
-import io.reactivex.Single
+import com.kstor.homeawaytest.domain.model.Venues
+import io.reactivex.Observable
 
 interface VenuesRepository {
-    fun getClosestVenuses(limit: Int, query: String): Single<VenuesData>
+    fun getClosestVenuses(limit: Int, query: String): Observable<List<Venues>>
 }

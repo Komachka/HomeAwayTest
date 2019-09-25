@@ -1,5 +1,6 @@
 package com.kstor.homeawaytest.data.di
 
+import com.kstor.homeawaytest.data.db.LocalData
 import com.kstor.homeawaytest.data.network.RemoteData
 import com.kstor.homeawaytest.data.repos.StaticMapRepositoryImpl
 import com.kstor.homeawaytest.data.repos.VenuesRepositoryImp
@@ -15,8 +16,8 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideVenusRepository(remoteData: RemoteData, seredPrefData: SharedPreferenceData): VenuesRepository =
-        VenuesRepositoryImp(remoteData, seredPrefData)
+    fun provideVenusRepository(remoteData: RemoteData, seredPrefData: SharedPreferenceData, localData: LocalData): VenuesRepository =
+        VenuesRepositoryImp(remoteData, seredPrefData, localData)
 
     @Provides
     @Singleton

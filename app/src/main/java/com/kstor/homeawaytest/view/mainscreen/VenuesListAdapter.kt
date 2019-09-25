@@ -35,14 +35,12 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
         fun bind(venue: Venues) {
             view.venuesNameNameTextView.text = venue.name
             view.venuesCategory.text =
-                venue.categories?.let { category -> category.joinToString { it.name ?: "" } }
+                venue.categories?.name
             view.venuesNameAdressTextView.text = venue.address
             view.venuesDistanceFromCenterTextView.text = "${venue.distance} m"
             venue.categories?.let {
-                if (it.isNotEmpty()) {
-                    it[0].iconPath.let {
+                it.iconPath.let {
                         view.venuesPlaceImgView.loadImage(it)
-                    }
                 }
             }
         }

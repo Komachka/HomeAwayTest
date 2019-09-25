@@ -1,5 +1,6 @@
 package com.kstor.homeawaytest
 
+import com.kstor.homeawaytest.data.di.DbModule
 import com.kstor.homeawaytest.data.di.NetworkModule
 import com.kstor.homeawaytest.data.di.RepositoryModule
 import com.kstor.homeawaytest.data.di.SharedPrefModule
@@ -14,7 +15,8 @@ import javax.inject.Singleton
 @Component(modules = [RepositoryModule::class,
     NetworkModule::class,
     AppModule::class,
-    SharedPrefModule::class
+    SharedPrefModule::class,
+    DbModule::class
 ])
 interface AppComponent {
     fun inject(target: MainActivity)

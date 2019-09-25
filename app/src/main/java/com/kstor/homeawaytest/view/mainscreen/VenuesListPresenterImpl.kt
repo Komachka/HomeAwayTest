@@ -43,11 +43,7 @@ class VenuesListPresenterImpl(
 
     override fun getVenues(query: String) {
         this.query = query
-        useCase.loadVenuesData(query).toObservable().subscribeOn(schedulerProvider.io())
-
-            .map {
-                it.venues
-            }
+        useCase.loadVenuesData(query).subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
             .subscribeBy(
                 onNext = {

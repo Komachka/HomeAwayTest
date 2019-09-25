@@ -46,15 +46,13 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView {
             }
             venuesNameNameTextView.text = venues.name
             venuesCategory.text =
-                venues.categories?.let { category -> category.joinToString { it.name ?: "" } }
+                venues.categories?.name
             venuesNameAdressTextView.text = venues.address
             venues.categories?.let {
-                if (it.isNotEmpty()) {
-                    it[0].iconPath?.let { path ->
+                it.iconPath?.let { path ->
                         venuesPlaceImgView.loadImage(path)
                     }
                 }
-            }
             venuesDistanceFromCenterTextView.text = "${venues.distance} m"
             presenter.setFavorite(venues)
         }

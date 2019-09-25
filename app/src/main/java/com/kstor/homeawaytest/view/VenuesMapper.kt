@@ -13,7 +13,7 @@ interface VenuesMapper {
             VenuesParcelize(
                 requireNotNull(venues.id),
                 requireNotNull(venues.name),
-                requireNotNull(map(venues.categories)),
+                map(venues.categories),
                 venues.address,
                 requireNotNull(venues.distance),
                 requireNotNull(venues.lat),
@@ -25,20 +25,16 @@ interface VenuesMapper {
         }
     }
 
-    fun map(categories: List<VenuesCategory>?): List<VenuesCategoryParcelize>? {
-        return categories?.let {
-            try {
-                categories.map {
-                    VenuesCategoryParcelize(
-                        requireNotNull(it.id),
-                        requireNotNull(it.name),
-                        requireNotNull(it.iconPath)
-                    )
-                }
-            } catch (e: IllegalArgumentException) {
-                log(e.message!!)
-                null
-            }
+    fun map(it: VenuesCategory?): VenuesCategoryParcelize? {
+        return try {
+            VenuesCategoryParcelize(
+                requireNotNull(it?.id),
+                requireNotNull(it?.name),
+                requireNotNull(it?.iconPath)
+            )
+        } catch (e: IllegalArgumentException) {
+            log(e.message!!)
+            null
         }
     }
 }
