@@ -35,4 +35,8 @@ class LocalData(private val venuesDao: VenuesDao) {
         venuesDBList.filter { favoritesId.contains(it.id) }.map { it.isFavorite = true }
         venuesDao.deleteAndSave(venuesDBList)
     }
+
+    fun removeFromFavorite(model: DBVenuesModel) {
+        venuesDao.deleteFromFavorite(mapToDBFavoriteModel(model))
+    }
 }

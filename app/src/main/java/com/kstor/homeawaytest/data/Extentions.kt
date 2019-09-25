@@ -32,7 +32,7 @@ fun mapToListOfVenues(list: List<DBVenuesModel>): List<Venues> {
             VenuesCategory(it.categoryId, it.categoryName, it.iconPath),
             it.address,
             it.distance,
-            it.lat, it.lng
+            it.lat, it.lng, it.isFavorite
         )
     }
 }

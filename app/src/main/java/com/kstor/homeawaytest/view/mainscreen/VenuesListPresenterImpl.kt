@@ -35,11 +35,24 @@ class VenuesListPresenterImpl(
 
     override fun addToFavorite(venues: Venues) {
         if (!venues.isFavorite) {
-            venues.isFavorite = true
             useCase.addToFavorite(venues)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribeBy(
+                    onComplete = {
+                        view?.updateItemView(venues)
+                    },
+                    onError = {})
         } else {
             log("is already favorite")
-            // useCase.removeFromFavorite(venues)
+            useCase.removeFromFavorite(venues)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribeBy(
+                    onComplete = {
+                        view?.updateItemView(venues)
+                    },
+                    onError = {})
         }
     }
 

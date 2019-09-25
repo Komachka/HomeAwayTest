@@ -17,7 +17,8 @@ interface VenuesMapper {
                 venues.address,
                 requireNotNull(venues.distance),
                 requireNotNull(venues.lat),
-                requireNotNull(venues.lng)
+                requireNotNull(venues.lng),
+                venues.isFavorite
             )
         } catch (e: Throwable) {
             log(e.message!!)

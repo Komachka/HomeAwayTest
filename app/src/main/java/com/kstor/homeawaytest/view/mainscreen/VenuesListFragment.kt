@@ -25,6 +25,10 @@ import kotlinx.android.synthetic.main.venues_list_fragment.*
 
 class VenuesListFragment : BaseFragment(), VenuesListView {
 
+    override fun updateItemView(venues: Venues) {
+       log("update item view")
+    }
+
     @Inject
     lateinit var useCases: VenuesUseCase
 
@@ -51,7 +55,6 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
             }
             (adapter as VenuesListAdapter).addToFavoriteClickListener = { venue ->
                 view?.let {
-                    log("add to favorite ${venue.name}")
                     presenter.addToFavorite(venue)
                 }
             }
@@ -62,13 +65,16 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
             .doOnNext {
                 presenter.showProgress()
                 presenter.hideMupButton()
-            }
+                if (it.isEmpty())
+                {
+                    presenter.getFavorites()
+                }
+            }.filter { it.isNotEmpty() }
             .subscribeBy(
                 onError = {
                     presenter.showError(it)
                 },
                 onNext = {
-                    (list.adapter as VenuesListAdapter).clearData()
                     presenter.getVenues(it)
                 })
     }
@@ -131,7 +137,7 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
                 queryEditText?.removeTextChangedListener(textWatcher)
             }
         }
-        return textChangeObservable.filter { it.length >= MIN_INPUT_LENGTH }
+        return textChangeObservable
             .debounce(LOADING_TIMEOUT, TimeUnit.MILLISECONDS)
     }
 }

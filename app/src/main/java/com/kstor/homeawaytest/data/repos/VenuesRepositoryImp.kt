@@ -23,8 +23,12 @@ class VenuesRepositoryImp(
     private val localData: LocalData
 ) : VenuesRepository {
 
-    override fun removeFromFavorite(venues: Venues) {
-        log("remove")
+    override fun removeFromFavorite(venues: Venues): Completable {
+        return Completable.fromRunnable {
+            mapToDBVenuesModel(venues)?.let {
+                localData.removeFromFavorite(it)
+            }
+        }
     }
 
     override fun getFavorites(): Single<List<Venues>> {
@@ -33,18 +37,12 @@ class VenuesRepositoryImp(
         }
     }
 
-    override fun saveToFavorite(venues: Venues) {
-
-        Completable.fromRunnable {
+    override fun saveToFavorite(venues: Venues): Completable {
+        return Completable.fromRunnable {
             mapToDBVenuesModel(venues)?.let {
                 localData.addToFavorites(it)
             }
-        }.subscribeOn(Schedulers.io()).observeOn(Schedulers.io()).subscribeBy(
-            onError = { error -> log("error $error") },
-            onComplete = {
-                log("suscess")
-            }
-        )
+        }
     }
 
     override fun getClosestVenuses(limit: Int, query: String): Observable<List<Venues>> {

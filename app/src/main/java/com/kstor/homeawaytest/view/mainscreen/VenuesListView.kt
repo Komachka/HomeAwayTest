@@ -9,4 +9,5 @@ interface VenuesListView : BaseView {
     fun hideProgress()
     fun showMupButn()
     fun hideMupButn()
+    fun updateItemView(venues: Venues)
 }

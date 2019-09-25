@@ -18,7 +18,7 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     private val venues = mutableListOf<Venues>()
 
     fun updateData(venues: List<Venues>) {
-        // this.venues.clear()
+        clearData()
         this.venues.addAll(venues)
         notifyDataSetChanged()
     }
@@ -32,9 +32,14 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
         }
 
         override fun onClick(item: View) {
+            log("--------------------------------")
             if (item.id == R.id.imageFavorite) {
                 addToFavoriteClickListener.invoke(venues[adapterPosition])
-                venues[adapterPosition].isFavorite = true
+                log(" before is favorite  ${venues[adapterPosition].isFavorite}")
+                venues[adapterPosition].isFavorite = !venues[adapterPosition].isFavorite
+                log("after is favorite  ${venues[adapterPosition].isFavorite}")
+                notifyDataSetChanged()
+                log("--------------------------------")
             } else
                 detailsOnClickListener.invoke(venues[adapterPosition])
         }
