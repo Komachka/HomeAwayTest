@@ -42,7 +42,7 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
         (presenter as VenuesListPresenterImpl).attachView(this)
 
         fab.setOnClickListener { view ->
-            presenter.navigateToMapScreen(view)
+            presenter.navigateToMapScreen(view, queryEditText.text.toString())
         }
 
         list.apply {

@@ -3,12 +3,19 @@ package com.kstor.homeawaytest.view.mainscreen
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.ImageLoader
 import kotlinx.android.synthetic.main.list_item.view.*
+
+
+
+
+
+
 
 class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     ImageLoader {
@@ -32,14 +39,19 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
         }
 
         override fun onClick(item: View) {
-            log("--------------------------------")
+
             if (item.id == R.id.imageFavorite) {
+                val animation = AnimationUtils.loadAnimation(
+                    view.context.applicationContext,
+                    R.anim.zoomin
+                )
+                view.imageFavorite.startAnimation(animation)
                 addToFavoriteClickListener.invoke(venues[adapterPosition])
-                log(" before is favorite  ${venues[adapterPosition].isFavorite}")
+
                 venues[adapterPosition].isFavorite = !venues[adapterPosition].isFavorite
-                log("after is favorite  ${venues[adapterPosition].isFavorite}")
-                notifyDataSetChanged()
-                log("--------------------------------")
+
+                notifyItemChanged(adapterPosition)
+
             } else
                 detailsOnClickListener.invoke(venues[adapterPosition])
         }

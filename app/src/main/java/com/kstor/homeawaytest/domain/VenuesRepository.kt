@@ -10,4 +10,5 @@ interface VenuesRepository {
     fun saveToFavorite(venues: Venues): Completable
     fun removeFromFavorite(venues: Venues) : Completable
     fun getFavorites(): Single<List<Venues>>
+    fun getCityCenter(): Pair<Float, Float>
 }

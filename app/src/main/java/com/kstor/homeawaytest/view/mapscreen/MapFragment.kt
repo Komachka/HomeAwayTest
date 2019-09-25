@@ -13,6 +13,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
+import com.kstor.homeawaytest.data.CENTER
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.BaseFragment
@@ -31,7 +32,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback, MapView {
     lateinit var useCases: VenuesUseCase
 
     override fun showCenterOnTheMap(sydney: LatLng) {
-        myMap?.addMarker(MarkerOptions().position(sydney).title("Sydney"))
+        myMap?.addMarker(MarkerOptions().position(sydney).title(CENTER))
         myMap?.moveCamera(CameraUpdateFactory.newLatLng(sydney))
         myMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 12.0f))
     }

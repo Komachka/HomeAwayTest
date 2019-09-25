@@ -40,7 +40,8 @@ class MapPresenterImpl(
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
             .doOnNext {
-                // view?.showCenterOnTheMap(it)
+                val(lat, lng) = venuesListUseCase.getCityCenter()
+                view?.showCenterOnTheMap(LatLng(lat.toDouble(), lng.toDouble()))
             }
             .subscribeBy(
                 onError = {

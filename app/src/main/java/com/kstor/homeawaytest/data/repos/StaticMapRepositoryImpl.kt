@@ -10,6 +10,10 @@ class StaticMapRepositoryImpl(private val preferenceData: SharedPreferenceData) 
 
     override fun createStaticMapUrl(venues: VenuesParcelize): Observable<String> {
         val (latCenter, lngCenter) = preferenceData.getCityCenterInfo()
+        log("create static map")
+        log(latCenter.toString())
+        log(lngCenter.toString())
+        log("---------")
         val latPoint = venues.lat
         val lngPoint = venues.lng
         val zoom = countZoom(venues.distance)
@@ -21,6 +25,7 @@ class StaticMapRepositoryImpl(private val preferenceData: SharedPreferenceData) 
                 "&$MARKERS=color:$colour1%7Clabel:C%7C$latCenter,$lngCenter" +
                 "&$MARKERS=color:$colour2%7Clabel:P%7C$latPoint,$lngPoint" +
                 "&$KEY=$API_KEY"
+        log(url)
         return Observable.just(url)
     }
 }

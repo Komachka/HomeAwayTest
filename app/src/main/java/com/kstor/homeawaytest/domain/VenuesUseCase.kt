@@ -24,4 +24,8 @@ class VenuesUseCase @Inject constructor(private val repository: VenuesRepository
     fun removeFromFavorite(venues: Venues) : Completable {
         return repository.removeFromFavorite(venues)
     }
+
+    fun getCityCenter():Pair<Float, Float> {
+        return repository.getCityCenter()
+    }
 }

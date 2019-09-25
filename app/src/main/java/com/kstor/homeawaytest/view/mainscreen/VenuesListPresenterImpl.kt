@@ -68,7 +68,6 @@ class VenuesListPresenterImpl(
         view?.showProgress()
     }
 
-    private var query = ""
 
     override fun navigateToDetailsScreen(view: View, venuesParcelize: VenuesParcelize) {
         val action =
@@ -76,13 +75,12 @@ class VenuesListPresenterImpl(
         Navigation.findNavController(view).navigate(action)
     }
 
-    override fun navigateToMapScreen(view: View) {
+    override fun navigateToMapScreen(view: View, query: String) {
         Navigation.findNavController(view)
             .navigate(VenuesListFragmentDirections.actionVenuesListFragmentToMapFragment(query))
     }
 
     override fun getVenues(query: String) {
-        this.query = query
         useCase.loadVenuesData(query).subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
             .subscribeBy(
