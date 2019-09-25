@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.*
+import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.BaseFragment
@@ -33,12 +34,15 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
     lateinit var useCases: VenuesUseCase
 
     @Inject
+    lateinit var favoriteUseCase: FavoriteUseCase
+
+    @Inject
     lateinit var schedulerProvider: SchedulerProvider
     lateinit var presenter: VenuesListPresenter
 
     override fun setUp() {
         presenter =
-            VenuesListPresenterImpl(useCases, schedulerProvider)
+            VenuesListPresenterImpl(useCases, schedulerProvider, favoriteUseCase)
         (presenter as VenuesListPresenterImpl).attachView(this)
 
         fab.setOnClickListener { view ->

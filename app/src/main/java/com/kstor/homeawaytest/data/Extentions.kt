@@ -111,7 +111,7 @@ fun log(message: String) {
     Log.d("MainActivity", message)
 }
 
-fun countZoom(distance: Int): Int {
+fun countZoom(distance: Int?): Int {
     return when (distance) {
         in 0..100 -> 17
         in 100..500 -> 15

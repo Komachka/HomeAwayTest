@@ -3,6 +3,7 @@ package com.kstor.homeawaytest.view.mainscreen
 import android.view.View
 import androidx.navigation.Navigation
 import com.kstor.homeawaytest.data.log
+import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.domain.model.VenuesParcelize
@@ -13,13 +14,14 @@ import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.rxkotlin.subscribeBy
 
 class VenuesListPresenterImpl(
-    private val useCase: VenuesUseCase,
-    private val schedulerProvider: SchedulerProvider
+    private val getVenuesUseCase: VenuesUseCase,
+    private val schedulerProvider: SchedulerProvider,
+    private val favoritesUseCase: FavoriteUseCase
 ) :
     VenuesListPresenter, BasePresentor<VenuesListView>(), VenuesMapper {
 
     override fun getFavorites() {
-        useCase.getFavorites().subscribeOn(schedulerProvider.io())
+        favoritesUseCase.getFavorites().subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
             .subscribeBy(
                 onSuccess = {
@@ -35,7 +37,7 @@ class VenuesListPresenterImpl(
 
     override fun addToFavorite(venues: Venues) {
         if (!venues.isFavorite) {
-            useCase.addToFavorite(venues)
+            favoritesUseCase.addToFavorite(venues)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .subscribeBy(
@@ -45,7 +47,7 @@ class VenuesListPresenterImpl(
                     onError = {})
         } else {
             log("is already favorite")
-            useCase.removeFromFavorite(venues)
+            favoritesUseCase.removeFromFavorite(venues)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .subscribeBy(
@@ -81,7 +83,7 @@ class VenuesListPresenterImpl(
     }
 
     override fun getVenues(query: String) {
-        useCase.loadVenuesData(query).subscribeOn(schedulerProvider.io())
+        getVenuesUseCase.loadVenuesData(query).subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
             .subscribeBy(
                 onNext = {
@@ -98,7 +100,7 @@ class VenuesListPresenterImpl(
     }
 
     override fun navigateToDetailScreen(view: View, venue: Venues) {
-        map(venue)?.let {
+        mapToPaprelize(venue)?.let {
             val action =
                 VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(it)
             Navigation.findNavController(view).navigate(action)

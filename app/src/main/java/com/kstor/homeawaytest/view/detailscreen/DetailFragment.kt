@@ -7,18 +7,29 @@ import android.view.View
 import android.view.ViewGroup
 import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
+import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
+import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.BaseFragment
 import com.kstor.homeawaytest.view.ImageLoader
+import com.kstor.homeawaytest.view.VenuesMapper
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.detail_fragment.*
 
-class DetailFragment : BaseFragment(), ImageLoader, DetailsView {
+class DetailFragment : BaseFragment(), ImageLoader, DetailsView, VenuesMapper {
+
+
+    override fun updateItemView(venues: Venues) {
+        presenter.setFavorite(venues)
+    }
 
     lateinit var presenter: DetailsPresenterImpl
     @Inject
     lateinit var useCase: GenerateStaticMapUrlUseCase
+
+    @Inject
+    lateinit var favoriteUseCase: FavoriteUseCase
     @Inject
     lateinit var schedulerProvider: SchedulerProvider
 
@@ -36,26 +47,35 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView {
     }
 
     override fun setUp() {
-        presenter = DetailsPresenterImpl(useCase, schedulerProvider)
+        presenter = DetailsPresenterImpl(useCase, schedulerProvider, favoriteUseCase )
         presenter.attachView(this)
         arguments?.let { bundle ->
-            val venues = DetailFragmentArgs.fromBundle(bundle).venues
-            presenter.createStaticMapUrl(venues)
-            toolbar.apply {
-                title = venues.name
-            }
-            venuesNameNameTextView.text = venues.name
-            venuesCategory.text =
-                venues.categories?.name
-            venuesNameAdressTextView.text = venues.address
-            venues.categories?.let {
-                it.iconPath?.let { path ->
+            val venuesParselize = DetailFragmentArgs.fromBundle(bundle).venues
+            mapToVenues(venuesParselize)?.let {venues ->
+                presenter.createStaticMapUrl(venues)
+                toolbar.apply {
+                    title = venuesParselize.name
+                }
+                venuesNameNameTextView.text = venuesParselize.name
+                venuesCategory.text =
+                    venuesParselize.categories?.name
+                venuesNameAdressTextView.text = venuesParselize.address
+                venuesParselize.categories?.let {
+                    it.iconPath?.let { path ->
                         venuesPlaceImgView.loadImage(path)
                     }
                 }
-            venuesDistanceFromCenterTextView.text = "${venues.distance} m"
-            presenter.setFavorite(venues)
+                venuesDistanceFromCenterTextView.text = "${venuesParselize.distance} m"
+                presenter.setFavorite(venues)
+                fabFavorite.setOnClickListener {
+                    venues.isFavorite = !venues.isFavorite
+                    presenter.addAndRemoveFromFavorites(venues)
+                }
+            }
+
         }
+
+
     }
 
     override fun destroy() {
