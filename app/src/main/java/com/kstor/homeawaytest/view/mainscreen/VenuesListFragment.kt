@@ -12,11 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.*
-import com.kstor.homeawaytest.domain.FavoriteUseCase
-import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.base.BaseFragment
-import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -32,26 +29,13 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
     }
 
     @Inject
-    lateinit var useCases: VenuesUseCase
-
-    @Inject
-    lateinit var favoriteUseCase: FavoriteUseCase
-
-    @Inject
-    lateinit var schedulerProvider: SchedulerProvider
     lateinit var presenter: VenuesListPresenter
 
     private lateinit var compositeDisposable: CompositeDisposable
 
     override fun setUp() {
         compositeDisposable = CompositeDisposable()
-        presenter =
-            VenuesListPresenterImpl(
-                compositeDisposable,
-                useCases,
-                schedulerProvider,
-                favoriteUseCase
-            ) // TODO inject by dagger
+
         (presenter as VenuesListPresenterImpl).attachView(this)
         fab.setOnClickListener { view ->
             presenter.navigateToMapScreen(view, queryEditText.text.toString())

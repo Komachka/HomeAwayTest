@@ -8,8 +8,9 @@ import com.kstor.homeawaytest.view.base.BasePresenter
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
+import javax.inject.Inject
 
-class DetailsPresenterImpl(
+class DetailsPresenterImpl @Inject constructor(
     compositeDisposable: CompositeDisposable,
     private val useCase: GenerateStaticMapUrlUseCase,
     private val schedulerProvider: SchedulerProvider,

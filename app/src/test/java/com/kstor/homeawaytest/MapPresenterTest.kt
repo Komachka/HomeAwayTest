@@ -35,10 +35,9 @@ class MapPresenterTest {
     @Mock
     private lateinit var view: MapView
 
-    private lateinit var compositeDisposable:CompositeDisposable
+    private lateinit var compositeDisposable: CompositeDisposable
 
     private lateinit var schedulerProvider: SchedulerProvider
-
 
     private lateinit var venuesList: List<Venues>
     private lateinit var venuesMap: Map<LatLng, Venues>
@@ -48,7 +47,7 @@ class MapPresenterTest {
     private lateinit var presenterNoView: MapPresenterImpl
     private lateinit var presenterWithError: MapPresenterImpl
 
-    private lateinit var centerLatLng:LatLng
+    private lateinit var centerLatLng: LatLng
 
     @Before
     fun setup() {
@@ -69,7 +68,6 @@ class MapPresenterTest {
         presenter = createBaseTestPresenter()
         presenterNoView = createPresenterWithoutView()
         presenterWithError = createPresenterWithError()
-
     }
 
     private fun createPresenterWithoutView(): MapPresenterImpl {

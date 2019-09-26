@@ -9,12 +9,13 @@ import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.base.BasePresenter
 import com.kstor.homeawaytest.view.base.BaseView
-import com.kstor.homeawaytest.view.utils.VenuesMapper
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
+import com.kstor.homeawaytest.view.utils.VenuesMapper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
+import javax.inject.Inject
 
-class MapPresenterImpl(
+class MapPresenterImpl @Inject constructor(
     compositeDisposable: CompositeDisposable,
     private val venuesListUseCase: VenuesUseCase,
     private val schedulerProvider: SchedulerProvider

@@ -13,24 +13,15 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
-import com.kstor.homeawaytest.data.CENTER
-import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.base.BaseFragment
-import com.kstor.homeawaytest.view.utils.SchedulerProvider
-import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class MapFragment : BaseFragment(), OnMapReadyCallback, MapView {
 
     private var myMap: GoogleMap? = null
+    @Inject
     lateinit var mapPresenter: MapPresenter
-
-    @Inject
-    lateinit var schedulerProvider: SchedulerProvider
-
-    @Inject
-    lateinit var useCases: VenuesUseCase
 
     override fun showCenterOnTheMap(sydney: LatLng) {
         myMap?.moveCamera(CameraUpdateFactory.newLatLng(sydney))
@@ -56,7 +47,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback, MapView {
     override fun setUp() {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-        mapPresenter = MapPresenterImpl(CompositeDisposable(), useCases, schedulerProvider) // TODO inject by dagger
         (mapPresenter as MapPresenterImpl).attachView(this)
         arguments?.let {
             mapPresenter.getVenues(MapFragmentArgs.fromBundle(it).query)
