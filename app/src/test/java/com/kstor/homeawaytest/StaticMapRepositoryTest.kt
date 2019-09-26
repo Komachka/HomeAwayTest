@@ -26,7 +26,7 @@ class StaticMapRepositoryTest {
 
     @Before
     fun setup() {
-         venues = VenuesParcelize(
+        venues = VenuesParcelize(
             id = "1",
             name = "Some Caffe",
             categories = listOf(VenuesCategoryParcelize("1", "Coffe", "imagePath")),

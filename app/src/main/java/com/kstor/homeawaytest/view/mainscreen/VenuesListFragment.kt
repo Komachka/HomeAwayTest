@@ -1,6 +1,5 @@
 package com.kstor.homeawaytest.view.mainscreen
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -19,6 +18,7 @@ import com.kstor.homeawaytest.view.BaseFragment
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -33,14 +33,17 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
     lateinit var schedulerProvider: SchedulerProvider
     lateinit var presenter: VenuesListPresenter
 
+    private lateinit var compositeDisposable: CompositeDisposable
+
     override fun setUp() {
+        compositeDisposable = CompositeDisposable()
         presenter =
-            VenuesListPresenterImpl(useCases, schedulerProvider)
+            VenuesListPresenterImpl(compositeDisposable, useCases, schedulerProvider) // TODO inject by dagger
         (presenter as VenuesListPresenterImpl).attachView(this)
 
         fab.setOnClickListener { view ->
+            presenter.navigateToMapScreen(view)
         }
-
         list.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = VenuesListAdapter()
@@ -50,8 +53,7 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
                 }
             }
         }
-
-        createTextChangeObservable().observeOn(AndroidSchedulers.mainThread())
+        compositeDisposable.add(createTextChangeObservable().observeOn(AndroidSchedulers.mainThread())
             .doOnNext {
                 presenter.showProgress()
                 presenter.hideMupButton()
@@ -63,9 +65,11 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
                 onNext = {
                     presenter.getVenues(it)
                 })
+        )
     }
 
     override fun destroy() {
+        compositeDisposable.clear()
         (presenter as VenuesListPresenterImpl).detachView()
     }
 
@@ -98,11 +102,9 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
         fab.visibility = VISIBLE
     }
 
-
     override fun hideMupButn() {
         fab.visibility = INVISIBLE
     }
-
 
     private fun createTextChangeObservable(): Observable<String> {
         val textChangeObservable = Observable.create<String> { emitter ->
@@ -128,5 +130,4 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
         return textChangeObservable.filter { it.length >= MIN_INPUT_LENGTH }
             .debounce(LOADING_TIMEOUT, TimeUnit.MILLISECONDS)
     }
-
 }

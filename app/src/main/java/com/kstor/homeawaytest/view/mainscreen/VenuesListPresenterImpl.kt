@@ -4,17 +4,19 @@ import android.view.View
 import androidx.navigation.Navigation
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.view.BasePresentor
+import com.kstor.homeawaytest.domain.model.VenuesParcelize
+import com.kstor.homeawaytest.view.BasePresenter
 import com.kstor.homeawaytest.view.BaseView
 import com.kstor.homeawaytest.view.VenuesMapper
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 
-class VenuesListPresenterImpl(
+class VenuesListPresenterImpl(compositeDisposable: CompositeDisposable,
     private val useCase: VenuesUseCase,
     private val schedulerProvider: SchedulerProvider
 ) :
-    VenuesListPresenter, BasePresentor<VenuesListView>(), VenuesMapper {
+    VenuesListPresenter, BasePresenter<VenuesListView>(compositeDisposable), VenuesMapper {
 
     override fun hideMupButton() {
         view?.hideMupButn()
@@ -28,8 +30,22 @@ class VenuesListPresenterImpl(
         view?.showProgress()
     }
 
+    private var query = ""
+
+    override fun navigateToDetailsScreen(view: View, venuesParcelize: VenuesParcelize) {
+        val action =
+            VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(venuesParcelize)
+        Navigation.findNavController(view).navigate(action)
+    }
+
+    override fun navigateToMapScreen(view: View) {
+        Navigation.findNavController(view).navigate(VenuesListFragmentDirections.actionVenuesListFragmentToMapFragment(query))
+    }
+
     override fun getVenues(query: String) {
+        this.query = query
         useCase.loadVenuesData(query).toObservable().subscribeOn(schedulerProvider.io())
+
             .map {
                 it.venues
             }

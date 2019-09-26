@@ -15,12 +15,15 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        resValue "string", "google_map_key", "AIzaSyC6SflSVpRXbS2qbY0P7yJ1THGl-dOJiUQ"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+
     }
 }
 configurations {
@@ -48,10 +51,12 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:2.1.0"
     implementation "com.squareup.picasso:picasso:2.71828"
     ktlint "com.pinterest:ktlint:0.34.2"
+    implementation 'com.google.android.gms:play-services-maps:16.1.0'
     implementation 'com.google.dagger:dagger:2.24'
     kapt 'com.google.dagger:dagger-compiler:2.11'
     testImplementation 'com.nhaarman:mockito-kotlin-kt1.1:1.5.0'
     testImplementation "org.mockito:mockito-inline:+"
+
 }
 
 task ktlint(type: JavaExec, group: "verification") {
