@@ -27,7 +27,6 @@ class VenuesListPresenterImpl(
                 onSuccess = {
                     view?.hideProgress()
                     view?.displayVenues(it)
-                    view?.showMupButn()
                     log("count ${it.size}")
                 }, onError = {
                     (view as BaseView).showError(it)
