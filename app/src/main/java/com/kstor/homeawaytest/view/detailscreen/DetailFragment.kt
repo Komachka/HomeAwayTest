@@ -10,19 +10,16 @@ import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
 import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.view.BaseFragment
-import com.kstor.homeawaytest.view.ImageLoader
-import com.kstor.homeawaytest.view.VenuesMapper
+import com.kstor.homeawaytest.view.base.BaseFragment
+import com.kstor.homeawaytest.view.utils.ImageLoader
+import com.kstor.homeawaytest.view.utils.VenuesMapper
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.detail_fragment.*
 
-class DetailFragment : BaseFragment(), ImageLoader, DetailsView, VenuesMapper {
-
-    override fun updateItemView(venues: Venues) {
-        presenter.setFavorite(venues)
-    }
+class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
+    VenuesMapper {
 
     lateinit var presenter: DetailsPresenterImpl
     @Inject
@@ -47,7 +44,12 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView, VenuesMapper {
     }
 
     override fun setUp() {
-        presenter = DetailsPresenterImpl(CompositeDisposable(), useCase, schedulerProvider, favoriteUseCase) // TODO inject by dagger
+        presenter = DetailsPresenterImpl(
+            CompositeDisposable(),
+            useCase,
+            schedulerProvider,
+            favoriteUseCase
+        ) // TODO inject by dagger
         presenter.attachView(this)
         arguments?.let { bundle ->
             val venuesParselize = DetailFragmentArgs.fromBundle(bundle).venues
@@ -73,6 +75,10 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView, VenuesMapper {
                 }
             }
         }
+    }
+
+    override fun updateItemView(venues: Venues) {
+        presenter.setFavorite(venues)
     }
 
     override fun destroy() {

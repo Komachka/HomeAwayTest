@@ -1,14 +1,11 @@
 package com.kstor.homeawaytest
 
 import com.kstor.homeawaytest.data.LOAD_LIMIT
-import com.kstor.homeawaytest.data.network.model.*
 import com.kstor.homeawaytest.domain.VenuesRepository
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.domain.model.VenuesCategory
-import com.kstor.homeawaytest.domain.model.VenuesData
 import io.reactivex.Observable
-import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -87,7 +84,7 @@ class VenuesUseCaseTest {
 
     @Test
     fun on_load_venues_data_get_valid_venues_data() {
-        useCase.loadVenuesData(QUERY).test()
+        useCase.loadVenuesDataFromApi(QUERY).test()
             .assertNoErrors()
             .assertValue {
                 it.isNotEmpty()
@@ -96,7 +93,7 @@ class VenuesUseCaseTest {
 
     @Test
     fun on_load_venues_data_get_error() {
-        useCase.loadVenuesData(ERROR).test()
+        useCase.loadVenuesDataFromApi(ERROR).test()
             .assertError {
                 it == error
             }

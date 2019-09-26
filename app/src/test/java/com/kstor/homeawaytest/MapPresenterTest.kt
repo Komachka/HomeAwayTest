@@ -3,7 +3,6 @@ package com.kstor.homeawaytest
 import com.google.android.gms.maps.model.LatLng
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.domain.model.VenuesData
 import com.kstor.homeawaytest.view.mapscreen.MapPresenterImpl
 import com.kstor.homeawaytest.view.mapscreen.MapView
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
@@ -75,14 +74,17 @@ class MapPresenterTest {
 
     private fun createPresenterWithoutView(): MapPresenterImpl {
         val goodResult = Observable.just(venuesList)
-        `when`(useCaseResultWithData.loadVenuesData(TEST_QUERY)).thenReturn(goodResult)
+        `when`(useCaseResultWithData.loadVenuesCache()).thenReturn(goodResult)
         presenterNoView = MapPresenterImpl(compositeDisposable, useCaseResultWithData, schedulerProvider)
         return presenterNoView
     }
 
     private fun createBaseTestPresenter(): MapPresenterImpl {
         val goodResult = Observable.just(venuesList)
-        `when`(useCaseResultWithData.loadVenuesData(TEST_QUERY)).thenReturn(goodResult)
+        `when`(useCaseResultWithData.loadVenuesCache()).thenReturn(goodResult)
+
+        `when`(useCaseResultWithData.getCityCenter()).thenReturn(0.0F to 0.0F)
+
         presenter = MapPresenterImpl(compositeDisposable, useCaseResultWithData, schedulerProvider)
         presenter.attachView(view)
         return presenter
@@ -90,7 +92,7 @@ class MapPresenterTest {
 
     private fun createPresenterWithError(): MapPresenterImpl {
         val bedResult = Observable.error<List<Venues>>(error)
-        `when`(useCaseResultWithError.loadVenuesData(TEST_QUERY)).thenReturn(bedResult)
+        `when`(useCaseResultWithError.loadVenuesCache()).thenReturn(bedResult)
         presenterWithError =
             MapPresenterImpl(compositeDisposable, useCaseResultWithError, schedulerProvider)
         presenterWithError.attachView(view)

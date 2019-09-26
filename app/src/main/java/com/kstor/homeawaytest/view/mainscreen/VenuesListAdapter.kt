@@ -6,9 +6,8 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.kstor.homeawaytest.R
-import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.view.ImageLoader
+import com.kstor.homeawaytest.view.utils.ImageLoader
 import kotlinx.android.synthetic.main.list_item.view.*
 
 class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
@@ -41,9 +40,7 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
                 )
                 view.imageFavorite.startAnimation(animation)
                 addToFavoriteClickListener.invoke(venues[adapterPosition])
-
                 venues[adapterPosition].isFavorite = !venues[adapterPosition].isFavorite
-
                 notifyItemChanged(adapterPosition)
             } else
                 detailsOnClickListener.invoke(venues[adapterPosition])
@@ -60,7 +57,6 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
                         view.venuesPlaceImgView.loadImage(it)
                 }
             }
-            log(venue.name + " " + venue.isFavorite.toString())
             if (venue.isFavorite) { view.imageFavorite.setImageResource(R.drawable.ic_favorite_black_24dp) } else { view.imageFavorite.setImageResource(R.drawable.ic_favorite_border_black_24dp) }
         }
     }
@@ -81,7 +77,7 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
         (holder as ItemViewHolder).bind(venues[position])
     }
 
-    fun clearData() {
+    private fun clearData() {
         this.venues.clear()
     }
 }

@@ -21,6 +21,11 @@ class VenuesRepositoryImp(
     private val localData: LocalData
 ) : VenuesRepository {
 
+
+    override fun getClosestVenusesCache(): Observable<List<Venues>> {
+        return getLocalData()
+    }
+
     override fun getCityCenter(): Pair<Float, Float> {
         return preferenceData.getCityCenterInfo()
     }

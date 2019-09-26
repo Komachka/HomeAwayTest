@@ -7,8 +7,12 @@ import javax.inject.Inject
 
 class VenuesUseCase @Inject constructor(private val repository: VenuesRepository) {
 
-    fun loadVenuesData(query: String): Observable<List<Venues>> {
+    fun loadVenuesDataFromApi(query: String): Observable<List<Venues>> {
         return repository.getClosestVenuses(LOAD_LIMIT, query)
+    }
+
+    fun loadVenuesCache(): Observable<List<Venues>> {
+        return repository.getClosestVenusesCache()
     }
 
     fun getCityCenter(): Pair<Float, Float> {

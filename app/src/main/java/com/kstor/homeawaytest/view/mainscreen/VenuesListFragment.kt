@@ -15,7 +15,7 @@ import com.kstor.homeawaytest.data.*
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.view.BaseFragment
+import com.kstor.homeawaytest.view.base.BaseFragment
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -53,7 +53,6 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
                 favoriteUseCase
             ) // TODO inject by dagger
         (presenter as VenuesListPresenterImpl).attachView(this)
-
         fab.setOnClickListener { view ->
             presenter.navigateToMapScreen(view, queryEditText.text.toString())
         }
@@ -72,8 +71,8 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
             }
         }
         presenter.getFavorites()
-        compositeDisposable.add(createTextChangeObservable().observeOn(AndroidSchedulers.mainThread())
-
+        compositeDisposable.add(createTextChangeObservable()
+            .observeOn(AndroidSchedulers.mainThread())
             .doOnNext {
                 presenter.showProgress()
                 presenter.hideMupButton()

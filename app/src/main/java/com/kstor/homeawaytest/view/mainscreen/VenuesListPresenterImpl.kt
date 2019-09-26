@@ -2,14 +2,13 @@ package com.kstor.homeawaytest.view.mainscreen
 
 import android.view.View
 import androidx.navigation.Navigation
-import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.domain.model.VenuesParcelize
-import com.kstor.homeawaytest.view.BasePresenter
-import com.kstor.homeawaytest.view.BaseView
-import com.kstor.homeawaytest.view.VenuesMapper
+import com.kstor.homeawaytest.view.base.BasePresenter
+import com.kstor.homeawaytest.view.base.BaseView
+import com.kstor.homeawaytest.view.utils.VenuesMapper
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
@@ -20,7 +19,8 @@ class VenuesListPresenterImpl(
     private val schedulerProvider: SchedulerProvider,
     private val favoritesUseCase: FavoriteUseCase
 ) :
-    VenuesListPresenter, BasePresenter<VenuesListView>(compositeDisposable), VenuesMapper {
+    VenuesListPresenter, BasePresenter<VenuesListView>(compositeDisposable),
+    VenuesMapper {
 
     override fun getFavorites() {
         compositeDisposable.add(favoritesUseCase.getFavorites().subscribeOn(schedulerProvider.io())
@@ -29,8 +29,8 @@ class VenuesListPresenterImpl(
                 onSuccess = {
                     view?.hideProgress()
                     view?.displayVenues(it)
-                    log("count ${it.size}")
                 }, onError = {
+                    view?.hideProgress()
                     (view as BaseView).showError(it)
                 }
             ))
@@ -82,7 +82,7 @@ class VenuesListPresenterImpl(
     }
 
     override fun getVenues(query: String) {
-        compositeDisposable.add(getVenuesUseCase.loadVenuesData(query).subscribeOn(schedulerProvider.io())
+        compositeDisposable.add(getVenuesUseCase.loadVenuesDataFromApi(query).subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
             .subscribeBy(
                 onNext = {
@@ -90,6 +90,7 @@ class VenuesListPresenterImpl(
                     view?.displayVenues(it)
                     view?.showMupButn()
                 }, onError = {
+                    view?.hideProgress()
                     (view as BaseView).showError(it)
                 }, onComplete = {
                     println("Complete")

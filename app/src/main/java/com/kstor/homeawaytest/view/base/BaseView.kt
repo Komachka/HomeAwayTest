@@ -1,4 +1,4 @@
-package com.kstor.homeawaytest.view
+package com.kstor.homeawaytest.view.base
 
 interface BaseView {
     fun showError(error: Throwable?)

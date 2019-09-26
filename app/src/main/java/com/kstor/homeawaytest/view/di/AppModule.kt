@@ -1,4 +1,4 @@
-package com.kstor.homeawaytest.view
+package com.kstor.homeawaytest.view.di
 
 import android.app.Application
 import android.content.Context

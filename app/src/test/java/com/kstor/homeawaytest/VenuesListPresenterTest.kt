@@ -3,7 +3,6 @@ package com.kstor.homeawaytest
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.domain.model.VenuesData
 import com.kstor.homeawaytest.view.mainscreen.VenuesListPresenterImpl
 import com.kstor.homeawaytest.view.mainscreen.VenuesListView
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
@@ -69,15 +68,14 @@ class VenuesListPresenterTest {
 
     private fun createPresenterWithoutView(): VenuesListPresenterImpl {
         val goodResult = Observable.just(venuesList)
-        `when`(useCaseResultWithData.loadVenuesData(TEST_QUERY)).thenReturn(goodResult)
+        `when`(useCaseResultWithData.loadVenuesDataFromApi(TEST_QUERY)).thenReturn(goodResult)
         presenterNoView = VenuesListPresenterImpl(compositeDisposable, useCaseResultWithData, schedulerProvider, favoritesUseCase)
         return presenterNoView
     }
 
     private fun createBaseTestPresenter(): VenuesListPresenterImpl {
-
         val goodResult = Observable.just(venuesList)
-        `when`(useCaseResultWithData.loadVenuesData(TEST_QUERY)).thenReturn(goodResult)
+        `when`(useCaseResultWithData.loadVenuesDataFromApi(TEST_QUERY)).thenReturn(goodResult)
         presenter = VenuesListPresenterImpl(compositeDisposable, useCaseResultWithData, schedulerProvider, favoritesUseCase)
         presenter.attachView(view)
         return presenter
@@ -85,7 +83,7 @@ class VenuesListPresenterTest {
 
     private fun createPresenterWithError(): VenuesListPresenterImpl {
         val bedResult = Observable.error<List<Venues>>(error)
-        `when`(useCaseResultWithError.loadVenuesData(TEST_QUERY)).thenReturn(bedResult)
+        `when`(useCaseResultWithError.loadVenuesDataFromApi(TEST_QUERY)).thenReturn(bedResult)
         presenterWithError =
             VenuesListPresenterImpl(compositeDisposable, useCaseResultWithError, schedulerProvider, favoritesUseCase)
         presenterWithError.attachView(view)
@@ -110,8 +108,9 @@ class VenuesListPresenterTest {
     }
 
     @Test
-    fun show_error_if_use_case_return_error() {
+    fun show_error_and_hide_progress_if_use_case_return_error() {
         presenterWithError.getVenues(TEST_QUERY)
+        verify(view).hideProgress()
         verify(view).showError(error)
         Mockito.verifyZeroInteractions(view)
     }

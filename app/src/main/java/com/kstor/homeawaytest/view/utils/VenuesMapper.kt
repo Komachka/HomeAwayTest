@@ -1,4 +1,4 @@
-package com.kstor.homeawaytest.view
+package com.kstor.homeawaytest.view.utils
 
 import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.model.Venues

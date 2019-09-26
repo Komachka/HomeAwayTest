@@ -11,4 +11,5 @@ interface VenuesRepository {
     fun removeFromFavorite(venues: Venues): Completable
     fun getFavorites(): Single<List<Venues>>
     fun getCityCenter(): Pair<Float, Float>
+    fun getClosestVenusesCache(): Observable<List<Venues>>
 }

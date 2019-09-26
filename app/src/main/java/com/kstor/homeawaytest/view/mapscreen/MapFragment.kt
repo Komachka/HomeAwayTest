@@ -16,7 +16,7 @@ import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.CENTER
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.view.BaseFragment
+import com.kstor.homeawaytest.view.base.BaseFragment
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -33,7 +33,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback, MapView {
     lateinit var useCases: VenuesUseCase
 
     override fun showCenterOnTheMap(sydney: LatLng) {
-        myMap?.addMarker(MarkerOptions().position(sydney).title(CENTER))
         myMap?.moveCamera(CameraUpdateFactory.newLatLng(sydney))
         myMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 12.0f))
     }
