@@ -21,6 +21,7 @@ import kotlinx.android.synthetic.main.detail_fragment.*
 class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
     VenuesMapper {
 
+    @Inject
     lateinit var presenter: DetailsPresenterImpl
     @Inject
     lateinit var useCase: GenerateStaticMapUrlUseCase
@@ -44,12 +45,12 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
     }
 
     override fun setUp() {
-        presenter = DetailsPresenterImpl(
+        /*presenter = DetailsPresenterImpl(
             CompositeDisposable(),
             useCase,
             schedulerProvider,
             favoriteUseCase
-        ) // TODO inject by dagger
+        ) // TODO inject by dagger*/
         presenter.attachView(this)
         arguments?.let { bundle ->
             val venuesParselize = DetailFragmentArgs.fromBundle(bundle).venues

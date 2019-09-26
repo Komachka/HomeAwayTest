@@ -16,7 +16,8 @@ import javax.inject.Singleton
     NetworkModule::class,
     AppModule::class,
     SharedPrefModule::class,
-    DbModule::class
+    DbModule::class,
+    PresentersModule::class
 ])
 interface AppComponent {
     fun inject(target: MainActivity)
