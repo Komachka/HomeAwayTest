@@ -14,11 +14,11 @@ import com.kstor.homeawaytest.view.BaseFragment
 import com.kstor.homeawaytest.view.ImageLoader
 import com.kstor.homeawaytest.view.VenuesMapper
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
+import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.detail_fragment.*
 
 class DetailFragment : BaseFragment(), ImageLoader, DetailsView, VenuesMapper {
-
 
     override fun updateItemView(venues: Venues) {
         presenter.setFavorite(venues)
@@ -47,11 +47,11 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView, VenuesMapper {
     }
 
     override fun setUp() {
-        presenter = DetailsPresenterImpl(useCase, schedulerProvider, favoriteUseCase )
+        presenter = DetailsPresenterImpl(CompositeDisposable(), useCase, schedulerProvider, favoriteUseCase) // TODO inject by dagger
         presenter.attachView(this)
         arguments?.let { bundle ->
             val venuesParselize = DetailFragmentArgs.fromBundle(bundle).venues
-            mapToVenues(venuesParselize)?.let {venues ->
+            mapToVenues(venuesParselize)?.let { venues ->
                 presenter.createStaticMapUrl(venues)
                 toolbar.apply {
                     title = venuesParselize.name
@@ -72,10 +72,7 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView, VenuesMapper {
                     presenter.addAndRemoveFromFavorites(venues)
                 }
             }
-
         }
-
-
     }
 
     override fun destroy() {

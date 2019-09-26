@@ -1,43 +1,41 @@
 package com.kstor.homeawaytest.view.detailscreen
 
 import com.kstor.homeawaytest.R
-import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
 import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.domain.model.VenuesParcelize
-import com.kstor.homeawaytest.view.BasePresentor
-import com.kstor.homeawaytest.view.VenuesMapper
+import com.kstor.homeawaytest.view.BasePresenter
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 
 class DetailsPresenterImpl(
+    compositeDisposable: CompositeDisposable,
     private val useCase: GenerateStaticMapUrlUseCase,
     private val schedulerProvider: SchedulerProvider,
     private val favoritesUseCase: FavoriteUseCase
 
-) : DetailsPresenter, BasePresentor<DetailsView>() {
+) : DetailsPresenter, BasePresenter<DetailsView>(compositeDisposable) {
 
     override fun addAndRemoveFromFavorites(venues: Venues) {
         if (!venues.isFavorite) {
-            favoritesUseCase.addToFavorite(venues)
+            compositeDisposable.add(favoritesUseCase.addToFavorite(venues)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .subscribeBy(
                     onComplete = {
                         view?.updateItemView(venues)
                     },
-                    onError = {})
+                    onError = {}))
         } else {
-            log("is already favorite")
-            favoritesUseCase.removeFromFavorite(venues)
+            compositeDisposable.add(favoritesUseCase.removeFromFavorite(venues)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .subscribeBy(
                     onComplete = {
                         view?.updateItemView(venues)
                     },
-                    onError = {})
+                    onError = {}))
         }
     }
 
@@ -47,13 +45,11 @@ class DetailsPresenterImpl(
     }
 
     override fun createStaticMapUrl(venues: Venues) {
-        useCase.createStaticMapUrl(venues)
+        compositeDisposable.add(useCase.createStaticMapUrl(venues)
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
             .subscribe {
                 (view as DetailsView).loadMap(it)
-            }
+            })
     }
-
-
 }

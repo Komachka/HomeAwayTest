@@ -11,12 +11,6 @@ import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.ImageLoader
 import kotlinx.android.synthetic.main.list_item.view.*
 
-
-
-
-
-
-
 class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     ImageLoader {
 
@@ -51,7 +45,6 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
                 venues[adapterPosition].isFavorite = !venues[adapterPosition].isFavorite
 
                 notifyItemChanged(adapterPosition)
-
             } else
                 detailsOnClickListener.invoke(venues[adapterPosition])
         }

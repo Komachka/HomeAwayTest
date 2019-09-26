@@ -7,21 +7,23 @@ import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.domain.model.VenuesParcelize
-import com.kstor.homeawaytest.view.BasePresentor
+import com.kstor.homeawaytest.view.BasePresenter
 import com.kstor.homeawaytest.view.BaseView
 import com.kstor.homeawaytest.view.VenuesMapper
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 
 class VenuesListPresenterImpl(
+    compositeDisposable: CompositeDisposable,
     private val getVenuesUseCase: VenuesUseCase,
     private val schedulerProvider: SchedulerProvider,
     private val favoritesUseCase: FavoriteUseCase
 ) :
-    VenuesListPresenter, BasePresentor<VenuesListView>(), VenuesMapper {
+    VenuesListPresenter, BasePresenter<VenuesListView>(compositeDisposable), VenuesMapper {
 
     override fun getFavorites() {
-        favoritesUseCase.getFavorites().subscribeOn(schedulerProvider.io())
+        compositeDisposable.add(favoritesUseCase.getFavorites().subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
             .subscribeBy(
                 onSuccess = {
@@ -31,29 +33,28 @@ class VenuesListPresenterImpl(
                 }, onError = {
                     (view as BaseView).showError(it)
                 }
-            )
+            ))
     }
 
     override fun addToFavorite(venues: Venues) {
         if (!venues.isFavorite) {
-            favoritesUseCase.addToFavorite(venues)
+            compositeDisposable.add(favoritesUseCase.addToFavorite(venues)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .subscribeBy(
                     onComplete = {
                         view?.updateItemView(venues)
                     },
-                    onError = {})
+                    onError = {}))
         } else {
-            log("is already favorite")
-            favoritesUseCase.removeFromFavorite(venues)
+            compositeDisposable.add(favoritesUseCase.removeFromFavorite(venues)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .subscribeBy(
                     onComplete = {
                         view?.updateItemView(venues)
                     },
-                    onError = {})
+                    onError = {}))
         }
     }
 
@@ -69,7 +70,6 @@ class VenuesListPresenterImpl(
         view?.showProgress()
     }
 
-
     override fun navigateToDetailsScreen(view: View, venuesParcelize: VenuesParcelize) {
         val action =
             VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(venuesParcelize)
@@ -82,20 +82,19 @@ class VenuesListPresenterImpl(
     }
 
     override fun getVenues(query: String) {
-        getVenuesUseCase.loadVenuesData(query).subscribeOn(schedulerProvider.io())
+        compositeDisposable.add(getVenuesUseCase.loadVenuesData(query).subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
             .subscribeBy(
                 onNext = {
                     view?.hideProgress()
                     view?.displayVenues(it)
                     view?.showMupButn()
-                    log("count ${it.size}")
                 }, onError = {
                     (view as BaseView).showError(it)
                 }, onComplete = {
                     println("Complete")
                 }
-            )
+            ))
     }
 
     override fun navigateToDetailScreen(view: View, venue: Venues) {

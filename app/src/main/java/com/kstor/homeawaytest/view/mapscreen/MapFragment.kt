@@ -18,6 +18,7 @@ import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.BaseFragment
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
+import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class MapFragment : BaseFragment(), OnMapReadyCallback, MapView {
@@ -56,7 +57,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback, MapView {
     override fun setUp() {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-        mapPresenter = MapPresenterImpl(useCases, schedulerProvider)
+        mapPresenter = MapPresenterImpl(CompositeDisposable(), useCases, schedulerProvider) // TODO inject by dagger
         (mapPresenter as MapPresenterImpl).attachView(this)
         arguments?.let {
             mapPresenter.getVenues(MapFragmentArgs.fromBundle(it).query)
@@ -65,7 +66,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback, MapView {
 
     override fun destroy() {
         (mapPresenter as MapPresenterImpl).apply {
-            onDispose()
             detachView()
         }
     }

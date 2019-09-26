@@ -19,6 +19,7 @@ import com.kstor.homeawaytest.view.BaseFragment
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -27,7 +28,7 @@ import kotlinx.android.synthetic.main.venues_list_fragment.*
 class VenuesListFragment : BaseFragment(), VenuesListView {
 
     override fun updateItemView(venues: Venues) {
-       log("update item view")
+        log("update item view")
     }
 
     @Inject
@@ -40,15 +41,22 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
     lateinit var schedulerProvider: SchedulerProvider
     lateinit var presenter: VenuesListPresenter
 
+    private lateinit var compositeDisposable: CompositeDisposable
+
     override fun setUp() {
+        compositeDisposable = CompositeDisposable()
         presenter =
-            VenuesListPresenterImpl(useCases, schedulerProvider, favoriteUseCase)
+            VenuesListPresenterImpl(
+                compositeDisposable,
+                useCases,
+                schedulerProvider,
+                favoriteUseCase
+            ) // TODO inject by dagger
         (presenter as VenuesListPresenterImpl).attachView(this)
 
         fab.setOnClickListener { view ->
             presenter.navigateToMapScreen(view, queryEditText.text.toString())
         }
-
         list.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = VenuesListAdapter()
@@ -64,13 +72,12 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
             }
         }
         presenter.getFavorites()
+        compositeDisposable.add(createTextChangeObservable().observeOn(AndroidSchedulers.mainThread())
 
-        createTextChangeObservable().observeOn(AndroidSchedulers.mainThread())
             .doOnNext {
                 presenter.showProgress()
                 presenter.hideMupButton()
-                if (it.isEmpty())
-                {
+                if (it.isEmpty()) {
                     presenter.getFavorites()
                 }
             }.filter { it.isNotEmpty() }
@@ -81,9 +88,11 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
                 onNext = {
                     presenter.getVenues(it)
                 })
+        )
     }
 
     override fun destroy() {
+        compositeDisposable.clear()
         (presenter as VenuesListPresenterImpl).detachView()
     }
 

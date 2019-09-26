@@ -15,7 +15,7 @@ class FavoriteUseCase @Inject constructor(private val repository: VenuesReposito
         return repository.getFavorites()
     }
 
-    fun removeFromFavorite(venues: Venues) : Completable {
+    fun removeFromFavorite(venues: Venues): Completable {
         return repository.removeFromFavorite(venues)
     }
 }

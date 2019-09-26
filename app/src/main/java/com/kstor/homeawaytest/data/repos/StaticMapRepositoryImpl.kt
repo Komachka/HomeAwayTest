@@ -4,7 +4,6 @@ import com.kstor.homeawaytest.data.*
 import com.kstor.homeawaytest.data.sp.SharedPreferenceData
 import com.kstor.homeawaytest.domain.StaticMapRepository
 import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.domain.model.VenuesParcelize
 import io.reactivex.Observable
 
 class StaticMapRepositoryImpl(private val preferenceData: SharedPreferenceData) : StaticMapRepository {

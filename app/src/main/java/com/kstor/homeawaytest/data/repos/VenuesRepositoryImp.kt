@@ -14,8 +14,6 @@ import com.kstor.homeawaytest.domain.model.VenuesData
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.schedulers.Schedulers
 
 class VenuesRepositoryImp(
     private val remoteData: RemoteData,
