@@ -1,5 +1,6 @@
 package com.kstor.homeawaytest
 
+import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.domain.model.VenuesData
@@ -10,6 +11,7 @@ import com.kstor.homeawaytest.view.utils.TestSchedulerProvider
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.junit.Before
 import org.junit.Test
@@ -29,6 +31,12 @@ class VenuesListPresenterTest {
 
     @Mock
     lateinit var useCaseResultWithData: VenuesUseCase
+
+
+    @Mock
+    lateinit var favoritesUseCase: FavoriteUseCase
+
+
     @Mock
     lateinit var useCaseResultWithError: VenuesUseCase
     @Mock
@@ -42,10 +50,12 @@ class VenuesListPresenterTest {
     private lateinit var presenter: VenuesListPresenterImpl
     private lateinit var presenterNoView: VenuesListPresenterImpl
     private lateinit var presenterWithError: VenuesListPresenterImpl
+    private lateinit var compositeDisposable: CompositeDisposable
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
+        compositeDisposable = CompositeDisposable()
         venuesList = listOf(
             Venues("1", "Name", null, "Adress", 0, 0.0, 0.0)
         )
@@ -54,30 +64,30 @@ class VenuesListPresenterTest {
         presenter = createBaseTestPresenter()
         presenterNoView = createPresenterWithoutView()
         presenterWithError = createPresenterWithError()
+
     }
 
     private fun createPresenterWithoutView(): VenuesListPresenterImpl {
-        val data = VenuesData(venuesList, 0.0, 0.0)
-        val goodResult = Observable.just(data).firstOrError()
+        val goodResult = Observable.just(venuesList)
         `when`(useCaseResultWithData.loadVenuesData(TEST_QUERY)).thenReturn(goodResult)
-        presenterNoView = VenuesListPresenterImpl(useCaseResultWithData, schedulerProvider)
+        presenterNoView = VenuesListPresenterImpl(compositeDisposable, useCaseResultWithData, schedulerProvider, favoritesUseCase)
         return presenterNoView
     }
 
     private fun createBaseTestPresenter(): VenuesListPresenterImpl {
-        val data = VenuesData(venuesList, 0.0, 0.0)
-        val goodResult = Observable.just(data).firstOrError()
+
+        val goodResult = Observable.just(venuesList)
         `when`(useCaseResultWithData.loadVenuesData(TEST_QUERY)).thenReturn(goodResult)
-        presenter = VenuesListPresenterImpl(useCaseResultWithData, schedulerProvider)
+        presenter = VenuesListPresenterImpl(compositeDisposable, useCaseResultWithData, schedulerProvider, favoritesUseCase)
         presenter.attachView(view)
         return presenter
     }
 
     private fun createPresenterWithError(): VenuesListPresenterImpl {
-        val bedResult = Observable.error<VenuesData>(error).firstOrError()
+        val bedResult = Observable.error<List<Venues>>(error)
         `when`(useCaseResultWithError.loadVenuesData(TEST_QUERY)).thenReturn(bedResult)
         presenterWithError =
-            VenuesListPresenterImpl(useCaseResultWithError, schedulerProvider)
+            VenuesListPresenterImpl(compositeDisposable, useCaseResultWithError, schedulerProvider, favoritesUseCase)
         presenterWithError.attachView(view)
         return presenterWithError
     }

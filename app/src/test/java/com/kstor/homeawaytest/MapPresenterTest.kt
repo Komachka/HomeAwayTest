@@ -11,6 +11,7 @@ import com.kstor.homeawaytest.view.utils.TestSchedulerProvider
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.junit.Before
 import org.junit.Test
@@ -35,9 +36,11 @@ class MapPresenterTest {
     @Mock
     private lateinit var view: MapView
 
+    private lateinit var compositeDisposable:CompositeDisposable
+
     private lateinit var schedulerProvider: SchedulerProvider
 
-    private lateinit var venuesData: VenuesData
+
     private lateinit var venuesList: List<Venues>
     private lateinit var venuesMap: Map<LatLng, Venues>
     private lateinit var error: Throwable
@@ -46,14 +49,18 @@ class MapPresenterTest {
     private lateinit var presenterNoView: MapPresenterImpl
     private lateinit var presenterWithError: MapPresenterImpl
 
+    private lateinit var centerLatLng:LatLng
+
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
+        compositeDisposable = CompositeDisposable()
         venuesList = listOf(
             Venues("1", "Name1", null, "Adress1", 10, 1.0, 2.0),
             Venues("2", "Name2", null, "Adress2", 20, 2.0, 3.0)
         )
-        venuesData = VenuesData(venuesList, 0.0, 0.0)
+
+        centerLatLng = LatLng(0.0, 0.0)
         venuesMap = mapOf(
             LatLng(venuesList.first().lat!!, venuesList.first().lng!!) to venuesList.first(),
             LatLng(venuesList.last().lat!!, venuesList.last().lng!!) to venuesList.last()
@@ -63,28 +70,29 @@ class MapPresenterTest {
         presenter = createBaseTestPresenter()
         presenterNoView = createPresenterWithoutView()
         presenterWithError = createPresenterWithError()
+
     }
 
     private fun createPresenterWithoutView(): MapPresenterImpl {
-        val goodResult = Observable.just(venuesData).firstOrError()
+        val goodResult = Observable.just(venuesList)
         `when`(useCaseResultWithData.loadVenuesData(TEST_QUERY)).thenReturn(goodResult)
-        presenterNoView = MapPresenterImpl(useCaseResultWithData, schedulerProvider)
+        presenterNoView = MapPresenterImpl(compositeDisposable, useCaseResultWithData, schedulerProvider)
         return presenterNoView
     }
 
     private fun createBaseTestPresenter(): MapPresenterImpl {
-        val goodResult = Observable.just(venuesData).firstOrError()
+        val goodResult = Observable.just(venuesList)
         `when`(useCaseResultWithData.loadVenuesData(TEST_QUERY)).thenReturn(goodResult)
-        presenter = MapPresenterImpl(useCaseResultWithData, schedulerProvider)
+        presenter = MapPresenterImpl(compositeDisposable, useCaseResultWithData, schedulerProvider)
         presenter.attachView(view)
         return presenter
     }
 
     private fun createPresenterWithError(): MapPresenterImpl {
-        val bedResult = Observable.error<VenuesData>(error).firstOrError()
+        val bedResult = Observable.error<List<Venues>>(error)
         `when`(useCaseResultWithError.loadVenuesData(TEST_QUERY)).thenReturn(bedResult)
         presenterWithError =
-            MapPresenterImpl(useCaseResultWithError, schedulerProvider)
+            MapPresenterImpl(compositeDisposable, useCaseResultWithError, schedulerProvider)
         presenterWithError.attachView(view)
         return presenterWithError
     }
@@ -92,7 +100,7 @@ class MapPresenterTest {
     @Test
     fun show_venues_on_the_map_and_city_center_after_presenter_call_get_venues() {
         presenter.getVenues(TEST_QUERY)
-        verify(view).showCenterOnTheMap(venuesData)
+        verify(view).showCenterOnTheMap(centerLatLng)
         verify(view).showVenuesOnTheMap(venuesMap)
         Mockito.verifyZeroInteractions(view)
     }

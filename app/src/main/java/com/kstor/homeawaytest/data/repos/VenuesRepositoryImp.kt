@@ -72,11 +72,7 @@ class VenuesRepositoryImp(
     private fun getRemoteData(limit: Int, query: String): Observable<List<Venues>> {
         return remoteData.closedVenues(limit, query).map<VenuesData> {
             val venuesData = it.mapToVenuesData()
-            log(venuesData.citCenterlat.toString())
-            log(venuesData.citCenterlng.toString())
             preferenceData.setCityCenterInfo(venuesData.citCenterlat, venuesData.citCenterlng)
-            val (l1, l2) = preferenceData.getCityCenterInfo()
-            log("get remote data $l1 $l2")
             return@map venuesData
         }.map {
             it.venues

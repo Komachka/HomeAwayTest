@@ -6,10 +6,10 @@ import com.kstor.homeawaytest.data.mapToDBFavoriteModel
 import io.reactivex.Observable
 import io.reactivex.Single
 
-class LocalData(private val venuesDao: VenuesDao) {
+class LocalData(private val venuesDao: VenuesDao, private val favoritesDao: FavoritesDao) {
     fun getFavorites(): Single<List<DBVenuesModel>> {
         return Observable.fromCallable {
-            venuesDao.getAllFavorites()
+            favoritesDao.getAllFavorites()
         }.map {
             it.map { DBVenuesModel(it.id, it.name, it.categoryId, it.categoryName, it.iconPath, it.address, it.distance, it.lat, it.lng, isFavorite = true) }
         }.firstOrError()
@@ -21,22 +21,22 @@ class LocalData(private val venuesDao: VenuesDao) {
 
     fun addToFavorites(venues: DBVenuesModel) {
         log(venues.toString())
-        venuesDao.addFavorite(mapToDBFavoriteModel(venues))
+        favoritesDao.addFavorite(mapToDBFavoriteModel(venues))
     }
 
     fun saveToDB(venuesDBList: List<DBVenuesModel>) {
-        val favoritesId = venuesDao.getAllFavorites().map { it.id }
+        val favoritesId = favoritesDao.getAllFavorites().map { it.id }
         venuesDBList.filter { favoritesId.contains(it.id) }.map { it.isFavorite = true }
         venuesDao.insertAll(venuesDBList)
     }
 
     fun removeANdSaveVenues(venuesDBList: List<DBVenuesModel>) {
-        val favoritesId = venuesDao.getAllFavorites().map { it.id }
+        val favoritesId = favoritesDao.getAllFavorites().map { it.id }
         venuesDBList.filter { favoritesId.contains(it.id) }.map { it.isFavorite = true }
         venuesDao.deleteAndSave(venuesDBList)
     }
 
     fun removeFromFavorite(model: DBVenuesModel) {
-        venuesDao.deleteFromFavorite(mapToDBFavoriteModel(model))
+        favoritesDao.deleteFromFavorite(mapToDBFavoriteModel(model))
     }
 }

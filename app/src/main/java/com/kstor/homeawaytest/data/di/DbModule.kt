@@ -3,6 +3,7 @@ package com.kstor.homeawaytest.data.di
 import android.content.Context
 import androidx.room.Room
 import com.kstor.homeawaytest.data.db.AppDatabase
+import com.kstor.homeawaytest.data.db.FavoritesDao
 import com.kstor.homeawaytest.data.db.LocalData
 import com.kstor.homeawaytest.data.db.VenuesDao
 import dagger.Module
@@ -30,7 +31,13 @@ class DbModule {
 
     @Provides
     @Singleton
-    fun provideLocalData(venuesDao: VenuesDao): LocalData {
-        return LocalData(venuesDao)
+    fun provideFavoritesDao(database: AppDatabase): FavoritesDao {
+        return database.favoritesDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocalData(venuesDao: VenuesDao, favoritesDao: FavoritesDao): LocalData {
+        return LocalData(venuesDao, favoritesDao)
     }
 }

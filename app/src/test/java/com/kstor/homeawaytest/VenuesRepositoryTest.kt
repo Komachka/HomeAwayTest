@@ -1,5 +1,6 @@
 package com.kstor.homeawaytest
 
+import com.kstor.homeawaytest.data.db.LocalData
 import com.kstor.homeawaytest.data.network.RemoteData
 import com.kstor.homeawaytest.data.network.model.*
 import com.kstor.homeawaytest.data.repos.VenuesRepositoryImp
@@ -7,7 +8,6 @@ import com.kstor.homeawaytest.data.sp.SharedPreferenceData
 import com.kstor.homeawaytest.domain.model.Venues
 import io.reactivex.Observable
 import io.reactivex.Single
-import java.util.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,6 +21,9 @@ import org.mockito.junit.MockitoJUnitRunner
 class VenuesRepositoryTest {
     @Mock
     private lateinit var remoteData: RemoteData
+
+    @Mock
+    private lateinit var localData:LocalData
     @Mock
     private lateinit var preferenceData: SharedPreferenceData
 
@@ -41,7 +44,7 @@ class VenuesRepositoryTest {
         val correctData = createSingleWithCorrectData()
         `when`(remoteData.closedVenues(LIMIT, QUERY)).thenReturn(correctData)
         lenient().`when`(preferenceData.setCityCenterInfo(lat, lng)).thenReturn(true)
-        return VenuesRepositoryImp(remoteData, preferenceData)
+        return VenuesRepositoryImp(remoteData, preferenceData, localData)
     }
 
     private fun createSingleWithCorrectData(): Single<NetworkVenuesModel> {
@@ -161,9 +164,8 @@ class VenuesRepositoryTest {
         repo.getClosestVenuses(LIMIT, QUERY).test()
             .assertNoErrors()
             .assertValue {
-                it.citCenterlat == lat && it.citCenterlng == lng &&
-                        it.venues.size == 2
-                Observable.fromIterable(it.venues)
+                        it.size == 2 &&
+                Observable.fromIterable(it)
                     .map(Venues::name)
                     .toList()
                     .blockingGet() == listOf("Storyville Coffee Company", "Anchorhead Coffee Co")

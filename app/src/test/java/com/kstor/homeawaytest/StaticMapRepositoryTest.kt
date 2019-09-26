@@ -2,6 +2,8 @@ package com.kstor.homeawaytest
 
 import com.kstor.homeawaytest.data.repos.StaticMapRepositoryImpl
 import com.kstor.homeawaytest.data.sp.SharedPreferenceData
+import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.domain.model.VenuesCategory
 import com.kstor.homeawaytest.domain.model.VenuesCategoryParcelize
 import com.kstor.homeawaytest.domain.model.VenuesParcelize
 import org.junit.Before
@@ -22,14 +24,14 @@ class StaticMapRepositoryTest {
 
     private val lat = 50.0F
     private val lng = 40.0F
-    private lateinit var venues: VenuesParcelize
+    private lateinit var venues: Venues
 
     @Before
     fun setup() {
-        venues = VenuesParcelize(
+        venues = Venues(
             id = "1",
             name = "Some Caffe",
-            categories = listOf(VenuesCategoryParcelize("1", "Coffe", "imagePath")),
+            categories = VenuesCategory("1", "Coffe", "imagePath"),
             address = "some adress",
             distance = 10,
             lat = lat.toDouble(),

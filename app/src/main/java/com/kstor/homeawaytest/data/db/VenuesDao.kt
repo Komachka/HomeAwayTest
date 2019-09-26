@@ -1,7 +1,6 @@
 package com.kstor.homeawaytest.data.db
 
 import androidx.room.*
-import com.kstor.homeawaytest.data.db.model.DBFavoriteModel
 import com.kstor.homeawaytest.data.db.model.DBVenuesModel
 import io.reactivex.Single
 
@@ -33,13 +32,4 @@ interface VenuesDao {
         deleteAllVenues()
         insertAll(venues)
     }
-
-    @Query("SELECT * FROM favorite")
-    fun getAllFavorites(): List<DBFavoriteModel>
-
-    @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun addFavorite(vararg favorite: DBFavoriteModel)
-
-    @Delete
-    fun deleteFromFavorite(favorite: DBFavoriteModel)
 }
