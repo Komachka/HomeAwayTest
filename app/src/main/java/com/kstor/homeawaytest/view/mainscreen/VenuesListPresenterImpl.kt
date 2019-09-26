@@ -12,7 +12,8 @@ import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 
-class VenuesListPresenterImpl(compositeDisposable: CompositeDisposable,
+class VenuesListPresenterImpl(
+    compositeDisposable: CompositeDisposable,
     private val useCase: VenuesUseCase,
     private val schedulerProvider: SchedulerProvider
 ) :
