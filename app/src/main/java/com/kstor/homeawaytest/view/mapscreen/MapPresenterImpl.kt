@@ -12,7 +12,8 @@ import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 
-class MapPresenterImpl(compositeDisposable:CompositeDisposable,
+class MapPresenterImpl(
+    compositeDisposable: CompositeDisposable,
     private val venuesListUseCase: VenuesUseCase,
     private val schedulerProvider: SchedulerProvider
 ) : MapPresenter, BasePresenter<MapView>(compositeDisposable), VenuesMapper {
@@ -56,5 +57,4 @@ class MapPresenterImpl(compositeDisposable:CompositeDisposable,
         }
         return venuesMap
     }
-
 }

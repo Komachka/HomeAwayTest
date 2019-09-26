@@ -7,7 +7,8 @@ import com.kstor.homeawaytest.view.BasePresenter
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
 
-class DetailsPresenterImpl(compositeDisposable: CompositeDisposable,
+class DetailsPresenterImpl(
+    compositeDisposable: CompositeDisposable,
     private val useCase: GenerateStaticMapUrlUseCase,
     private val schedulerProvider: SchedulerProvider
 

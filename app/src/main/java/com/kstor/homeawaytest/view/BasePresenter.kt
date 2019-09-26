@@ -2,7 +2,6 @@ package com.kstor.homeawaytest.view
 
 import io.reactivex.disposables.CompositeDisposable
 
-
 abstract class BasePresenter<V>(val compositeDisposable: CompositeDisposable) {
     var view: V? = null
 
