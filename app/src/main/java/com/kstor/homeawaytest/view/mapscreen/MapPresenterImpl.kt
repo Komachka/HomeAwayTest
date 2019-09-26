@@ -5,21 +5,19 @@ import androidx.navigation.Navigation
 import com.google.android.gms.maps.model.LatLng
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.view.BasePresentor
+import com.kstor.homeawaytest.view.BasePresenter
 import com.kstor.homeawaytest.view.BaseView
-import com.kstor.homeawaytest.view.RxPresentor
 import com.kstor.homeawaytest.view.VenuesMapper
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 
-class MapPresenterImpl(
+class MapPresenterImpl(compositeDisposable:CompositeDisposable,
     private val venuesListUseCase: VenuesUseCase,
     private val schedulerProvider: SchedulerProvider
-) : MapPresenter, BasePresentor<MapView>(), VenuesMapper, RxPresentor {
+) : MapPresenter, BasePresenter<MapView>(compositeDisposable), VenuesMapper {
 
     private val venuesMap = mutableMapOf<LatLng, Venues>()
-    private val compositeDisposable = CompositeDisposable()
 
     override fun navigateToDetailsScreen(view: View, position: LatLng) {
         venuesMap[position]?.let { venues ->
@@ -59,7 +57,4 @@ class MapPresenterImpl(
         return venuesMap
     }
 
-    override fun onDispoce() {
-        compositeDisposable.clear()
-    }
 }

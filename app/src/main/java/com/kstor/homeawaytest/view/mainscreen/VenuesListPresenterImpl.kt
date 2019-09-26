@@ -5,17 +5,18 @@ import androidx.navigation.Navigation
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.domain.model.VenuesParcelize
-import com.kstor.homeawaytest.view.BasePresentor
+import com.kstor.homeawaytest.view.BasePresenter
 import com.kstor.homeawaytest.view.BaseView
 import com.kstor.homeawaytest.view.VenuesMapper
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 
-class VenuesListPresenterImpl(
+class VenuesListPresenterImpl(compositeDisposable: CompositeDisposable,
     private val useCase: VenuesUseCase,
     private val schedulerProvider: SchedulerProvider
 ) :
-    VenuesListPresenter, BasePresentor<VenuesListView>(), VenuesMapper {
+    VenuesListPresenter, BasePresenter<VenuesListView>(compositeDisposable), VenuesMapper {
 
     override fun hideMupButton() {
         view?.hideMupButn()
