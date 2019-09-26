@@ -24,8 +24,7 @@ class VenuesRepositoryTest {
     private lateinit var remoteData: RemoteData
 
     @Mock
-    private lateinit var localData:LocalData
-
+    private lateinit var localData: LocalData
 
     @Mock
     private lateinit var preferenceData: SharedPreferenceData

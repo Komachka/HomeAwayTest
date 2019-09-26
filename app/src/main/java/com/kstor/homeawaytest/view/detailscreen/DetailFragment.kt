@@ -7,14 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
-import com.kstor.homeawaytest.domain.FavoriteUseCase
-import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.base.BaseFragment
 import com.kstor.homeawaytest.view.utils.ImageLoader
 import com.kstor.homeawaytest.view.utils.VenuesMapper
-import com.kstor.homeawaytest.view.utils.SchedulerProvider
-import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.detail_fragment.*
 
@@ -23,13 +19,6 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
 
     @Inject
     lateinit var presenter: DetailsPresenterImpl
-    @Inject
-    lateinit var useCase: GenerateStaticMapUrlUseCase
-
-    @Inject
-    lateinit var favoriteUseCase: FavoriteUseCase
-    @Inject
-    lateinit var schedulerProvider: SchedulerProvider
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,12 +34,6 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
     }
 
     override fun setUp() {
-        /*presenter = DetailsPresenterImpl(
-            CompositeDisposable(),
-            useCase,
-            schedulerProvider,
-            favoriteUseCase
-        ) // TODO inject by dagger*/
         presenter.attachView(this)
         arguments?.let { bundle ->
             val venuesParselize = DetailFragmentArgs.fromBundle(bundle).venues
