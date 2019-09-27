@@ -37,6 +37,8 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView {
     }
 
     override fun setUp() {
+        collapsingToolbarLayout.setCollapsedTitleTextColor(resources.getColor(R.color.white))
+        collapsingToolbarLayout.setExpandedTitleColor(resources.getColor(R.color.transparent))
         presenter = DetailsPresenterImpl(CompositeDisposable(), useCase, schedulerProvider) // TODO inject by dagger
         presenter.attachView(this)
         arguments?.let { bundle ->
