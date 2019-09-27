@@ -31,10 +31,8 @@ class VenuesListPresenterTest {
     @Mock
     lateinit var useCaseResultWithData: VenuesUseCase
 
-
     @Mock
     lateinit var favoritesUseCase: FavoriteUseCase
-
 
     @Mock
     lateinit var useCaseResultWithError: VenuesUseCase
@@ -63,7 +61,6 @@ class VenuesListPresenterTest {
         presenter = createBaseTestPresenter()
         presenterNoView = createPresenterWithoutView()
         presenterWithError = createPresenterWithError()
-
     }
 
     private fun createPresenterWithoutView(): VenuesListPresenterImpl {

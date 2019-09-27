@@ -4,8 +4,6 @@ import com.kstor.homeawaytest.data.repos.StaticMapRepositoryImpl
 import com.kstor.homeawaytest.data.sp.SharedPreferenceData
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.domain.model.VenuesCategory
-import com.kstor.homeawaytest.domain.model.VenuesCategoryParcelize
-import com.kstor.homeawaytest.domain.model.VenuesParcelize
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
