@@ -8,12 +8,12 @@ import com.kstor.homeawaytest.domain.model.VenuesParcelize
 
 interface VenuesMapper {
 
-    fun mapToPaprelize(venues: Venues): VenuesParcelize? {
+    fun mapToPasrelize(venues: Venues): VenuesParcelize? {
         return try {
             VenuesParcelize(
                 requireNotNull(venues.id),
                 requireNotNull(venues.name),
-                mapToPaprelize(venues.categories),
+                mapToPasrelize(venues.categories),
                 venues.address,
                 requireNotNull(venues.distance),
                 requireNotNull(venues.lat),
@@ -26,7 +26,7 @@ interface VenuesMapper {
         }
     }
 
-    fun mapToPaprelize(it: VenuesCategory?): VenuesCategoryParcelize? {
+    fun mapToPasrelize(it: VenuesCategory?): VenuesCategoryParcelize? {
         return try {
             VenuesCategoryParcelize(
                 requireNotNull(it?.id),

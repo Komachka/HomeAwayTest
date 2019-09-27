@@ -1,5 +1,6 @@
 package com.kstor.homeawaytest.view.mainscreen
 
+import android.view.View
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.base.BaseView
 

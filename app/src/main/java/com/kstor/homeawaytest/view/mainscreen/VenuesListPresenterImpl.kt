@@ -1,6 +1,7 @@
 package com.kstor.homeawaytest.view.mainscreen
 
 import android.view.View
+import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.VenuesUseCase
@@ -71,14 +72,8 @@ class VenuesListPresenterImpl @Inject constructor(
         view?.showProgress()
     }
 
-    override fun navigateToDetailsScreen(view: View, venuesParcelize: VenuesParcelize) {
-        val action =
-            VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(venuesParcelize)
-        Navigation.findNavController(view).navigate(action)
-    }
-
-    override fun navigateToMapScreen(view: View, query: String) {
-        Navigation.findNavController(view)
+    override fun navigateToMapScreen(navController: NavController, query: String) {
+        navController
             .navigate(VenuesListFragmentDirections.actionVenuesListFragmentToMapFragment(query))
     }
 
@@ -99,11 +94,11 @@ class VenuesListPresenterImpl @Inject constructor(
             ))
     }
 
-    override fun navigateToDetailScreen(view: View, venue: Venues) {
-        mapToPaprelize(venue)?.let {
+    override fun navigateToDetailScreen(navController: NavController, venue: Venues) {
+        mapToPasrelize(venue)?.let {
             val action =
                 VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(it)
-            Navigation.findNavController(view).navigate(action)
+            navController.navigate(action)
         }
     }
 }

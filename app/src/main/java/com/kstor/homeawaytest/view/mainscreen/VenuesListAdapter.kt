@@ -47,7 +47,7 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
         }
 
         fun bind(venue: Venues) {
-            view.venuesNameNameTextView.text = venue.name
+            view.venuesNameNameTextViewItem.text = venue.name
             view.venuesCategory.text =
                 venue.categories?.name
             view.venuesNameAdressTextView.text = venue.address
