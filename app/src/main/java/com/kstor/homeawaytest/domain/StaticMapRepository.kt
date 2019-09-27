@@ -1,8 +1,8 @@
 package com.kstor.homeawaytest.domain
 
-import com.kstor.homeawaytest.domain.model.VenuesParcelize
+import com.kstor.homeawaytest.domain.model.Venues
 import io.reactivex.Observable
 
 interface StaticMapRepository {
-    fun createStaticMapUrl(venues: VenuesParcelize): Observable<String>
+    fun createStaticMapUrl(venues: Venues): Observable<String>
 }

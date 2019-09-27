@@ -4,7 +4,9 @@ import android.app.Application
 import com.kstor.homeawaytest.data.di.NetworkModule
 import com.kstor.homeawaytest.data.di.RepositoryModule
 import com.kstor.homeawaytest.data.di.SharedPrefModule
-import com.kstor.homeawaytest.view.AppModule
+import com.kstor.homeawaytest.view.di.AppComponent
+import com.kstor.homeawaytest.view.di.AppModule
+import com.kstor.homeawaytest.view.di.DaggerAppComponent
 
 class App : Application() {
 

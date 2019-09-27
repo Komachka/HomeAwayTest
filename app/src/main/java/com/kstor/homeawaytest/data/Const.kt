@@ -51,3 +51,7 @@ const val KEY = "key"
 
 const val IMAGE_SIZE = "600x350"
 const val MAP_TYPE_TERRIAN = "terrian"
+
+const val DATA_BASE_NAME = "app-database"
+const val FAVORITE_TABLE_NAME = "favorite"
+const val VENUES_TABLE_NAME = "venues"

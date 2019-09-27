@@ -2,10 +2,9 @@ package com.kstor.homeawaytest.view.mapscreen
 
 import com.google.android.gms.maps.model.LatLng
 import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.domain.model.VenuesData
-import com.kstor.homeawaytest.view.BaseView
+import com.kstor.homeawaytest.view.base.BaseView
 
 interface MapView : BaseView {
     fun showVenuesOnTheMap(venues: Map<LatLng, Venues>)
-    fun showCenterOnTheMap(venusData: VenuesData)
+    fun showCenterOnTheMap(centerData: LatLng)
 }

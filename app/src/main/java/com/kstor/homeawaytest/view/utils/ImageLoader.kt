@@ -1,4 +1,4 @@
-package com.kstor.homeawaytest.view
+package com.kstor.homeawaytest.view.utils
 
 import android.widget.ImageView
 import com.squareup.picasso.Picasso

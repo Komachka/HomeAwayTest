@@ -1,5 +1,7 @@
 package com.kstor.homeawaytest
 
+import com.kstor.homeawaytest.data.db.LocalData
+import com.kstor.homeawaytest.data.db.model.DBVenuesModel
 import com.kstor.homeawaytest.data.network.RemoteData
 import com.kstor.homeawaytest.data.network.model.*
 import com.kstor.homeawaytest.data.repos.VenuesRepositoryImp
@@ -7,20 +9,23 @@ import com.kstor.homeawaytest.data.sp.SharedPreferenceData
 import com.kstor.homeawaytest.domain.model.Venues
 import io.reactivex.Observable
 import io.reactivex.Single
-import java.util.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.lenient
+import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
 class VenuesRepositoryTest {
     @Mock
     private lateinit var remoteData: RemoteData
+
+    @Mock
+    private lateinit var localData: LocalData
+
     @Mock
     private lateinit var preferenceData: SharedPreferenceData
 
@@ -40,8 +45,21 @@ class VenuesRepositoryTest {
     private fun createRepoWithData(): VenuesRepositoryImp {
         val correctData = createSingleWithCorrectData()
         `when`(remoteData.closedVenues(LIMIT, QUERY)).thenReturn(correctData)
+        doNothing().`when`(localData).removeANdSaveVenues(ArgumentMatchers.anyList())
+        `when`(localData.getAllVenues()).thenReturn(getDBVenuesModelList())
         lenient().`when`(preferenceData.setCityCenterInfo(lat, lng)).thenReturn(true)
-        return VenuesRepositoryImp(remoteData, preferenceData)
+        return VenuesRepositoryImp(remoteData, preferenceData, localData)
+    }
+
+    private fun getDBVenuesModelList(): Single<List<DBVenuesModel>> {
+        return Observable.just(
+            listOf(
+                DBVenuesModel("1", "Storyville Coffee Company", "1", "category", "iconPath",
+                    "address", 100, 5.0, 3.0, true),
+                DBVenuesModel("2", "Anchorhead Coffee Co", "2", "category", "iconPath",
+                    "address", 100, 5.0, 3.0, true)
+            )
+        ).firstOrError()
     }
 
     private fun createSingleWithCorrectData(): Single<NetworkVenuesModel> {
@@ -161,9 +179,8 @@ class VenuesRepositoryTest {
         repo.getClosestVenuses(LIMIT, QUERY).test()
             .assertNoErrors()
             .assertValue {
-                it.citCenterlat == lat && it.citCenterlng == lng &&
-                        it.venues.size == 2
-                Observable.fromIterable(it.venues)
+                        it.size == 2 &&
+                Observable.fromIterable(it)
                     .map(Venues::name)
                     .toList()
                     .blockingGet() == listOf("Storyville Coffee Company", "Anchorhead Coffee Co")
