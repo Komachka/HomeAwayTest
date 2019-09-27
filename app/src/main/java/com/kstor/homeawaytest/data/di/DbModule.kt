@@ -2,6 +2,7 @@ package com.kstor.homeawaytest.data.di
 
 import android.content.Context
 import androidx.room.Room
+import com.kstor.homeawaytest.data.DATA_BASE_NAME
 import com.kstor.homeawaytest.data.db.AppDatabase
 import com.kstor.homeawaytest.data.db.FavoritesDao
 import com.kstor.homeawaytest.data.db.LocalData
@@ -19,7 +20,7 @@ class DbModule {
         return Room.databaseBuilder(
             context.applicationContext,
             AppDatabase::class.java,
-            "app-database"
+            DATA_BASE_NAME
         ).build()
     }
 

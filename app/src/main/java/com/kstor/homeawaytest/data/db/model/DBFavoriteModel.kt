@@ -2,8 +2,9 @@ package com.kstor.homeawaytest.data.db.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.kstor.homeawaytest.data.FAVORITE_TABLE_NAME
 
-@Entity(tableName = "favorite")
+@Entity(tableName = FAVORITE_TABLE_NAME)
 data class DBFavoriteModel(
     @PrimaryKey var id: String,
     val name: String,

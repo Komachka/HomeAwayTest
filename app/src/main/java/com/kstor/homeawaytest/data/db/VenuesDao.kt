@@ -1,18 +1,19 @@
 package com.kstor.homeawaytest.data.db
 
 import androidx.room.*
+import com.kstor.homeawaytest.data.VENUES_TABLE_NAME
 import com.kstor.homeawaytest.data.db.model.DBVenuesModel
 import io.reactivex.Single
 
 @Dao
 interface VenuesDao {
-    @Query("SELECT * FROM venues")
+    @Query("SELECT * FROM $VENUES_TABLE_NAME")
     fun getAll(): Single<List<DBVenuesModel>>
 
-    @Query("SELECT * FROM venues WHERE id IN (:venuesId)")
+    @Query("SELECT * FROM $VENUES_TABLE_NAME WHERE id IN (:venuesId)")
     fun loadAllByIds(venuesId: IntArray): List<DBVenuesModel>
 
-    @Query("SELECT * FROM venues WHERE name LIKE :name LIMIT 1")
+    @Query("SELECT * FROM $VENUES_TABLE_NAME WHERE name LIKE :name LIMIT 1")
     fun findByName(name: String): DBVenuesModel
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -24,7 +25,7 @@ interface VenuesDao {
     @Delete
     fun delete(venues: DBVenuesModel)
 
-    @Query("DELETE FROM venues")
+    @Query("DELETE FROM $VENUES_TABLE_NAME")
     fun deleteAllVenues()
 
     @Transaction
