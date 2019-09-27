@@ -34,6 +34,8 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
     }
 
     override fun setUp() {
+        collapsingToolbarLayout.setCollapsedTitleTextColor(resources.getColor(R.color.white))
+        collapsingToolbarLayout.setExpandedTitleColor(resources.getColor(R.color.transparent))
         presenter.attachView(this)
         arguments?.let { bundle ->
             val venuesParselize = DetailFragmentArgs.fromBundle(bundle).venues
