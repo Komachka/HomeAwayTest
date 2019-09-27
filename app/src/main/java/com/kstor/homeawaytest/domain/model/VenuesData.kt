@@ -9,11 +9,12 @@ data class VenuesData(
 data class Venues(
     var id: String? = null,
     var name: String? = null,
-    var categories: List<VenuesCategory>? = null,
+    var categories: VenuesCategory? = null,
     var address: String? = null,
     var distance: Int? = null,
     var lat: Double? = null,
-    var lng: Double? = null
+    var lng: Double? = null,
+    var isFavorite: Boolean = false
 )
 
 data class VenuesCategory(

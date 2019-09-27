@@ -1,12 +1,15 @@
 package com.kstor.homeawaytest.data
 
 import android.util.Log
+import com.kstor.homeawaytest.data.db.model.DBFavoriteModel
+import com.kstor.homeawaytest.data.db.model.DBVenuesModel
 import com.kstor.homeawaytest.data.network.model.NetworkCategory
 import com.kstor.homeawaytest.data.network.model.NetworkVenue
 import com.kstor.homeawaytest.data.network.model.NetworkVenuesModel
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.domain.model.VenuesCategory
 import com.kstor.homeawaytest.domain.model.VenuesData
+import java.lang.Exception
 import kotlin.math.*
 
 fun NetworkVenuesModel.mapToVenuesData(): VenuesData {
@@ -19,6 +22,35 @@ fun NetworkVenuesModel.mapToVenuesData(): VenuesData {
             centerLng
         ), centerLat, centerLng
     )
+}
+
+fun mapToListOfVenues(list: List<DBVenuesModel>): List<Venues> {
+    return list.map {
+        Venues(
+            it.id,
+            it.name,
+            VenuesCategory(it.categoryId, it.categoryName, it.iconPath),
+            it.address,
+            it.distance,
+            it.lat, it.lng, it.isFavorite
+        )
+    }
+}
+
+fun mapToDBVenuesModel(venues: Venues): DBVenuesModel? {
+        return try {
+            DBVenuesModel(
+                requireNotNull(venues.id),
+                requireNotNull(venues.name),
+                requireNotNull(venues.categories?.id),
+                requireNotNull(venues.categories?.name),
+                requireNotNull(venues.categories?.iconPath),
+                requireNotNull(venues.address),
+                requireNotNull(venues.distance),
+                requireNotNull(venues.lat),
+                requireNotNull(venues.lng),
+                requireNotNull(venues.isFavorite))
+        } catch (e: Exception) { null }
 }
 
 private fun createListOfCategories(venues: List<NetworkVenue>?, centerLat: Double, centerLng: Double): List<Venues> {
@@ -60,23 +92,26 @@ private fun Double.toRadians(): Double {
     return this * Math.PI / HALF_OF_CIRCLE_DEGREE
 }
 
-private fun mapToCategory(categories: List<NetworkCategory>?): List<VenuesCategory> {
+private fun mapToCategory(categories: List<NetworkCategory>?): VenuesCategory? {
     return categories?.let {
-        it.map {
+        it.first()?.let { category ->
             VenuesCategory(
-                it.id,
-                it.name,
-                it.icon?.prefix + SIZE_32 + it.icon?.suffix
+                category.id,
+                category.name,
+                category.icon?.prefix + SIZE_32 + category.icon?.suffix
             )
         }
-    } ?: emptyList()
+    }
 }
+
+fun mapToDBFavoriteModel(venues: DBVenuesModel) =
+    DBFavoriteModel(venues.id, venues.name, venues.categoryId, venues.categoryName, venues.iconPath, venues.address, venues.distance, venues.lat, venues.lng)
 
 fun log(message: String) {
     Log.d("MainActivity", message)
 }
 
-fun countZoom(distance: Int): Int {
+fun countZoom(distance: Int?): Int {
     return when (distance) {
         in 0..100 -> 17
         in 100..500 -> 15

@@ -3,12 +3,12 @@ package com.kstor.homeawaytest.data.repos
 import com.kstor.homeawaytest.data.*
 import com.kstor.homeawaytest.data.sp.SharedPreferenceData
 import com.kstor.homeawaytest.domain.StaticMapRepository
-import com.kstor.homeawaytest.domain.model.VenuesParcelize
+import com.kstor.homeawaytest.domain.model.Venues
 import io.reactivex.Observable
 
 class StaticMapRepositoryImpl(private val preferenceData: SharedPreferenceData) : StaticMapRepository {
 
-    override fun createStaticMapUrl(venues: VenuesParcelize): Observable<String> {
+    override fun createStaticMapUrl(venues: Venues): Observable<String> {
         val (latCenter, lngCenter) = preferenceData.getCityCenterInfo()
         val latPoint = venues.lat
         val lngPoint = venues.lng

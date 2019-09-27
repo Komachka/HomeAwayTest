@@ -1,8 +1,8 @@
 package com.kstor.homeawaytest
 
+import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.domain.model.VenuesData
 import com.kstor.homeawaytest.view.mainscreen.VenuesListPresenterImpl
 import com.kstor.homeawaytest.view.mainscreen.VenuesListView
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
@@ -10,6 +10,7 @@ import com.kstor.homeawaytest.view.utils.TestSchedulerProvider
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.junit.Before
 import org.junit.Test
@@ -29,6 +30,10 @@ class VenuesListPresenterTest {
 
     @Mock
     lateinit var useCaseResultWithData: VenuesUseCase
+
+    @Mock
+    lateinit var favoritesUseCase: FavoriteUseCase
+
     @Mock
     lateinit var useCaseResultWithError: VenuesUseCase
     @Mock
@@ -42,10 +47,12 @@ class VenuesListPresenterTest {
     private lateinit var presenter: VenuesListPresenterImpl
     private lateinit var presenterNoView: VenuesListPresenterImpl
     private lateinit var presenterWithError: VenuesListPresenterImpl
+    private lateinit var compositeDisposable: CompositeDisposable
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
+        compositeDisposable = CompositeDisposable()
         venuesList = listOf(
             Venues("1", "Name", null, "Adress", 0, 0.0, 0.0)
         )
@@ -57,27 +64,25 @@ class VenuesListPresenterTest {
     }
 
     private fun createPresenterWithoutView(): VenuesListPresenterImpl {
-        val data = VenuesData(venuesList, 0.0, 0.0)
-        val goodResult = Observable.just(data).firstOrError()
-        `when`(useCaseResultWithData.loadVenuesData(TEST_QUERY)).thenReturn(goodResult)
-        presenterNoView = VenuesListPresenterImpl(useCaseResultWithData, schedulerProvider)
+        val goodResult = Observable.just(venuesList)
+        `when`(useCaseResultWithData.loadVenuesDataFromApi(TEST_QUERY)).thenReturn(goodResult)
+        presenterNoView = VenuesListPresenterImpl(compositeDisposable, useCaseResultWithData, schedulerProvider, favoritesUseCase)
         return presenterNoView
     }
 
     private fun createBaseTestPresenter(): VenuesListPresenterImpl {
-        val data = VenuesData(venuesList, 0.0, 0.0)
-        val goodResult = Observable.just(data).firstOrError()
-        `when`(useCaseResultWithData.loadVenuesData(TEST_QUERY)).thenReturn(goodResult)
-        presenter = VenuesListPresenterImpl(useCaseResultWithData, schedulerProvider)
+        val goodResult = Observable.just(venuesList)
+        `when`(useCaseResultWithData.loadVenuesDataFromApi(TEST_QUERY)).thenReturn(goodResult)
+        presenter = VenuesListPresenterImpl(compositeDisposable, useCaseResultWithData, schedulerProvider, favoritesUseCase)
         presenter.attachView(view)
         return presenter
     }
 
     private fun createPresenterWithError(): VenuesListPresenterImpl {
-        val bedResult = Observable.error<VenuesData>(error).firstOrError()
-        `when`(useCaseResultWithError.loadVenuesData(TEST_QUERY)).thenReturn(bedResult)
+        val bedResult = Observable.error<List<Venues>>(error)
+        `when`(useCaseResultWithError.loadVenuesDataFromApi(TEST_QUERY)).thenReturn(bedResult)
         presenterWithError =
-            VenuesListPresenterImpl(useCaseResultWithError, schedulerProvider)
+            VenuesListPresenterImpl(compositeDisposable, useCaseResultWithError, schedulerProvider, favoritesUseCase)
         presenterWithError.attachView(view)
         return presenterWithError
     }
@@ -100,8 +105,9 @@ class VenuesListPresenterTest {
     }
 
     @Test
-    fun show_error_if_use_case_return_error() {
+    fun show_error_and_hide_progress_if_use_case_return_error() {
         presenterWithError.getVenues(TEST_QUERY)
+        verify(view).hideProgress()
         verify(view).showError(error)
         Mockito.verifyZeroInteractions(view)
     }

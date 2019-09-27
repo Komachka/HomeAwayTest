@@ -27,7 +27,7 @@
         app:layout_constrainedHeight="true"
         android:id="@+id/list"
         android:layout_width="@dimen/zero_size"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/zero_size"
         android:layout_marginTop="@dimen/default_margin"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"

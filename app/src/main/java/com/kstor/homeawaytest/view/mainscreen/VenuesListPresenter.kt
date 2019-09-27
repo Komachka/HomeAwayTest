@@ -6,10 +6,12 @@ import com.kstor.homeawaytest.domain.model.VenuesParcelize
 
 interface VenuesListPresenter {
     fun getVenues(query: String)
-    fun navigateToMapScreen(view: View)
+    fun navigateToMapScreen(view: View, query: String)
     fun navigateToDetailsScreen(view: View, venuesParcelize: VenuesParcelize)
     fun showError(throwable: Throwable)
     fun showProgress()
     fun navigateToDetailScreen(view: View, venue: Venues)
     fun hideMupButton()
+    fun addToFavorite(venues: Venues)
+    fun getFavorites()
 }

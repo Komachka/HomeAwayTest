@@ -1,9 +1,6 @@
 package com.kstor.homeawaytest.domain.di
 
-import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
-import com.kstor.homeawaytest.domain.StaticMapRepository
-import com.kstor.homeawaytest.domain.VenuesRepository
-import com.kstor.homeawaytest.domain.VenuesUseCase
+import com.kstor.homeawaytest.domain.*
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -20,4 +17,9 @@ class UseCaseModule {
     @Singleton
     fun provideLoadVenuesUseCase(repository: VenuesRepository) =
         VenuesUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideFavoritesUseCase(repository: VenuesRepository) =
+        FavoriteUseCase(repository)
 }

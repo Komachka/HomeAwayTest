@@ -3,20 +3,22 @@ package com.kstor.homeawaytest.view.mainscreen
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.view.ImageLoader
+import com.kstor.homeawaytest.view.utils.ImageLoader
 import kotlinx.android.synthetic.main.list_item.view.*
 
 class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     ImageLoader {
 
-    lateinit var detailsOnClickListener: (venue: Venues) -> Unit
+    lateinit var detailsOnClickListener: (venues: Venues) -> Unit
+    lateinit var addToFavoriteClickListener: (venues: Venues) -> Unit
     private val venues = mutableListOf<Venues>()
 
     fun updateData(venues: List<Venues>) {
-        this.venues.clear()
+        clearData()
         this.venues.addAll(venues)
         notifyDataSetChanged()
     }
@@ -26,25 +28,36 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
 
         init {
             view.setOnClickListener(this)
+            view.imageFavorite.setOnClickListener(this)
         }
 
         override fun onClick(item: View) {
-            detailsOnClickListener.invoke(venues[adapterPosition])
+
+            if (item.id == R.id.imageFavorite) {
+                val animation = AnimationUtils.loadAnimation(
+                    view.context.applicationContext,
+                    R.anim.zoomin
+                )
+                view.imageFavorite.startAnimation(animation)
+                addToFavoriteClickListener.invoke(venues[adapterPosition])
+                venues[adapterPosition].isFavorite = !venues[adapterPosition].isFavorite
+                notifyItemChanged(adapterPosition)
+            } else
+                detailsOnClickListener.invoke(venues[adapterPosition])
         }
 
         fun bind(venue: Venues) {
             view.venuesNameNameTextView.text = venue.name
             view.venuesCategory.text =
-                venue.categories?.let { category -> category.joinToString { it.name ?: "" } }
+                venue.categories?.name
             view.venuesNameAdressTextView.text = venue.address
             view.venuesDistanceFromCenterTextView.text = "${venue.distance} m"
             venue.categories?.let {
-                if (it.isNotEmpty()) {
-                    it[0].iconPath.let {
+                it.iconPath.let {
                         view.venuesPlaceImgView.loadImage(it)
-                    }
                 }
             }
+            if (venue.isFavorite) { view.imageFavorite.setImageResource(R.drawable.ic_favorite_black_24dp) } else { view.imageFavorite.setImageResource(R.drawable.ic_favorite_border_black_24dp) }
         }
     }
 
@@ -62,5 +75,9 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as ItemViewHolder).bind(venues[position])
+    }
+
+    private fun clearData() {
+        this.venues.clear()
     }
 }

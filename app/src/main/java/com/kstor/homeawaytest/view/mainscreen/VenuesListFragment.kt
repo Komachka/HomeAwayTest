@@ -12,10 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.*
-import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.view.BaseFragment
-import com.kstor.homeawaytest.view.utils.SchedulerProvider
+import com.kstor.homeawaytest.view.base.BaseFragment
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -26,23 +24,21 @@ import kotlinx.android.synthetic.main.venues_list_fragment.*
 
 class VenuesListFragment : BaseFragment(), VenuesListView {
 
-    @Inject
-    lateinit var useCases: VenuesUseCase
+    override fun updateItemView(venues: Venues) {
+        log("update item view")
+    }
 
     @Inject
-    lateinit var schedulerProvider: SchedulerProvider
     lateinit var presenter: VenuesListPresenter
 
     private lateinit var compositeDisposable: CompositeDisposable
 
     override fun setUp() {
         compositeDisposable = CompositeDisposable()
-        presenter =
-            VenuesListPresenterImpl(compositeDisposable, useCases, schedulerProvider) // TODO inject by dagger
-        (presenter as VenuesListPresenterImpl).attachView(this)
 
+        (presenter as VenuesListPresenterImpl).attachView(this)
         fab.setOnClickListener { view ->
-            presenter.navigateToMapScreen(view)
+            presenter.navigateToMapScreen(view, queryEditText.text.toString())
         }
         list.apply {
             layoutManager = LinearLayoutManager(context)
@@ -52,12 +48,22 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
                     presenter.navigateToDetailScreen(it, venue)
                 }
             }
+            (adapter as VenuesListAdapter).addToFavoriteClickListener = { venue ->
+                view?.let {
+                    presenter.addToFavorite(venue)
+                }
+            }
         }
-        compositeDisposable.add(createTextChangeObservable().observeOn(AndroidSchedulers.mainThread())
+        presenter.getFavorites()
+        compositeDisposable.add(createTextChangeObservable()
+            .observeOn(AndroidSchedulers.mainThread())
             .doOnNext {
                 presenter.showProgress()
                 presenter.hideMupButton()
-            }
+                if (it.isEmpty()) {
+                    presenter.getFavorites()
+                }
+            }.filter { it.isNotEmpty() }
             .subscribeBy(
                 onError = {
                     presenter.showError(it)
@@ -127,7 +133,7 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
                 queryEditText?.removeTextChangedListener(textWatcher)
             }
         }
-        return textChangeObservable.filter { it.length >= MIN_INPUT_LENGTH }
+        return textChangeObservable
             .debounce(LOADING_TIMEOUT, TimeUnit.MILLISECONDS)
     }
 }
