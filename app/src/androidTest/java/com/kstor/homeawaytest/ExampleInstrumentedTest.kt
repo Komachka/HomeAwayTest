@@ -3,6 +3,8 @@ package com.kstor.homeawaytest
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.testing.launchFragmentInContainer
@@ -17,8 +19,9 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.kstor.homeawaytest.data.di.NetworkModule
@@ -33,13 +36,18 @@ import com.kstor.homeawaytest.view.di.mock.FakeRepository
 
 import com.kstor.homeawaytest.view.mainscreen.*
 import com.kstor.homeawaytest.view.utils.VenuesMapper
+import net.bytebuddy.matcher.CollectionItemMatcher
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.Description
 import org.hamcrest.Matcher
 
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
 import org.w3c.dom.Text
@@ -91,6 +99,20 @@ class ExampleInstrumentedTest: VenuesMapper {
         val testVenues = repository.getFavorites().blockingGet().first()
         val venuesParselize = mapToPasrelize(testVenues)!!
 
+        onView(withId(R.id.list)).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
+        verify(navController).navigate(
+            VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(venuesParselize)
+        )
+        onView(ViewMatchers.withText("Hoffman's House of Horrors")).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        onView(ViewMatchers.withText("7986 Emery Blvd NE")).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        onView(ViewMatchers.withText("28882 m")).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    }
+
+    @Test
+    fun click_on_favorite_icon_to_remove_item_from_favorites()
+    {
+        val scenario = launchFragmentInContainer<VenuesListFragment>(Bundle(), R.style.AppTheme)
+
         val action = object:ViewAction{
             internal var click = ViewActions.click()
             override fun getDescription(): String {
@@ -103,16 +125,38 @@ class ExampleInstrumentedTest: VenuesMapper {
 
             override fun perform(uiController: UiController?, view: View?) {
                 val layout = view?.findViewById<ConstraintLayout>(R.id.list_item)
-                layout?.performClick()
+                layout?.findViewById<ImageButton>(R.id.imageFavorite)?.performClick()
             }
         }
-
         onView(withId(R.id.list)).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, action))
-        verify(navController).navigate(
-            VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(venuesParselize)
+        val matcher = atPositionImage(0, hasDescendant(
+            withTagValue(equalTo(R.drawable.ic_favorite_border_black_24dp))))
+        onView(withId(R.id.list)).check(
+            ViewAssertions.matches(matcher)
         )
-        onView(ViewMatchers.withText("Hoffman's House of Horrors")).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        onView(ViewMatchers.withText("7986 Emery Blvd NE")).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        onView(ViewMatchers.withText("28882 m")).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        //onView(withTagValue(equalTo(R.drawable.ic_favorite_border_black_24dp))).check()
     }
+
+
+    companion object {
+        fun atPositionImage(position:Int, itemMatcher: Matcher<View>) : Matcher<View>
+        {
+            return object : BoundedMatcher<View, RecyclerView>(RecyclerView::class.java)
+            {
+                override fun describeTo(description: Description?) {
+                    description?.appendText("has item at position $position: ")
+                    itemMatcher.describeTo(description)
+                }
+
+                override fun matchesSafely(item: RecyclerView?): Boolean {
+                    val  viewHolder: RecyclerView.ViewHolder? = item?.findViewHolderForAdapterPosition(position)
+                    val recyclerItem = viewHolder?.itemView
+                    val image = recyclerItem?.findViewById<ImageButton>(R.id.imageFavorite)
+                    return itemMatcher.matches(image)
+                }
+
+            }
+        }
+    }
+
 }

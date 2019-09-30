@@ -21,7 +21,7 @@ class FakeRepository : VenuesRepository {
             28882,
             47.633885804708434,
             -122.71479606628417,
-            false
+            true
         )
     )
 
@@ -36,7 +36,7 @@ class FakeRepository : VenuesRepository {
             28882,
             47.633885804708434,
             -122.71479606628417,
-            false
+            true
         )
     )
 
