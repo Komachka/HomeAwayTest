@@ -56,8 +56,8 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
                 venuesDistanceFromCenterTextView.text = "${venuesParselize.distance} m"
                 presenter.setFavorite(venues)
                 fabFavorite.setOnClickListener {
-                    venues.isFavorite = !venues.isFavorite
                     presenter.addAndRemoveFromFavorites(venues)
+                    venues.isFavorite = !venues.isFavorite
                 }
             }
         }
