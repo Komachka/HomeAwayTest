@@ -7,16 +7,23 @@ import com.kstor.homeawaytest.data.repos.VenuesRepositoryImp
 import com.kstor.homeawaytest.data.sp.SharedPreferenceData
 import com.kstor.homeawaytest.domain.StaticMapRepository
 import com.kstor.homeawaytest.domain.VenuesRepository
+import com.kstor.homeawaytest.view.di.mock.FakeRepository
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class TestRepositoryModule {
+class TestRepositoryModule(private val testRepository: VenuesRepository) {
 
     @Provides
     @Singleton
-    fun provideVenusRepository(testRepository: FakeRepository): VenuesRepository = FakeRepository()
+    fun provideVenusRepository(): VenuesRepository = testRepository
+
+
+    @Provides
+    @Singleton
+    fun provideStaticMapRepository(seredPrefData: SharedPreferenceData): StaticMapRepository =
+        StaticMapRepositoryImpl(seredPrefData)
 
 
 }

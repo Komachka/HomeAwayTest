@@ -29,6 +29,8 @@ import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.domain.model.VenuesCategory
 import com.kstor.homeawaytest.view.di.AppModule
 
+import com.kstor.homeawaytest.view.di.mock.FakeRepository
+
 import com.kstor.homeawaytest.view.mainscreen.*
 import com.kstor.homeawaytest.view.utils.VenuesMapper
 import org.hamcrest.Matcher
@@ -50,10 +52,6 @@ import org.w3c.dom.Text
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest: VenuesMapper {
 
-
-    private lateinit var repository: VenuesRepository
-
-
     @Test
     fun useAppContext() {
         // Context of the app under test.
@@ -64,7 +62,7 @@ class ExampleInstrumentedTest: VenuesMapper {
 
     @Mock
     private lateinit var navController: NavController
-
+    private lateinit var repository: VenuesRepository
 
 
     @Before
@@ -72,48 +70,26 @@ class ExampleInstrumentedTest: VenuesMapper {
     {
         val instr = InstrumentationRegistry.getInstrumentation()
         val app = instr.targetContext.applicationContext as App
-
-
         repository = FakeRepository()
         MockitoAnnotations.initMocks(this)
-        val component = DaggerTestComponent.builder().testRepositoryModule(TestRepositoryModule(repository)).build()
+        val component = DaggerTestComponent.builder().
+            appModule(AppModule(app))
+            .testRepositoryModule(TestRepositoryModule(repository)).build()
         component.inject(this)
-        //app.homeAwayComponents = component
-    }
-
-
-    @Test
-    fun do_smt()
-    {
-
+        app.homeAwayComponents = component
     }
 
 
 
     @Test
-    fun launchDetailActivity_by_cliking_on_item() {
+    fun launchDetailActivity_by_clicking_on_item_of_favoriteList() {
         val scenario = launchFragmentInContainer<VenuesListFragment>(Bundle(), R.style.AppTheme)
         //We can associate our new mock with the view's NavController
-        val fragmentView:View = mock(View::class.java)
         scenario.onFragment {
             Navigation.setViewNavController(it.view!!, navController)
         }
-        val testVenues = Venues(
-            "56d249bc498ef524220083f3",
-            "Hoffman's House of Horrors",
-            VenuesCategory("4bf58dd8d48988d117941735",
-                "Beer Garden",
-                "https://ss3.4sqi.net/img/categories_v2/nightlife/beergarden_32.png"),
-            "7986 Emery Blvd NE",
-            28882,
-            47.633885804708434,
-            -122.71479606628417,
-            false
-        )
+        val testVenues = repository.getFavorites().blockingGet().first()
         val venuesParselize = mapToPasrelize(testVenues)!!
-
-        val view = mock(VenuesListView::class.java)
-
 
         val action = object:ViewAction{
             internal var click = ViewActions.click()
@@ -131,9 +107,7 @@ class ExampleInstrumentedTest: VenuesMapper {
             }
         }
 
-
         onView(withId(R.id.list)).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, action))
-
         verify(navController).navigate(
             VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(venuesParselize)
         )
