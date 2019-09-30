@@ -9,6 +9,7 @@ import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.espresso.DaggerBaseLayerComponent
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
@@ -20,8 +21,14 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.kstor.homeawaytest.data.di.NetworkModule
+import com.kstor.homeawaytest.data.di.RepositoryModule
+import com.kstor.homeawaytest.data.di.SharedPrefModule
+import com.kstor.homeawaytest.domain.VenuesRepository
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.domain.model.VenuesCategory
+import com.kstor.homeawaytest.view.di.AppModule
+
 import com.kstor.homeawaytest.view.mainscreen.*
 import com.kstor.homeawaytest.view.utils.VenuesMapper
 import org.hamcrest.Matcher
@@ -43,6 +50,10 @@ import org.w3c.dom.Text
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest: VenuesMapper {
 
+
+    private lateinit var repository: VenuesRepository
+
+
     @Test
     fun useAppContext() {
         // Context of the app under test.
@@ -54,13 +65,27 @@ class ExampleInstrumentedTest: VenuesMapper {
     @Mock
     private lateinit var navController: NavController
 
-    @Mock
-    private lateinit var presentor: VenuesListPresenter
+
 
     @Before
     fun setup()
     {
+        val instr = InstrumentationRegistry.getInstrumentation()
+        val app = instr.targetContext.applicationContext as App
+
+
+        repository = FakeRepository()
         MockitoAnnotations.initMocks(this)
+        val component = DaggerTestComponent.builder().testRepositoryModule(TestRepositoryModule(repository)).build()
+        component.inject(this)
+        //app.homeAwayComponents = component
+    }
+
+
+    @Test
+    fun do_smt()
+    {
+
     }
 
 
@@ -88,9 +113,8 @@ class ExampleInstrumentedTest: VenuesMapper {
         val venuesParselize = mapToPasrelize(testVenues)!!
 
         val view = mock(VenuesListView::class.java)
-        `when`(presentor.getFavorites()).thenAnswer {
-            view.displayVenues(listOf(testVenues))
-        }
+
+
         val action = object:ViewAction{
             internal var click = ViewActions.click()
             override fun getDescription(): String {
