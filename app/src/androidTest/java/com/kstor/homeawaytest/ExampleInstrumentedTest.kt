@@ -1,5 +1,11 @@
 package com.kstor.homeawaytest
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Rect
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.VectorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -7,6 +13,8 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -103,9 +111,10 @@ class ExampleInstrumentedTest: VenuesMapper {
         verify(navController).navigate(
             VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(venuesParselize)
         )
-        onView(ViewMatchers.withText("Hoffman's House of Horrors")).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        onView(ViewMatchers.withText("7986 Emery Blvd NE")).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        onView(ViewMatchers.withText("28882 m")).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+        onView(ViewMatchers.withText(testVenues.name)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        onView(ViewMatchers.withText(testVenues.address)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        onView(ViewMatchers.withText("${testVenues.distance} m")).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
     @Test
@@ -129,12 +138,11 @@ class ExampleInstrumentedTest: VenuesMapper {
             }
         }
         onView(withId(R.id.list)).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, action))
-        val matcher = atPositionImage(0, hasDescendant(
-            withTagValue(equalTo(R.drawable.ic_favorite_border_black_24dp))))
+        val matcher = atPositionImage(0, hasDescendant(withTagValue(equalTo(R.drawable.ic_favorite_border_black_24dp))))
         onView(withId(R.id.list)).check(
             ViewAssertions.matches(matcher)
         )
-        //onView(withTagValue(equalTo(R.drawable.ic_favorite_border_black_24dp))).check()
+
     }
 
 
@@ -151,8 +159,7 @@ class ExampleInstrumentedTest: VenuesMapper {
                 override fun matchesSafely(item: RecyclerView?): Boolean {
                     val  viewHolder: RecyclerView.ViewHolder? = item?.findViewHolderForAdapterPosition(position)
                     val recyclerItem = viewHolder?.itemView
-                    val image = recyclerItem?.findViewById<ImageButton>(R.id.imageFavorite)
-                    return itemMatcher.matches(image)
+                    return itemMatcher.matches(recyclerItem)
                 }
 
             }
