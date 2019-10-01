@@ -2,6 +2,7 @@ package com.kstor.homeawaytest
 import android.os.Bundle
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
@@ -56,7 +57,7 @@ class DetailsTest : VenuesMapper {
         val bundle = Bundle().apply {
             putParcelable("venues", parselize)
         }
-        val scenario = launchFragmentInContainer<DetailFragment>(bundle, R.style.AppTheme)
+        launchFragmentInContainer<DetailFragment>(bundle, R.style.AppTheme)
         onView(ViewMatchers.withId(R.id.venuesNameNameTextView)).check(matches(ViewMatchers.withText(venues.name)))
         onView(ViewMatchers.withId(R.id.venuesNameAdressTextView)).check(matches(ViewMatchers.withText(venues.address)))
         onView(ViewMatchers.withId(R.id.venuesDistanceFromCenterTextView)).check(matches(ViewMatchers.withText("${venues.distance} m")))
@@ -65,5 +66,20 @@ class DetailsTest : VenuesMapper {
         onView(ViewMatchers.withId(R.id.mapIv)).check(matches(ViewMatchers.isDisplayed()))
         onView(ViewMatchers.withId(R.id.fabFavorite)).check(
             matches(ViewMatchers.withTagValue(CoreMatchers.equalTo(R.drawable.ic_favorite_black_24dp))))
+    }
+
+    @Test
+    fun change_favorite_icon_onClick() {
+        val venues = venuesRepository.getFavorites().blockingGet().first()
+        val parselize = mapToPasrelize(venues)
+        val bundle = Bundle().apply {
+            putParcelable("venues", parselize)
+        }
+        launchFragmentInContainer<DetailFragment>(bundle, R.style.AppTheme)
+
+
+        onView(ViewMatchers.withId(R.id.fabFavorite)).perform(click())
+        onView(ViewMatchers.withId(R.id.fabFavorite)).check(
+            matches(ViewMatchers.withTagValue(CoreMatchers.equalTo(R.drawable.ic_favorite_border_black_24dp))))
     }
 }
