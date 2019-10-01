@@ -84,7 +84,7 @@ class VenuesListPresenterImpl @Inject constructor(
                 onNext = {
                     view?.hideProgress()
                     view?.displayVenues(it)
-                    view?.showMupButn()
+                    if (it.isNotEmpty()) view?.showMupButn()
                 }, onError = {
                     view?.hideProgress()
                     (view as BaseView).showError(it)
