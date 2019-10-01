@@ -8,7 +8,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 
 
-class FakeRepository : VenuesRepository {
+class FakeVenuesRepository : VenuesRepository {
 
     val venues = listOf<Venues>(
         Venues(

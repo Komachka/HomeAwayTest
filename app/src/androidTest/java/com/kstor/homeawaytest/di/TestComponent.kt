@@ -1,5 +1,6 @@
-package com.kstor.homeawaytest
+package com.kstor.homeawaytest.di
 
+import com.kstor.homeawaytest.VenuesListTest
 import com.kstor.homeawaytest.data.di.DbModule
 import com.kstor.homeawaytest.data.di.NetworkModule
 import com.kstor.homeawaytest.data.di.SharedPrefModule
@@ -10,7 +11,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [TestRepositoryModule::class,
+@Component(modules = [TestVenuesRepositoryModule::class, TestStaticMapRepositoryModule::class,
     NetworkModule::class,
     AppModule::class,
     SharedPrefModule::class,
