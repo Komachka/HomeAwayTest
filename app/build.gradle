@@ -58,6 +58,12 @@ ext {
     retrofitAdapterRx = '2.2.0'
     navigationComponent = '2.1.0'
     googleMap = '17.0.0'
+    rxKotlin = '2.4.0'
+    rxAndroid = '2.1.1'
+    picasso = '2.71828'
+    ktLintVersion = '0.34.2'
+    mokitoKotlin = '1.5.0'
+    mokitoInline = '3.0.0'
 }
 
 dependencies {
@@ -75,16 +81,16 @@ dependencies {
 
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitAdapterRx"
 
-    implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation "io.reactivex.rxjava2:rxkotlin:$rxKotlin"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroid"
 
 
     implementation "androidx.navigation:navigation-fragment-ktx:$navigationComponent"
     implementation "androidx.navigation:navigation-ui-ktx:$navigationComponent"
 
-    implementation "com.squareup.picasso:picasso:2.71828"
+    implementation "com.squareup.picasso:picasso:$picasso"
 
-    ktlint "com.pinterest:ktlint:0.34.2"
+    ktlint "com.pinterest:ktlint:$ktLintVersion"
 
     implementation "com.google.android.gms:play-services-maps:$googleMap"
 
@@ -94,8 +100,8 @@ dependencies {
     kapt "android.arch.persistence.room:compiler:$roomKaptCompiler"
     kaptAndroidTest "android.arch.persistence.room:compiler:$roomKaptCompiler"
 
-    testImplementation 'com.nhaarman:mockito-kotlin-kt1.1:1.5.0'
-    testImplementation "org.mockito:mockito-inline:3.0.0"
+    testImplementation "com.nhaarman:mockito-kotlin-kt1.1:$mokitoKotlin"
+    testImplementation "org.mockito:mockito-inline:$mokitoInline"
     androidTestImplementation "org.mockito:mockito-core:$mockitoVersion"
     androidTestImplementation "com.linkedin.dexmaker:dexmaker-mockito:$dexMakerVersion"
 

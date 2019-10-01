@@ -163,7 +163,6 @@ class VenuesListTest : VenuesMapper {
         launchFragmentInContainer<VenuesListFragment>(Bundle(), R.style.AppTheme)
         //type search query
         onView(withId(R.id.queryEditText)).perform(typeText(TEST_QUERY))
-        // icon  drawable was changed
         onView(withId(R.id.queryEditText)).check(
             ViewAssertions.matches(
                 withText(TEST_QUERY)
