@@ -79,5 +79,6 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
 
     override fun setIfFavorite(resFavorites: Int) {
         fabFavorite.setImageResource(resFavorites)
+        fabFavorite.tag = resFavorites
     }
 }

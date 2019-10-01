@@ -1,5 +1,6 @@
 package com.kstor.homeawaytest.di
 
+import com.kstor.homeawaytest.DetailsTest
 import com.kstor.homeawaytest.VenuesListTest
 import com.kstor.homeawaytest.data.di.DbModule
 import com.kstor.homeawaytest.data.di.NetworkModule
@@ -19,4 +20,5 @@ import javax.inject.Singleton
     PresentersModule::class])
 interface TestComponent : AppComponent{
     fun inject(test: VenuesListTest)
+    fun inject(test: DetailsTest)
 }

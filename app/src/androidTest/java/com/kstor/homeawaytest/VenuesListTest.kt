@@ -20,7 +20,6 @@ import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.kstor.homeawaytest.data.repos.StaticMapRepositoryImpl
 import com.kstor.homeawaytest.di.DaggerTestComponent
 import com.kstor.homeawaytest.di.TestStaticMapRepositoryModule
 import com.kstor.homeawaytest.di.TestVenuesRepositoryModule

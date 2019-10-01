@@ -1,5 +1,4 @@
 package com.kstor.homeawaytest.di
-import com.kstor.homeawaytest.data.sp.SharedPreferenceData
 import com.kstor.homeawaytest.domain.StaticMapRepository
 import dagger.Module
 import dagger.Provides
@@ -10,5 +9,5 @@ class TestStaticMapRepositoryModule(private val testRepository: StaticMapReposit
 {
     @Provides
     @Singleton
-    fun provideStaticMapRepository(seredPrefData: SharedPreferenceData): StaticMapRepository = testRepository
+    fun provideStaticMapRepository(): StaticMapRepository = testRepository
 }
