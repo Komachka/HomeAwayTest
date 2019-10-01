@@ -169,7 +169,7 @@ class VenuesListTest : VenuesMapper {
                 withText(TEST_QUERY)
             )
         )
-        Thread.sleep(5000)
+        Thread.sleep(3000)
         //recycler is visible
         onView(withId(R.id.list)).check(
             ViewAssertions.matches(
@@ -198,7 +198,7 @@ class VenuesListTest : VenuesMapper {
                 withText(query)
             )
         )
-        Thread.sleep(5000)
+        Thread.sleep(3000)
         //recycler has not item that contains query
         onView(withId(R.id.list)).check(
             ViewAssertions.matches(
@@ -226,7 +226,7 @@ class VenuesListTest : VenuesMapper {
                 withText(TEST_QUERY)
             )
         )
-        Thread.sleep(5000)
+        Thread.sleep(3000)
         //map button is  displayed
         onView(withId(R.id.fab)).check(ViewAssertions.matches(isDisplayed()))
         onView(withId(R.id.fab)).perform(click())

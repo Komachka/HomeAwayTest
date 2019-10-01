@@ -76,8 +76,6 @@ class DetailsTest : VenuesMapper {
             putParcelable("venues", parselize)
         }
         launchFragmentInContainer<DetailFragment>(bundle, R.style.AppTheme)
-
-
         onView(ViewMatchers.withId(R.id.fabFavorite)).perform(click())
         onView(ViewMatchers.withId(R.id.fabFavorite)).check(
             matches(ViewMatchers.withTagValue(CoreMatchers.equalTo(R.drawable.ic_favorite_border_black_24dp))))
