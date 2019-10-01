@@ -22,6 +22,30 @@ class FakeRepository : VenuesRepository {
             47.633885804708434,
             -122.71479606628417,
             true
+        ),
+        Venues(
+            "56d249bc498ef524220083f32",
+            "Coffee Shop",
+            VenuesCategory("4bf58dd8d48988d117941735",
+                "Beer Garden",
+                "https://ss3.4sqi.net/img/categories_v2/nightlife/beergarden_32.png"),
+            "7986 Emery Blvd NE",
+            28882,
+            47.633885804708434,
+            -122.71479606628417,
+            true
+        ),
+        Venues(
+            "56d249bc498ef524220083f32",
+            "Zoo",
+            VenuesCategory("4bf58dd8d48988d117941735",
+                "Beer Garden",
+                "https://ss3.4sqi.net/img/categories_v2/nightlife/beergarden_32.png"),
+            "7986 Emery Blvd NE",
+            28882,
+            47.633885804708434,
+            -122.71479606628417,
+            true
         )
     )
 
@@ -41,7 +65,7 @@ class FakeRepository : VenuesRepository {
     )
 
     override fun getClosestVenuses(limit: Int, query: String): Observable<List<Venues>> {
-        return Observable.just(venues.take(limit))
+        return Observable.just(venues.take(limit).filter { it.name?.toLowerCase()?.contains(query.toLowerCase())?:false })
     }
 
     override fun saveToFavorite(venues: Venues): Completable {
