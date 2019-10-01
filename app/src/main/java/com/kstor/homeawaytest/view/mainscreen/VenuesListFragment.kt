@@ -25,7 +25,6 @@ import kotlinx.android.synthetic.main.venues_list_fragment.*
 
 class VenuesListFragment : BaseFragment(), VenuesListView {
 
-
     override fun updateItemView(venues: Venues) {
         log("update item view")
     }

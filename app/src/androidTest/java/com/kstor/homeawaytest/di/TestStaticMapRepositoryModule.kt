@@ -5,8 +5,7 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class TestStaticMapRepositoryModule(private val testRepository: StaticMapRepository)
-{
+class TestStaticMapRepositoryModule(private val testRepository: StaticMapRepository) {
     @Provides
     @Singleton
     fun provideStaticMapRepository(): StaticMapRepository = testRepository

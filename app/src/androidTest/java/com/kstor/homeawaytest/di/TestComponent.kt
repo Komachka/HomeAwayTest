@@ -14,7 +14,7 @@ import javax.inject.Singleton
     TestStaticMapRepositoryModule::class,
     AppModule::class,
     PresentersModule::class])
-interface TestComponent : AppComponent{
+interface TestComponent : AppComponent {
     fun inject(test: VenuesListTest)
     fun inject(test: DetailsTest)
 }

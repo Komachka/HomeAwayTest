@@ -34,13 +34,10 @@ import com.kstor.homeawaytest.view.utils.VenuesMapper
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.Description
 import org.hamcrest.Matcher
-
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
-
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
@@ -60,12 +57,10 @@ class VenuesListTest : VenuesMapper {
         assertEquals("com.kstor.homeawaytest", appContext.packageName)
     }
 
-
     @Mock
     private lateinit var navController: NavController
     private lateinit var venuesRepository: VenuesRepository
     private lateinit var staticMapRepository: StaticMapRepository
-
 
     @Before
     fun setup() {
@@ -86,16 +81,15 @@ class VenuesListTest : VenuesMapper {
         app.homeAwayComponents = component
     }
 
-
     @Test
     fun navigate_to_details_fragment_by_clicking_on_item_from_favorite_list() {
         val scenario = launchFragmentInContainer<VenuesListFragment>(Bundle(), R.style.AppTheme)
-        //We can associate our new mock with the view's NavController
+        // We can associate our new mock with the view's NavController
         scenario.onFragment {
             Navigation.setViewNavController(it.view!!, navController)
         }
         val testVenues = venuesRepository.getFavorites().blockingGet().first()
-        val venuesParselize = mapToPasrelize(testVenues)!!
+        val venuesParselize = mapToParcelize(testVenues)!!
 
         onView(withId(R.id.list)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
@@ -111,7 +105,6 @@ class VenuesListTest : VenuesMapper {
         onView(withText(testVenues.address)).check(ViewAssertions.matches(isDisplayed()))
         onView(withText("${testVenues.distance} m")).check(ViewAssertions.matches(isDisplayed()))
     }
-
 
     @Test
     fun click_on_favorite_icon_to_remove_item_from_favorites() {
@@ -131,7 +124,7 @@ class VenuesListTest : VenuesMapper {
                 layout?.findViewById<ImageButton>(R.id.imageFavorite)?.performClick()
             }
         }
-        //before item is in favorite
+        // before item is in favorite
         onView(withId(R.id.list)).check(
             ViewAssertions.matches(
                 atPositionItem(
@@ -140,7 +133,7 @@ class VenuesListTest : VenuesMapper {
                 )
             )
         )
-        //click on favorite icon
+        // click on favorite icon
         onView(withId(R.id.list)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                 0,
@@ -161,7 +154,7 @@ class VenuesListTest : VenuesMapper {
     @Test
     fun type_query_in_search_return_valid_data() {
         launchFragmentInContainer<VenuesListFragment>(Bundle(), R.style.AppTheme)
-        //type search query
+        // type search query
         onView(withId(R.id.queryEditText)).perform(typeText(TEST_QUERY))
         onView(withId(R.id.queryEditText)).check(
             ViewAssertions.matches(
@@ -169,28 +162,35 @@ class VenuesListTest : VenuesMapper {
             )
         )
         Thread.sleep(3000)
-        //recycler is visible
+        // recycler is visible
         onView(withId(R.id.list)).check(
             ViewAssertions.matches(
                 isDisplayed()
             )
         )
-        //recycler has item that contains query
+        // recycler has item that contains query
         onView(withId(R.id.list))
-            .check(ViewAssertions.matches(atPositionItem(0, hasDescendant(withText(
-                containsStringIgnoreCase(TEST_QUERY)
-            )))))
-        //map button is displayed
+            .check(
+                ViewAssertions.matches(
+                    atPositionItem(
+                        0, hasDescendant(
+                            withText(
+                                containsStringIgnoreCase(TEST_QUERY)
+                            )
+                        )
+                    )
+                )
+            )
+        // map button is displayed
         onView(withId(R.id.fab)).check(ViewAssertions.matches(isDisplayed()))
     }
 
     @Test
     fun typed_query_without_return_data_search_result_is_not_displayed() {
         launchFragmentInContainer<VenuesListFragment>(Bundle(), R.style.AppTheme)
-        val query= TEST_QUERY2.substring(0, 1)
-        //type search query
+        val query = TEST_QUERY2.substring(0, 1)
+        // type search query
         onView(withId(R.id.queryEditText)).perform(typeText(query))
-
 
         onView(withId(R.id.queryEditText)).check(
             ViewAssertions.matches(
@@ -198,26 +198,25 @@ class VenuesListTest : VenuesMapper {
             )
         )
         Thread.sleep(3000)
-        //recycler has not item that contains query
+        // recycler has not item that contains query
         onView(withId(R.id.list)).check(
             ViewAssertions.matches(
-                atPositionItem(0, not(isDisplayed()) )
+                atPositionItem(0, not(isDisplayed()))
             )
         )
-        //map button is not displayed
+        // map button is not displayed
         onView(withId(R.id.fab)).check(ViewAssertions.matches(not(isDisplayed())))
     }
-
 
     @Test
     fun navigate_to_map_fragment_by_clicking_on_fab_button() {
         val scenario = launchFragmentInContainer<VenuesListFragment>(Bundle(), R.style.AppTheme)
-        //We can associate our new mock with the view's NavController
+        // We can associate our new mock with the view's NavController
         scenario.onFragment {
             Navigation.setViewNavController(it.view!!, navController)
         }
 
-        //search with test query
+        // search with test query
         onView(withId(R.id.queryEditText)).perform(typeText(TEST_QUERY))
 
         onView(withId(R.id.queryEditText)).check(
@@ -226,14 +225,13 @@ class VenuesListTest : VenuesMapper {
             )
         )
         Thread.sleep(3000)
-        //map button is  displayed
+        // map button is  displayed
         onView(withId(R.id.fab)).check(ViewAssertions.matches(isDisplayed()))
         onView(withId(R.id.fab)).perform(click())
         verify(navController).navigate(
             VenuesListFragmentDirections.actionVenuesListFragmentToMapFragment(TEST_QUERY)
         )
     }
-
 
     companion object {
         const val TEST_QUERY = "coffee"
@@ -252,11 +250,7 @@ class VenuesListTest : VenuesMapper {
                     val recyclerItem = viewHolder?.itemView
                     return itemMatcher.matches(recyclerItem)
                 }
-
             }
         }
     }
-
 }
-
-

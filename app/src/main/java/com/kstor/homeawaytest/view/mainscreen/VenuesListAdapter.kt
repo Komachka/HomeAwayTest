@@ -63,15 +63,12 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
         private fun setFavoriteDrawable(isFavorite: Boolean) {
             if (isFavorite) {
                 view.imageFavorite.tag = R.drawable.ic_favorite_black_24dp
-                view.imageFavorite.setImageResource(R.drawable.ic_favorite_black_24dp) }
-            else {
+                view.imageFavorite.setImageResource(R.drawable.ic_favorite_black_24dp) } else {
                 view.imageFavorite.tag = R.drawable.ic_favorite_border_black_24dp
                 view.imageFavorite.setImageResource(R.drawable.ic_favorite_border_black_24dp)
             }
         }
     }
-
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return ItemViewHolder(

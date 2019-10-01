@@ -30,7 +30,7 @@ class MapPresenterImpl @Inject constructor(
 
     override fun navigateToDetailsScreen(view: View, position: LatLng) {
         venuesMap[position]?.let { venues ->
-            mapToPasrelize(venues)?.let {
+            mapToParcelize(venues)?.let {
                 Navigation.findNavController(view)
                     .navigate(MapFragmentDirections.actionMapFragmentToDetailFragment(it))
             }

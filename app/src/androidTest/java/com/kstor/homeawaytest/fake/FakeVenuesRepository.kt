@@ -7,7 +7,6 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 
-
 class FakeVenuesRepository : VenuesRepository {
 
     val venues = listOf<Venues>(
@@ -65,7 +64,7 @@ class FakeVenuesRepository : VenuesRepository {
     )
 
     override fun getClosestVenuses(limit: Int, query: String): Observable<List<Venues>> {
-        return Observable.just(venues.take(limit).filter { it.name?.toLowerCase()?.contains(query.toLowerCase())?:false })
+        return Observable.just(venues.take(limit).filter { it.name?.toLowerCase()?.contains(query.toLowerCase()) ?: false })
     }
 
     override fun saveToFavorite(venues: Venues): Completable {

@@ -3,7 +3,6 @@ import android.os.Bundle
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -49,11 +48,10 @@ class DetailsTest : VenuesMapper {
         app.homeAwayComponents = component
     }
 
-
     @Test
     fun show_detail_screen_for_venues() {
         val venues = venuesRepository.getFavorites().blockingGet().first()
-        val parselize = mapToPasrelize(venues)
+        val parselize = mapToParcelize(venues)
         val bundle = Bundle().apply {
             putParcelable("venues", parselize)
         }
@@ -71,7 +69,7 @@ class DetailsTest : VenuesMapper {
     @Test
     fun change_favorite_icon_onClick() {
         val venues = venuesRepository.getFavorites().blockingGet().first()
-        val parselize = mapToPasrelize(venues)
+        val parselize = mapToParcelize(venues)
         val bundle = Bundle().apply {
             putParcelable("venues", parselize)
         }

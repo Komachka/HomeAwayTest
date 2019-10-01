@@ -11,6 +11,4 @@ class TestVenuesRepositoryModule(private val testRepository: VenuesRepository) {
     @Provides
     @Singleton
     fun provideVenusRepository(): VenuesRepository = testRepository
-
-
 }
