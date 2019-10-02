@@ -6,7 +6,7 @@ import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.base.BasePresenter
 import com.kstor.homeawaytest.view.base.BaseView
-import com.kstor.homeawaytest.view.base.FavoritesManager
+import com.kstor.homeawaytest.view.base.AddAndRemoveFavoritesManager
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import com.kstor.homeawaytest.view.utils.VenuesMapper
 import io.reactivex.disposables.CompositeDisposable
@@ -19,7 +19,7 @@ class VenuesListPresenterImpl @Inject constructor(
     schedulerProvider: SchedulerProvider,
     private val favoritesUseCase: FavoriteUseCase
 ) :
-    VenuesListPresenter, FavoritesManager,
+    VenuesListPresenter, AddAndRemoveFavoritesManager,
     BasePresenter<VenuesListView>(compositeDisposable, schedulerProvider),
     VenuesMapper {
 

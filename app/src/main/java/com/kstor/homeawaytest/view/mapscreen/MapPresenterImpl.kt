@@ -22,8 +22,8 @@ class MapPresenterImpl @Inject constructor(
 ) : MapPresenter, BasePresenter<MapView>(compositeDisposable, schedulerProvider),
     VenuesMapper {
 
-    override fun setUpMapToCityCenter() {
-        view?.showCenterOnTheMap(LatLng(CENTER_LAT, CENTER_LNG))
+    override fun setUpMapToCityCenter(lat:Float, lng:Float) {
+        view?.showCenterOnTheMap(LatLng(lat.toDouble(), lng.toDouble()))
     }
 
     private val venuesMap = mutableMapOf<LatLng, Venues>()
@@ -43,11 +43,10 @@ class MapPresenterImpl @Inject constructor(
             .observeOn(schedulerProvider.ui())
             .doOnNext {
                 val (lat, lng) = venuesListUseCase.getCityCenter()
-                view?.showCenterOnTheMap(LatLng(lat.toDouble(), lng.toDouble()))
+                setUpMapToCityCenter(lat, lng)
             }
             .subscribeBy(
                 onError = {
-                    print(it)
                     view?.showError(it)
                 },
                 onNext = {

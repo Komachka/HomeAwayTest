@@ -2,10 +2,8 @@ package com.kstor.homeawaytest.view.base
 
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.view.utils.SchedulerProvider
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
-interface FavoritesManager{
+interface AddAndRemoveFavoritesManager{
 
     fun <T:ViewWithFavorites>BasePresenter<T>.addAndRemoveFromFavorites(venues: Venues, favoritesUseCase: FavoriteUseCase)
     {
