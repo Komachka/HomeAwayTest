@@ -30,6 +30,7 @@ import com.kstor.homeawaytest.utils.StringContainsIgnoringCase.Companion.contain
 import com.kstor.homeawaytest.view.di.AppModule
 import com.kstor.homeawaytest.view.di.mock.FakeVenuesRepository
 import com.kstor.homeawaytest.view.mainscreen.*
+import com.kstor.homeawaytest.view.utils.FavoriteImageRes
 import com.kstor.homeawaytest.view.utils.VenuesMapper
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.Description
@@ -145,7 +146,7 @@ class VenuesListTest : VenuesMapper {
             ViewAssertions.matches(
                 atPositionItem(
                     0,
-                    hasDescendant(withTagValue(equalTo(R.drawable.ic_favorite_border_black_24dp)))
+                    hasDescendant(withTagValue(equalTo(FavoriteImageRes.IS_NOT_FAVORITE.resId)))
                 )
             )
         )

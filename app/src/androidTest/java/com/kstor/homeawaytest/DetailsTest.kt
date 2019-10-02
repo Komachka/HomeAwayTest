@@ -16,6 +16,7 @@ import com.kstor.homeawaytest.fake.FakeStaticMapRepository
 import com.kstor.homeawaytest.view.detailscreen.DetailFragment
 import com.kstor.homeawaytest.view.di.AppModule
 import com.kstor.homeawaytest.view.di.mock.FakeVenuesRepository
+import com.kstor.homeawaytest.view.utils.FavoriteImageRes
 import com.kstor.homeawaytest.view.utils.VenuesMapper
 import org.hamcrest.CoreMatchers
 import org.junit.Before
@@ -76,6 +77,6 @@ class DetailsTest : VenuesMapper {
         launchFragmentInContainer<DetailFragment>(bundle, R.style.AppTheme)
         onView(ViewMatchers.withId(R.id.fabFavorite)).perform(click())
         onView(ViewMatchers.withId(R.id.fabFavorite)).check(
-            matches(ViewMatchers.withTagValue(CoreMatchers.equalTo(R.drawable.ic_favorite_border_black_24dp))))
+            matches(ViewMatchers.withTagValue(CoreMatchers.equalTo(FavoriteImageRes.IS_FAVORITE))))
     }
 }

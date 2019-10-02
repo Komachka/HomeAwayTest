@@ -7,6 +7,7 @@ import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.view.utils.FavoriteImageRes
 import com.kstor.homeawaytest.view.utils.ImageLoader
 import kotlinx.android.synthetic.main.list_item.view.*
 
@@ -61,12 +62,12 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
         }
 
         private fun setFavoriteDrawable(isFavorite: Boolean) {
-            if (isFavorite) {
-                view.imageFavorite.tag = R.drawable.ic_favorite_black_24dp
-                view.imageFavorite.setImageResource(R.drawable.ic_favorite_black_24dp) } else {
-                view.imageFavorite.tag = R.drawable.ic_favorite_border_black_24dp
-                view.imageFavorite.setImageResource(R.drawable.ic_favorite_border_black_24dp)
+            val imageRes = if (isFavorite) {
+                FavoriteImageRes.IS_FAVORITE.resId } else {
+                FavoriteImageRes.IS_NOT_FAVORITE.resId
             }
+            view.imageFavorite.tag = imageRes
+            view.imageFavorite.setImageResource(imageRes)
         }
     }
 

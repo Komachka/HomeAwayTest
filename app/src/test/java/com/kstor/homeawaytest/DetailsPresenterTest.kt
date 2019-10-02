@@ -23,14 +23,14 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class DetailsPresenterTest
 {
-    lateinit var presenter: DetailsPresenter
     @Mock
     lateinit var compositeDisposable: CompositeDisposable
-
-
     lateinit var schedulerProvider: SchedulerProvider
     @Mock
     lateinit var staticMapUseCase:GenerateStaticMapUrlUseCase
+
+    @Mock
+    lateinit var errorStaticMapUseCase:GenerateStaticMapUrlUseCase
     @Mock
     lateinit var favoriteUseCase:FavoriteUseCase
 
@@ -38,16 +38,28 @@ class DetailsPresenterTest
     lateinit var view: DetailsView
 
     lateinit var testVenues:  Venues
+    lateinit var testError:Throwable
+    lateinit var testPresenter: DetailsPresenter
+    lateinit var errorPresenter:DetailsPresenter
+
     @Before
     fun setup()
     {
         MockitoAnnotations.initMocks(this)
         testVenues = createTestVenues()
+        testError  = Throwable("This is test error")
         createStaticMapUseCase()
+        createErrorStaticMapUseCase()
         schedulerProvider = TestSchedulerProvider(Schedulers.trampoline())
-        presenter = DetailsPresenterImpl(compositeDisposable, staticMapUseCase, schedulerProvider,  favoriteUseCase)
-        (presenter as DetailsPresenterImpl).attachView(view)
+        testPresenter = DetailsPresenterImpl(compositeDisposable, staticMapUseCase, schedulerProvider,  favoriteUseCase)
+        (testPresenter as DetailsPresenterImpl).attachView(view)
+
+        errorPresenter = DetailsPresenterImpl(compositeDisposable, errorStaticMapUseCase, schedulerProvider, favoriteUseCase)
+        (errorPresenter as DetailsPresenterImpl).attachView(view)
+
     }
+
+
 
     private fun createTestVenues(): Venues {
         return Venues("1", "Name1", null, "Adress1", 10, 1.0, 2.0, true)
@@ -57,17 +69,33 @@ class DetailsPresenterTest
         val result = Observable.just(TEST_URL)
         `when`(staticMapUseCase.createStaticMapUrl(testVenues)).thenReturn(result)
     }
+    private fun createErrorStaticMapUseCase() {
+        val result = Observable.error<String>(testError)
+        `when`(errorStaticMapUseCase.createStaticMapUrl(testVenues)).thenReturn(result)
+    }
 
     /*
-    fun createStaticMapUrl(venues: Venues)
     fun setFavorite(venues: Venues)
     fun addAndRemoveFromFavorites(venues: Venues)
     */
 
     @Test
     fun show_map_image(){
-        presenter.createStaticMapUrl(testVenues)
+        testPresenter.createStaticMapUrl(testVenues)
         verify(view).loadMap(TEST_URL)
+    }
+
+    @Test
+    fun show_error_on_map_loaded(){
+        errorPresenter.createStaticMapUrl(testVenues)
+        verify(view).showError(testError)
+    }
+
+
+    @Test
+    fun set_venues_to_favorite()
+    {
+        testPresenter.setFavorite(testVenues)
     }
 
     companion object {
