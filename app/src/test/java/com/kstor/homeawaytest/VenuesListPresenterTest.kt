@@ -151,4 +151,6 @@ class VenuesListPresenterTest {
         verify(view).showError(error)
         verifyZeroInteractions(view)
     }
+
+
 }
