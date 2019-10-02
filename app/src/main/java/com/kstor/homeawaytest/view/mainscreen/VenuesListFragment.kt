@@ -50,7 +50,7 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
                 }
             }
             (adapter as VenuesListAdapter).addToFavoriteClickListener = { venue ->
-                presenter.addAndRemoveFromFavorites(venue)
+                (presenter as VenuesListPresenterImpl).addAndRemoveFromFavorites(venue)
             }
         }
         presenter.getFavorites()

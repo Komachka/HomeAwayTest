@@ -27,26 +27,6 @@ class DetailsPresenterImpl @Inject constructor(
         }
     }
 
-    /*override fun addAndRemoveFromFavorites(venues: Venues) {
-        val act = if (!venues.isFavorite) {
-            { favoritesUseCase.addToFavorite(venues) }
-        } else {
-            { favoritesUseCase.removeFromFavorite(venues) }
-        }
-        compositeDisposable.add(
-            act.invoke()
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
-                .subscribeBy(
-                    onComplete = {
-                        view?.updateItemView(venues)
-                    },
-                    onError = {
-                        view?.showError(it)
-                    })
-        )
-    }*/
-
     override fun setFavorite(venues: Venues) {
         val imageFavorite =
             if (venues.isFavorite) FavoriteImageRes.IS_FAVORITE.resId else FavoriteImageRes.IS_NOT_FAVORITE.resId

@@ -48,7 +48,7 @@ class MapPresenterImpl @Inject constructor(
             .subscribeBy(
                 onError = {
                     print(it)
-                    (view as BaseView).showError(it)
+                    view?.showError(it)
                 },
                 onNext = {
                     it.createVenuesMap()
