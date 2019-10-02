@@ -130,7 +130,7 @@ class VenuesListTest : VenuesMapper {
             ViewAssertions.matches(
                 atPositionItem(
                     0,
-                    hasDescendant(withTagValue(equalTo(R.drawable.ic_favorite_black_24dp)))
+                    hasDescendant(withTagValue(equalTo(FavoriteImageRes.IS_FAVORITE.resId)))
                 )
             )
         )
