@@ -19,29 +19,28 @@ class DetailsPresenterImpl @Inject constructor(
 ) : DetailsPresenter, BasePresenter<DetailsView>(compositeDisposable) {
 
     override fun addAndRemoveFromFavorites(venues: Venues) {
-        if (!venues.isFavorite) {
-            compositeDisposable.add(favoritesUseCase.addToFavorite(venues)
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
-                .subscribeBy(
-                    onComplete = {
-                        view?.updateItemView(venues)
-                    },
-                    onError = {}))
+        val act = if (!venues.isFavorite) {
+            { favoritesUseCase.addToFavorite(venues) }
         } else {
-            compositeDisposable.add(favoritesUseCase.removeFromFavorite(venues)
+            { favoritesUseCase.removeFromFavorite(venues) }
+        }
+        compositeDisposable.add(
+            act.invoke()
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .subscribeBy(
                     onComplete = {
                         view?.updateItemView(venues)
                     },
-                    onError = {}))
-        }
+                    onError = {
+                        view?.showError(it)
+                    })
+        )
     }
 
     override fun setFavorite(venues: Venues) {
-        val imageFavorite = if (venues.isFavorite) FavoriteImageRes.IS_FAVORITE.resId else FavoriteImageRes.IS_NOT_FAVORITE.resId
+        val imageFavorite =
+            if (venues.isFavorite) FavoriteImageRes.IS_FAVORITE.resId else FavoriteImageRes.IS_NOT_FAVORITE.resId
         (view as DetailsView).setIfFavorite(imageFavorite)
     }
 
@@ -50,11 +49,11 @@ class DetailsPresenterImpl @Inject constructor(
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
             .subscribeBy(
-                onError = {view?.showError(it)},
+                onError = { view?.showError(it) },
                 onComplete = {},
                 onNext = {
                     (view as DetailsView).loadMap(it)
                 }
-            ) )
+            ))
     }
 }
