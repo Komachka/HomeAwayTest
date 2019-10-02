@@ -49,8 +49,12 @@ class DetailsPresenterImpl @Inject constructor(
         compositeDisposable.add(useCase.createStaticMapUrl(venues)
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
-            .subscribe {
-                (view as DetailsView).loadMap(it)
-            })
+            .subscribeBy(
+                onError = {view?.showError(it)},
+                onComplete = {},
+                onNext = {
+                    (view as DetailsView).loadMap(it)
+                }
+            ) )
     }
 }
