@@ -14,6 +14,7 @@ import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.*
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.base.BaseFragment
+import com.kstor.homeawaytest.view.customview.ErrorSnackBar
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -34,6 +35,8 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
     private lateinit var compositeDisposable: CompositeDisposable
 
     override fun setUp() {
+        view?.let{ErrorSnackBar.make(it)?.show()}
+
         compositeDisposable = CompositeDisposable()
 
         (presenter as VenuesListPresenterImpl).attachView(this)
