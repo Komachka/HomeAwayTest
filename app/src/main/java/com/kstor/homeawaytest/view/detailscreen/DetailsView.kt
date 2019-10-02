@@ -2,9 +2,9 @@ package com.kstor.homeawaytest.view.detailscreen
 
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.base.BaseView
+import com.kstor.homeawaytest.view.base.ViewWithFavorites
 
-interface DetailsView : BaseView {
+interface DetailsView : ViewWithFavorites {
     fun loadMap(url: String?)
     fun setIfFavorite(resFavorites: Int)
-    fun updateItemView(venues: Venues)
 }

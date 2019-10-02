@@ -11,4 +11,5 @@ interface VenuesListPresenter {
     fun navigateToDetailScreen(navController: NavController, venue: Venues)
     fun hideMupButton()
     fun getFavorites()
+    fun addAndRemoveFromFavorites(venue: Venues)
 }

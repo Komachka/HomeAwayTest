@@ -5,13 +5,10 @@ import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
+interface FavoritesManager{
 
-abstract class FavoritesPresenter<T>(
-    private val favoritesUseCase: FavoriteUseCase,
-    schedulerProvider: SchedulerProvider,
-    compositeDisposable: CompositeDisposable
-) : BasePresenter<T>(compositeDisposable, schedulerProvider) {
-    fun addAndRemoveFromFavorites(venues: Venues) {
+    fun <T:ViewWithFavorites>BasePresenter<T>.addAndRemoveFromFavorites(venues: Venues, favoritesUseCase: FavoriteUseCase)
+    {
         val act = if (!venues.isFavorite) {
             { favoritesUseCase.addToFavorite(venues) }
         } else {
@@ -23,13 +20,11 @@ abstract class FavoritesPresenter<T>(
                 .observeOn(schedulerProvider.ui())
                 .subscribeBy(
                     onComplete = {
-                        updateViewAfterAddOrRemoveFromFavorites(venues = venues)
+                        view?.updateItemView(venues = venues)
                     },
                     onError = {
-                        updateViewAfterAddOrRemoveFromFavorites(throwable = it)
+                        view?.showError(it)
                     })
         )
     }
-
-    abstract fun updateViewAfterAddOrRemoveFromFavorites(venues: Venues? = null, throwable: Throwable? = null)
 }

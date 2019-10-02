@@ -3,7 +3,8 @@ package com.kstor.homeawaytest.view.detailscreen
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
 import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.view.base.FavoritesPresenter
+import com.kstor.homeawaytest.view.base.BasePresenter
+import com.kstor.homeawaytest.view.base.FavoritesManager
 import com.kstor.homeawaytest.view.utils.FavoriteImageRes
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
@@ -14,18 +15,13 @@ class DetailsPresenterImpl @Inject constructor(
     compositeDisposable: CompositeDisposable,
     private val useCase: GenerateStaticMapUrlUseCase,
     schedulerProvider: SchedulerProvider,
-    favoritesUseCase: FavoriteUseCase
+    private val favoritesUseCase: FavoriteUseCase
 
-) : DetailsPresenter, FavoritesPresenter<DetailsView>(favoritesUseCase, schedulerProvider, compositeDisposable) {
-
-    override fun updateViewAfterAddOrRemoveFromFavorites(venues: Venues?, throwable: Throwable?) {
-        venues?.let {
-            view?.updateItemView(venues)
-        }
-        throwable?.let {
-            view?.showError(it)
-        }
+) : DetailsPresenter, FavoritesManager, BasePresenter<DetailsView>(compositeDisposable, schedulerProvider) {
+    override fun addAndRemoveFromFavorites(venues: Venues) {
+        addAndRemoveFromFavorites(venues, favoritesUseCase)
     }
+
 
     override fun setFavorite(venues: Venues) {
         val imageFavorite =
