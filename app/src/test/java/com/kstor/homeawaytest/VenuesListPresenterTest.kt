@@ -140,7 +140,6 @@ class VenuesListPresenterTest {
         verify(view).hideProgress()
         verify(view).displayVenues(venuesList)
         verifyZeroInteractions(view)
-
     }
 
     @Test
@@ -152,5 +151,4 @@ class VenuesListPresenterTest {
         verify(view).showError(error)
         verifyZeroInteractions(view)
     }
-
 }

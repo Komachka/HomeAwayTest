@@ -236,12 +236,12 @@ class VenuesListTest : VenuesMapper {
 
     @Test
     fun add_to_favorite_displayed_in_favorite_list() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     @Test
     fun remove_from_favorite_not_displayed_in_favorite_list() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     companion object {

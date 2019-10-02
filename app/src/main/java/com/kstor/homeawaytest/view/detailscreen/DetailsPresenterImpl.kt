@@ -1,11 +1,9 @@
 package com.kstor.homeawaytest.view.detailscreen
 
-import android.view.View
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
 import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.view.base.BasePresenter
-import com.kstor.homeawaytest.view.base.BaseView
+import com.kstor.homeawaytest.view.base.FavoritesPresenter
 import com.kstor.homeawaytest.view.utils.FavoriteImageRes
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
@@ -15,12 +13,21 @@ import javax.inject.Inject
 class DetailsPresenterImpl @Inject constructor(
     compositeDisposable: CompositeDisposable,
     private val useCase: GenerateStaticMapUrlUseCase,
-    private val schedulerProvider: SchedulerProvider,
-    private val favoritesUseCase: FavoriteUseCase
+    schedulerProvider: SchedulerProvider,
+    favoritesUseCase: FavoriteUseCase
 
-) : DetailsPresenter, BasePresenter<DetailsView>(compositeDisposable) {
+) : DetailsPresenter, FavoritesPresenter<DetailsView>(favoritesUseCase, schedulerProvider, compositeDisposable) {
 
-    override fun addAndRemoveFromFavorites(venues: Venues) {
+    override fun updateViewAfterAddOrRemoveFromFavorites(venues: Venues?, throwable: Throwable?) {
+        venues?.let {
+            view?.updateItemView(venues)
+        }
+        throwable?.let {
+            view?.showError(it)
+        }
+    }
+
+    /*override fun addAndRemoveFromFavorites(venues: Venues) {
         val act = if (!venues.isFavorite) {
             { favoritesUseCase.addToFavorite(venues) }
         } else {
@@ -38,7 +45,7 @@ class DetailsPresenterImpl @Inject constructor(
                         view?.showError(it)
                     })
         )
-    }
+    }*/
 
     override fun setFavorite(venues: Venues) {
         val imageFavorite =
@@ -59,4 +66,3 @@ class DetailsPresenterImpl @Inject constructor(
             ))
     }
 }
-

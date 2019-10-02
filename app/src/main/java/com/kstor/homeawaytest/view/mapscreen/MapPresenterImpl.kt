@@ -18,8 +18,8 @@ import javax.inject.Inject
 class MapPresenterImpl @Inject constructor(
     compositeDisposable: CompositeDisposable,
     private val venuesListUseCase: VenuesUseCase,
-    private val schedulerProvider: SchedulerProvider
-) : MapPresenter, BasePresenter<MapView>(compositeDisposable),
+    schedulerProvider: SchedulerProvider
+) : MapPresenter, BasePresenter<MapView>(compositeDisposable, schedulerProvider),
     VenuesMapper {
 
     override fun setUpMapToCityCenter() {

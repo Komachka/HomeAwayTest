@@ -23,52 +23,47 @@ import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations.initMocks
 import org.mockito.junit.MockitoJUnitRunner
 
-
 @RunWith(MockitoJUnitRunner::class)
-class DetailsPresenterTest
-{
+class DetailsPresenterTest {
     @Mock
     lateinit var compositeDisposable: CompositeDisposable
     lateinit var schedulerProvider: SchedulerProvider
     @Mock
-    lateinit var staticMapUseCase:GenerateStaticMapUrlUseCase
+    lateinit var staticMapUseCase: GenerateStaticMapUrlUseCase
 
     @Mock
-    lateinit var errorStaticMapUseCase:GenerateStaticMapUrlUseCase
+    lateinit var errorStaticMapUseCase: GenerateStaticMapUrlUseCase
 
     @Mock
-    lateinit var favoriteUseCase:FavoriteUseCase
+    lateinit var favoriteUseCase: FavoriteUseCase
     @Mock
-    lateinit var errorFavoriteUseCase:FavoriteUseCase
+    lateinit var errorFavoriteUseCase: FavoriteUseCase
 
     @Mock
     lateinit var view: DetailsView
 
-    lateinit var testVenues:  Venues
-    lateinit var testError:Throwable
+    lateinit var testVenues: Venues
+    lateinit var testError: Throwable
     lateinit var testPresenter: DetailsPresenter
-    lateinit var errorPresenter:DetailsPresenter
+    lateinit var errorPresenter: DetailsPresenter
 
     @Before
-    fun setup()
-    {
+    fun setup() {
         initMocks(this)
         testVenues = createTestVenues()
-        testError  = Throwable("This is test error")
+        testError = Throwable("This is test error")
         createStaticMapUseCase()
         createErrorStaticMapUseCase()
         createFavoriteUseCase()
         createErrorFavoriteUseCase()
 
-
         schedulerProvider = TestSchedulerProvider(Schedulers.trampoline())
 
-        testPresenter = DetailsPresenterImpl(compositeDisposable, staticMapUseCase, schedulerProvider,  favoriteUseCase)
+        testPresenter = DetailsPresenterImpl(compositeDisposable, staticMapUseCase, schedulerProvider, favoriteUseCase)
         (testPresenter as DetailsPresenterImpl).attachView(view)
 
         errorPresenter = DetailsPresenterImpl(compositeDisposable, errorStaticMapUseCase, schedulerProvider, errorFavoriteUseCase)
         (errorPresenter as DetailsPresenterImpl).attachView(view)
-
     }
 
     private fun createErrorFavoriteUseCase() {
@@ -77,10 +72,9 @@ class DetailsPresenterTest
     }
 
     private fun createFavoriteUseCase() {
-        `when`(favoriteUseCase.removeFromFavorite(testVenues)).thenReturn(Completable.fromRunnable {  })
-        `when`(favoriteUseCase.addToFavorite(testVenues)).thenReturn(Completable.fromRunnable {  })
+        `when`(favoriteUseCase.removeFromFavorite(testVenues)).thenReturn(Completable.fromRunnable { })
+        `when`(favoriteUseCase.addToFavorite(testVenues)).thenReturn(Completable.fromRunnable { })
     }
-
 
     private fun createTestVenues(): Venues {
         return Venues("1", "Name1", null, "Adress1", 10, 1.0, 2.0, true)
@@ -96,23 +90,21 @@ class DetailsPresenterTest
     }
 
     @Test
-    fun show_map_image(){
+    fun show_map_image() {
         testPresenter.createStaticMapUrl(testVenues)
         verify(view).loadMap(TEST_URL)
         verifyZeroInteractions(view)
     }
 
     @Test
-    fun show_error_on_map_loaded(){
+    fun show_error_on_map_loaded() {
         errorPresenter.createStaticMapUrl(testVenues)
         verify(view).showError(testError)
         verifyZeroInteractions(view)
     }
 
-
     @Test
-    fun change_favorite_venues_image()
-    {
+    fun change_favorite_venues_image() {
         testVenues.isFavorite = true
         testPresenter.setFavorite(testVenues)
         verify(view).setIfFavorite(FavoriteImageRes.IS_FAVORITE.resId)
@@ -124,36 +116,29 @@ class DetailsPresenterTest
     }
 
     @Test
-    fun remove_from_favorites_success()
-    {
+    fun remove_from_favorites_success() {
         testVenues.isFavorite = true
-        testPresenter.addAndRemoveFromFavorites(testVenues)
+        (testPresenter as DetailsPresenterImpl).addAndRemoveFromFavorites(testVenues)
 
         verify(favoriteUseCase).removeFromFavorite(testVenues)
         verify(view).updateItemView(testVenues)
         verifyZeroInteractions(view)
-
     }
 
-
-
     @Test
-    fun add_to_favorites_success()
-    {
+    fun add_to_favorites_success() {
         testVenues.isFavorite = false
-        testPresenter.addAndRemoveFromFavorites(testVenues)
+        (testPresenter as DetailsPresenterImpl).addAndRemoveFromFavorites(testVenues)
 
         verify(favoriteUseCase).addToFavorite(testVenues)
         verify(view).updateItemView(testVenues)
         verifyZeroInteractions(view)
-
     }
 
     @Test
-    fun remove_from_favorites_error()
-    {
+    fun remove_from_favorites_error() {
         testVenues.isFavorite = true
-        errorPresenter.addAndRemoveFromFavorites(testVenues)
+        (errorPresenter as DetailsPresenterImpl).addAndRemoveFromFavorites(testVenues)
 
         verify(errorFavoriteUseCase).removeFromFavorite(testVenues)
         verify(view).showError(testError)
@@ -161,10 +146,9 @@ class DetailsPresenterTest
     }
 
     @Test
-    fun add_to_favorites_error()
-    {
+    fun add_to_favorites_error() {
         testVenues.isFavorite = false
-        errorPresenter.addAndRemoveFromFavorites(testVenues)
+        (errorPresenter as DetailsPresenterImpl).addAndRemoveFromFavorites(testVenues)
 
         verify(errorFavoriteUseCase).addToFavorite(testVenues)
         verify(view).showError(testError)

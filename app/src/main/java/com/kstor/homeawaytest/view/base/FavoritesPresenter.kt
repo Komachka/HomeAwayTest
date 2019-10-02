@@ -2,16 +2,16 @@ package com.kstor.homeawaytest.view.base
 
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.view.utils.TestSchedulerProvider
+import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 
 abstract class FavoritesPresenter<T>(
     private val favoritesUseCase: FavoriteUseCase,
-    schedulerProvider: TestSchedulerProvider,
-    compositeDisposable: CompositeDisposable) : BasePresenter<T>(compositeDisposable, schedulerProvider)
-{
-    fun addAndRemoveFromFavorites(venues: Venues) { // TODO code duplicate
+    schedulerProvider: SchedulerProvider,
+    compositeDisposable: CompositeDisposable
+) : BasePresenter<T>(compositeDisposable, schedulerProvider) {
+    fun addAndRemoveFromFavorites(venues: Venues) {
         val act = if (!venues.isFavorite) {
             { favoritesUseCase.addToFavorite(venues) }
         } else {
@@ -23,15 +23,13 @@ abstract class FavoritesPresenter<T>(
                 .observeOn(schedulerProvider.ui())
                 .subscribeBy(
                     onComplete = {
-                        //view?.updateItemView(venues)
-                        updateView(venues = venues)
+                        updateViewAfterAddOrRemoveFromFavorites(venues = venues)
                     },
                     onError = {
-                        updateView(throwable = it)
-                        //view?.showError(it)
+                        updateViewAfterAddOrRemoveFromFavorites(throwable = it)
                     })
         )
     }
 
-    abstract fun updateView(venues: Venues? = null, throwable: Throwable? = null)
+    abstract fun updateViewAfterAddOrRemoveFromFavorites(venues: Venues? = null, throwable: Throwable? = null)
 }
