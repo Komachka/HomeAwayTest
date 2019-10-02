@@ -35,26 +35,24 @@ class VenuesListPresenterImpl @Inject constructor(
             ))
     }
 
-    override fun addToFavorite(venues: Venues) {
-        if (!venues.isFavorite) {
-            compositeDisposable.add(favoritesUseCase.addToFavorite(venues)
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
-                .subscribeBy(
-                    onComplete = {
-                        view?.updateItemView(venues)
-                    },
-                    onError = {}))
+    override fun addAndRemoveFromFavorites(venues: Venues) { // TODO code duplicate
+        val act = if (!venues.isFavorite) {
+            { favoritesUseCase.addToFavorite(venues) }
         } else {
-            compositeDisposable.add(favoritesUseCase.removeFromFavorite(venues)
+            { favoritesUseCase.removeFromFavorite(venues) }
+        }
+        compositeDisposable.add(
+            act.invoke()
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .subscribeBy(
                     onComplete = {
                         view?.updateItemView(venues)
                     },
-                    onError = {}))
-        }
+                    onError = {
+                        view?.showError(it)
+                    })
+        )
     }
 
     override fun hideMupButton() {
