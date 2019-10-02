@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.venues_list_fragment.*
 class VenuesListFragment : BaseFragment(), VenuesListView {
 
     override fun updateItemView(venues: Venues) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     @Inject

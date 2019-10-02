@@ -4,9 +4,9 @@ import androidx.navigation.NavController
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.view.base.AddAndRemoveFavoritesManager
 import com.kstor.homeawaytest.view.base.BasePresenter
 import com.kstor.homeawaytest.view.base.BaseView
-import com.kstor.homeawaytest.view.base.AddAndRemoveFavoritesManager
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import com.kstor.homeawaytest.view.utils.VenuesMapper
 import io.reactivex.disposables.CompositeDisposable
@@ -26,7 +26,6 @@ class VenuesListPresenterImpl @Inject constructor(
     override fun addAndRemoveFromFavorites(venue: Venues) {
         addAndRemoveFromFavorites(venue, favoritesUseCase)
     }
-
 
     override fun getFavorites() {
         compositeDisposable.add(favoritesUseCase.getFavorites().subscribeOn(schedulerProvider.io())

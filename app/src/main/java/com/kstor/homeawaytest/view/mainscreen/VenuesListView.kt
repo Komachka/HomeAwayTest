@@ -1,7 +1,6 @@
 package com.kstor.homeawaytest.view.mainscreen
 
 import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.view.base.BaseView
 import com.kstor.homeawaytest.view.base.ViewWithFavorites
 
 interface VenuesListView : ViewWithFavorites {

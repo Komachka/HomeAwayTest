@@ -3,10 +3,9 @@ package com.kstor.homeawaytest.view.base
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import io.reactivex.rxkotlin.subscribeBy
-interface AddAndRemoveFavoritesManager{
+interface AddAndRemoveFavoritesManager {
 
-    fun <T:ViewWithFavorites>BasePresenter<T>.addAndRemoveFromFavorites(venues: Venues, favoritesUseCase: FavoriteUseCase)
-    {
+    fun <T : ViewWithFavorites> BasePresenter<T>.addAndRemoveFromFavorites(venues: Venues, favoritesUseCase: FavoriteUseCase) {
         val act = if (!venues.isFavorite) {
             { favoritesUseCase.addToFavorite(venues) }
         } else {
