@@ -32,7 +32,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback, MapView {
         venuesMap.forEach {
             addVenuesMarker(it)
         }
-        mapPresenter.setUpMapToCityCenter()
     }
 
     private fun addVenuesMarker(venues: Map.Entry<LatLng, Venues>) {

@@ -7,6 +7,7 @@ import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.view.utils.FavoriteImageRes
 import com.kstor.homeawaytest.view.utils.ImageLoader
 import kotlinx.android.synthetic.main.list_item.view.*
 
@@ -47,7 +48,7 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
         }
 
         fun bind(venue: Venues) {
-            view.venuesNameNameTextView.text = venue.name
+            view.venuesNameNameTextViewItem.text = venue.name
             view.venuesCategory.text =
                 venue.categories?.name
             view.venuesNameAdressTextView.text = venue.address
@@ -57,7 +58,16 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
                         view.venuesPlaceImgView.loadImage(it)
                 }
             }
-            if (venue.isFavorite) { view.imageFavorite.setImageResource(R.drawable.ic_favorite_black_24dp) } else { view.imageFavorite.setImageResource(R.drawable.ic_favorite_border_black_24dp) }
+            setFavoriteDrawable(venue.isFavorite)
+        }
+
+        private fun setFavoriteDrawable(isFavorite: Boolean) {
+            val imageRes = if (isFavorite) {
+                FavoriteImageRes.IS_FAVORITE.resId } else {
+                FavoriteImageRes.IS_NOT_FAVORITE.resId
+            }
+            view.imageFavorite.tag = imageRes
+            view.imageFavorite.setImageResource(imageRes)
         }
     }
 
