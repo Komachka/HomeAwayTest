@@ -2,6 +2,7 @@ package com.kstor.homeawaytest.view.di
 
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
+import com.kstor.homeawaytest.domain.VenueDetailsUseCase
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.view.detailscreen.DetailsPresenter
 import com.kstor.homeawaytest.view.detailscreen.DetailsPresenterImpl
@@ -23,9 +24,10 @@ class PresentersModule {
         useCase: GenerateStaticMapUrlUseCase,
         compositeDisposable: CompositeDisposable,
         favoriteUseCase: FavoriteUseCase,
-        schedulerProvider: SchedulerProvider
+        schedulerProvider: SchedulerProvider,
+        detailsUseCase: VenueDetailsUseCase
     ): DetailsPresenter =
-        DetailsPresenterImpl(compositeDisposable, useCase, schedulerProvider, favoriteUseCase)
+        DetailsPresenterImpl(compositeDisposable, useCase, schedulerProvider, favoriteUseCase, detailsUseCase)
 
     @Provides
     fun provideCompositeCompositeDisposable() = CompositeDisposable()

@@ -1,14 +1,14 @@
 package com.kstor.homeawaytest.view.utils
 
 import com.kstor.homeawaytest.data.log
-import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.domain.model.VenuesCategory
 import com.kstor.homeawaytest.domain.model.VenuesCategoryParcelize
 import com.kstor.homeawaytest.domain.model.VenuesParcelize
 
 interface VenuesMapper {
 
-    fun mapToParcelize(venues: Venues): VenuesParcelize? {
+    fun mapToParcelize(venues: Venue): VenuesParcelize? {
         return try {
             VenuesParcelize(
                 requireNotNull(venues.id),
@@ -39,9 +39,9 @@ interface VenuesMapper {
         }
     }
 
-    fun mapToVenues(venues: VenuesParcelize): Venues? {
+    fun mapToVenues(venues: VenuesParcelize): Venue? {
         return try {
-            Venues(
+            Venue(
                 requireNotNull(venues.id),
                 requireNotNull(venues.name),
                 mapToVenuesCategory(venues.categories),

@@ -1,9 +1,12 @@
 package com.kstor.homeawaytest.view.detailscreen
 
-import com.kstor.homeawaytest.domain.model.Venues
+import androidx.navigation.NavController
+import com.kstor.homeawaytest.domain.model.Venue
 
 interface DetailsPresenter {
-    fun createStaticMapUrl(venues: Venues)
-    fun setFavorite(venues: Venues)
-    fun addAndRemoveFromFavorites(venues: Venues)
+    fun createStaticMapUrl(venues: Venue)
+    fun setFavorite(venues: Venue)
+    fun addAndRemoveFromFavorites(venues: Venue)
+    fun getVenueDetails(venues: Venue)
+    fun navigateBack(findNavController: NavController)
 }

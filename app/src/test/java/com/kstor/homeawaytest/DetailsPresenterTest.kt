@@ -2,7 +2,7 @@ package com.kstor.homeawaytest
 
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
-import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.detailscreen.DetailsPresenter
 import com.kstor.homeawaytest.view.detailscreen.DetailsPresenterImpl
 import com.kstor.homeawaytest.view.detailscreen.DetailsView
@@ -42,7 +42,7 @@ class DetailsPresenterTest {
     @Mock
     lateinit var view: DetailsView
 
-    lateinit var testVenues: Venues
+    lateinit var testVenues: Venue
     lateinit var testError: Throwable
     lateinit var testPresenter: DetailsPresenter
     lateinit var errorPresenter: DetailsPresenter
@@ -76,8 +76,8 @@ class DetailsPresenterTest {
         `when`(favoriteUseCase.addToFavorite(testVenues)).thenReturn(Completable.fromRunnable { })
     }
 
-    private fun createTestVenues(): Venues {
-        return Venues("1", "Name1", null, "Adress1", 10, 1.0, 2.0, true)
+    private fun createTestVenues(): Venue {
+        return Venue("1", "Name1", null, "Adress1", 10, 1.0, 2.0, true)
     }
 
     private fun createStaticMapUseCase() {

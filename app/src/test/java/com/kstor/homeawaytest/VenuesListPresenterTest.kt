@@ -2,7 +2,7 @@ package com.kstor.homeawaytest
 
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.VenuesUseCase
-import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.mainscreen.VenuesListPresenterImpl
 import com.kstor.homeawaytest.view.mainscreen.VenuesListView
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
@@ -44,7 +44,7 @@ class VenuesListPresenterTest {
 
     private lateinit var schedulerProvider: SchedulerProvider
 
-    private lateinit var venuesList: List<Venues>
+    private lateinit var venuesList: List<Venue>
     private lateinit var error: Throwable
 
     private lateinit var presenter: VenuesListPresenterImpl
@@ -57,7 +57,7 @@ class VenuesListPresenterTest {
         MockitoAnnotations.initMocks(this)
         compositeDisposable = CompositeDisposable()
         venuesList = listOf(
-            Venues("1", "Name", null, "Adress", 0, 0.0, 0.0)
+            Venue("1", "Name", null, "Adress", 0, 0.0, 0.0)
         )
         error = Throwable("Something wrong")
         schedulerProvider = TestSchedulerProvider(Schedulers.trampoline())
@@ -93,7 +93,7 @@ class VenuesListPresenterTest {
     }
 
     private fun createPresenterWithError(): VenuesListPresenterImpl {
-        val badResult = Observable.error<List<Venues>>(error)
+        val badResult = Observable.error<List<Venue>>(error)
         `when`(useCaseResultWithError.loadVenuesDataFromApi(TEST_QUERY)).thenReturn(badResult)
         `when`(errorFavoritesUseCase.getFavorites()).thenReturn(badResult.firstOrError())
         presenterWithError =

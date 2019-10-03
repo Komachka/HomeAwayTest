@@ -2,7 +2,7 @@ package com.kstor.homeawaytest
 
 import com.kstor.homeawaytest.data.repos.StaticMapRepositoryImpl
 import com.kstor.homeawaytest.data.sp.SharedPreferenceData
-import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.domain.model.VenuesCategory
 import org.junit.Before
 import org.junit.Test
@@ -22,11 +22,11 @@ class StaticMapRepositoryTest {
 
     private val lat = 50.0F
     private val lng = 40.0F
-    private lateinit var venues: Venues
+    private lateinit var venues: Venue
 
     @Before
     fun setup() {
-        venues = Venues(
+        venues = Venue(
             id = "1",
             name = "Some Caffe",
             categories = VenuesCategory("1", "Coffe", "imagePath"),
