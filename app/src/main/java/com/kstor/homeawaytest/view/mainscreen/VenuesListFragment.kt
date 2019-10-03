@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
@@ -25,12 +26,11 @@ import kotlinx.android.synthetic.main.venues_list_fragment.*
 class VenuesListFragment : BaseFragment(), VenuesListView {
 
     override fun updateItemView(venues: Venues) {
-        log("update item view")
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     @Inject
     lateinit var presenter: VenuesListPresenter
-
     private lateinit var compositeDisposable: CompositeDisposable
 
     override fun setUp() {
@@ -38,20 +38,18 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
 
         (presenter as VenuesListPresenterImpl).attachView(this)
         fab.setOnClickListener { view ->
-            presenter.navigateToMapScreen(view, queryEditText.text.toString())
+            presenter.navigateToMapScreen(Navigation.findNavController(view), queryEditText.text.toString())
         }
         list.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = VenuesListAdapter()
             (adapter as VenuesListAdapter).detailsOnClickListener = { venue ->
                 view?.let {
-                    presenter.navigateToDetailScreen(it, venue)
+                    presenter.navigateToDetailScreen(Navigation.findNavController(it), venue)
                 }
             }
             (adapter as VenuesListAdapter).addToFavoriteClickListener = { venue ->
-                view?.let {
-                    presenter.addToFavorite(venue)
-                }
+                (presenter as VenuesListPresenterImpl).addAndRemoveFromFavorites(venue)
             }
         }
         presenter.getFavorites()

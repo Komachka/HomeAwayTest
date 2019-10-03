@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/list_item"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -15,7 +16,7 @@
       android:src="@drawable/ic_place_black_24dp"
       app:layout_constraintEnd_toEndOf="@+id/venuesCategory"
       app:layout_constraintStart_toStartOf="@+id/venuesCategory"
-      app:layout_constraintTop_toTopOf="@+id/venuesNameNameTextView"
+      app:layout_constraintTop_toTopOf="@+id/venuesNameNameTextViewItem"
       android:contentDescription="TODO" />
 
   <TextView
@@ -30,7 +31,7 @@
       tools:text="Category" />
 
   <TextView
-      android:id="@+id/venuesNameNameTextView"
+      android:id="@+id/venuesNameNameTextViewItem"
       android:layout_width="@dimen/zero_size"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/name_start_margin"
@@ -50,8 +51,8 @@
       android:textSize="@dimen/reqular_text_size"
       android:textStyle="bold"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="@+id/venuesNameNameTextView"
-      app:layout_constraintTop_toBottomOf="@+id/venuesNameNameTextView"
+      app:layout_constraintStart_toStartOf="@+id/venuesNameNameTextViewItem"
+      app:layout_constraintTop_toBottomOf="@+id/venuesNameNameTextViewItem"
       tools:text="adress" />
 
   <TextView

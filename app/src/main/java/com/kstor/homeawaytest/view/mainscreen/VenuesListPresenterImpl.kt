@@ -1,11 +1,10 @@
 package com.kstor.homeawaytest.view.mainscreen
 
-import android.view.View
-import androidx.navigation.Navigation
+import androidx.navigation.NavController
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.domain.model.VenuesParcelize
+import com.kstor.homeawaytest.view.base.AddAndRemoveFavoritesManager
 import com.kstor.homeawaytest.view.base.BasePresenter
 import com.kstor.homeawaytest.view.base.BaseView
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
@@ -17,11 +16,16 @@ import javax.inject.Inject
 class VenuesListPresenterImpl @Inject constructor(
     compositeDisposable: CompositeDisposable,
     private val getVenuesUseCase: VenuesUseCase,
-    private val schedulerProvider: SchedulerProvider,
+    schedulerProvider: SchedulerProvider,
     private val favoritesUseCase: FavoriteUseCase
 ) :
-    VenuesListPresenter, BasePresenter<VenuesListView>(compositeDisposable),
+    VenuesListPresenter, AddAndRemoveFavoritesManager,
+    BasePresenter<VenuesListView>(compositeDisposable, schedulerProvider),
     VenuesMapper {
+
+    override fun addAndRemoveFromFavorites(venue: Venues) {
+        addAndRemoveFromFavorites(venue, favoritesUseCase)
+    }
 
     override fun getFavorites() {
         compositeDisposable.add(favoritesUseCase.getFavorites().subscribeOn(schedulerProvider.io())
@@ -37,28 +41,6 @@ class VenuesListPresenterImpl @Inject constructor(
             ))
     }
 
-    override fun addToFavorite(venues: Venues) {
-        if (!venues.isFavorite) {
-            compositeDisposable.add(favoritesUseCase.addToFavorite(venues)
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
-                .subscribeBy(
-                    onComplete = {
-                        view?.updateItemView(venues)
-                    },
-                    onError = {}))
-        } else {
-            compositeDisposable.add(favoritesUseCase.removeFromFavorite(venues)
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
-                .subscribeBy(
-                    onComplete = {
-                        view?.updateItemView(venues)
-                    },
-                    onError = {}))
-        }
-    }
-
     override fun hideMupButton() {
         view?.hideMupButn()
     }
@@ -71,25 +53,21 @@ class VenuesListPresenterImpl @Inject constructor(
         view?.showProgress()
     }
 
-    override fun navigateToDetailsScreen(view: View, venuesParcelize: VenuesParcelize) {
-        val action =
-            VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(venuesParcelize)
-        Navigation.findNavController(view).navigate(action)
-    }
-
-    override fun navigateToMapScreen(view: View, query: String) {
-        Navigation.findNavController(view)
+    override fun navigateToMapScreen(navController: NavController, query: String) {
+        navController
             .navigate(VenuesListFragmentDirections.actionVenuesListFragmentToMapFragment(query))
     }
 
     override fun getVenues(query: String) {
-        compositeDisposable.add(getVenuesUseCase.loadVenuesDataFromApi(query).subscribeOn(schedulerProvider.io())
+        compositeDisposable.add(getVenuesUseCase.loadVenuesDataFromApi(query).subscribeOn(
+            schedulerProvider.io()
+        )
             .observeOn(schedulerProvider.ui())
             .subscribeBy(
                 onNext = {
                     view?.hideProgress()
                     view?.displayVenues(it)
-                    view?.showMupButn()
+                    if (it.isNotEmpty()) view?.showMupButn()
                 }, onError = {
                     view?.hideProgress()
                     (view as BaseView).showError(it)
@@ -99,11 +77,11 @@ class VenuesListPresenterImpl @Inject constructor(
             ))
     }
 
-    override fun navigateToDetailScreen(view: View, venue: Venues) {
-        mapToPaprelize(venue)?.let {
+    override fun navigateToDetailScreen(navController: NavController, venue: Venues) {
+        mapToParcelize(venue)?.let {
             val action =
                 VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(it)
-            Navigation.findNavController(view).navigate(action)
+            navController.navigate(action)
         }
     }
 }

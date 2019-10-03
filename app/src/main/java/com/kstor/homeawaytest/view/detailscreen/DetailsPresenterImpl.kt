@@ -1,10 +1,11 @@
 package com.kstor.homeawaytest.view.detailscreen
 
-import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
 import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.view.base.AddAndRemoveFavoritesManager
 import com.kstor.homeawaytest.view.base.BasePresenter
+import com.kstor.homeawaytest.view.utils.FavoriteImageRes
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
@@ -13,35 +14,18 @@ import javax.inject.Inject
 class DetailsPresenterImpl @Inject constructor(
     compositeDisposable: CompositeDisposable,
     private val useCase: GenerateStaticMapUrlUseCase,
-    private val schedulerProvider: SchedulerProvider,
+    schedulerProvider: SchedulerProvider,
     private val favoritesUseCase: FavoriteUseCase
 
-) : DetailsPresenter, BasePresenter<DetailsView>(compositeDisposable) {
+) : DetailsPresenter, AddAndRemoveFavoritesManager, BasePresenter<DetailsView>(compositeDisposable, schedulerProvider) {
 
     override fun addAndRemoveFromFavorites(venues: Venues) {
-        if (!venues.isFavorite) {
-            compositeDisposable.add(favoritesUseCase.addToFavorite(venues)
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
-                .subscribeBy(
-                    onComplete = {
-                        view?.updateItemView(venues)
-                    },
-                    onError = {}))
-        } else {
-            compositeDisposable.add(favoritesUseCase.removeFromFavorite(venues)
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
-                .subscribeBy(
-                    onComplete = {
-                        view?.updateItemView(venues)
-                    },
-                    onError = {}))
-        }
+        addAndRemoveFromFavorites(venues, favoritesUseCase)
     }
 
     override fun setFavorite(venues: Venues) {
-        val imageFavorite = if (venues.isFavorite) R.drawable.ic_favorite_black_24dp else R.drawable.ic_favorite_border_black_24dp
+        val imageFavorite =
+            if (venues.isFavorite) FavoriteImageRes.IS_FAVORITE.resId else FavoriteImageRes.IS_NOT_FAVORITE.resId
         (view as DetailsView).setIfFavorite(imageFavorite)
     }
 
@@ -49,8 +33,12 @@ class DetailsPresenterImpl @Inject constructor(
         compositeDisposable.add(useCase.createStaticMapUrl(venues)
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
-            .subscribe {
-                (view as DetailsView).loadMap(it)
-            })
+            .subscribeBy(
+                onError = { view?.showError(it) },
+                onComplete = {},
+                onNext = {
+                    (view as DetailsView).loadMap(it)
+                }
+            ))
     }
 }
