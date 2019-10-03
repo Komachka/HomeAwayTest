@@ -165,11 +165,8 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
         details.url?.let { url ->
             urlTv.text = url
             urlTv.setOnClickListener {
-                val browserIntent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(url)
-                )
-                startActivity(browserIntent) }
+                context?.let { presenter.openBrowser(it, url) }
+            }
         }
         details.formattedPhone?.let {
             telephoneTv.text = it

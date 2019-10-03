@@ -1,5 +1,8 @@
 package com.kstor.homeawaytest.view.detailscreen
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.navigation.NavController
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
@@ -20,7 +23,19 @@ class DetailsPresenterImpl @Inject constructor(
     private val favoritesUseCase: FavoriteUseCase,
     private val detailsUseCase: VenueDetailsUseCase
 
-) : DetailsPresenter, AddAndRemoveFavoritesManager, BasePresenter<DetailsView>(compositeDisposable, schedulerProvider) {
+) : DetailsPresenter, AddAndRemoveFavoritesManager,
+    BasePresenter<DetailsView>(compositeDisposable, schedulerProvider) {
+
+    override fun openBrowser(context: Context, url: String) {
+        context.startActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(url)
+            )
+        )
+    }
+
+
     override fun navigateBack(navController: NavController) {
         navController.popBackStack()
     }
