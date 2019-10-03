@@ -30,6 +30,7 @@ import com.kstor.homeawaytest.utils.StringContainsIgnoringCase.Companion.contain
 import com.kstor.homeawaytest.view.di.AppModule
 import com.kstor.homeawaytest.view.di.mock.FakeVenuesRepository
 import com.kstor.homeawaytest.view.mainscreen.*
+import com.kstor.homeawaytest.view.utils.FavoriteImageRes
 import com.kstor.homeawaytest.view.utils.VenuesMapper
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.Description
@@ -129,7 +130,7 @@ class VenuesListTest : VenuesMapper {
             ViewAssertions.matches(
                 atPositionItem(
                     0,
-                    hasDescendant(withTagValue(equalTo(R.drawable.ic_favorite_black_24dp)))
+                    hasDescendant(withTagValue(equalTo(FavoriteImageRes.IS_FAVORITE.resId)))
                 )
             )
         )
@@ -145,7 +146,7 @@ class VenuesListTest : VenuesMapper {
             ViewAssertions.matches(
                 atPositionItem(
                     0,
-                    hasDescendant(withTagValue(equalTo(R.drawable.ic_favorite_border_black_24dp)))
+                    hasDescendant(withTagValue(equalTo(FavoriteImageRes.IS_NOT_FAVORITE.resId)))
                 )
             )
         )
@@ -231,6 +232,16 @@ class VenuesListTest : VenuesMapper {
         verify(navController).navigate(
             VenuesListFragmentDirections.actionVenuesListFragmentToMapFragment(TEST_QUERY)
         )
+    }
+
+    @Test
+    fun add_to_favorite_displayed_in_favorite_list() {
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+    }
+
+    @Test
+    fun remove_from_favorite_not_displayed_in_favorite_list() {
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     companion object {

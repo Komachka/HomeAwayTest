@@ -9,6 +9,7 @@ import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import com.kstor.homeawaytest.view.utils.TestSchedulerProvider
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -16,7 +17,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
@@ -33,6 +33,9 @@ class VenuesListPresenterTest {
 
     @Mock
     lateinit var favoritesUseCase: FavoriteUseCase
+
+    @Mock
+    lateinit var errorFavoritesUseCase: FavoriteUseCase
 
     @Mock
     lateinit var useCaseResultWithError: VenuesUseCase
@@ -66,23 +69,40 @@ class VenuesListPresenterTest {
     private fun createPresenterWithoutView(): VenuesListPresenterImpl {
         val goodResult = Observable.just(venuesList)
         `when`(useCaseResultWithData.loadVenuesDataFromApi(TEST_QUERY)).thenReturn(goodResult)
-        presenterNoView = VenuesListPresenterImpl(compositeDisposable, useCaseResultWithData, schedulerProvider, favoritesUseCase)
+        presenterNoView = VenuesListPresenterImpl(
+            compositeDisposable,
+            useCaseResultWithData,
+            schedulerProvider,
+            favoritesUseCase
+        )
         return presenterNoView
     }
 
     private fun createBaseTestPresenter(): VenuesListPresenterImpl {
         val goodResult = Observable.just(venuesList)
         `when`(useCaseResultWithData.loadVenuesDataFromApi(TEST_QUERY)).thenReturn(goodResult)
-        presenter = VenuesListPresenterImpl(compositeDisposable, useCaseResultWithData, schedulerProvider, favoritesUseCase)
+        `when`(favoritesUseCase.getFavorites()).thenReturn(goodResult.firstOrError())
+        presenter = VenuesListPresenterImpl(
+            compositeDisposable,
+            useCaseResultWithData,
+            schedulerProvider,
+            favoritesUseCase
+        )
         presenter.attachView(view)
         return presenter
     }
 
     private fun createPresenterWithError(): VenuesListPresenterImpl {
-        val bedResult = Observable.error<List<Venues>>(error)
-        `when`(useCaseResultWithError.loadVenuesDataFromApi(TEST_QUERY)).thenReturn(bedResult)
+        val badResult = Observable.error<List<Venues>>(error)
+        `when`(useCaseResultWithError.loadVenuesDataFromApi(TEST_QUERY)).thenReturn(badResult)
+        `when`(errorFavoritesUseCase.getFavorites()).thenReturn(badResult.firstOrError())
         presenterWithError =
-            VenuesListPresenterImpl(compositeDisposable, useCaseResultWithError, schedulerProvider, favoritesUseCase)
+            VenuesListPresenterImpl(
+                compositeDisposable,
+                useCaseResultWithError,
+                schedulerProvider,
+                errorFavoritesUseCase
+            )
         presenterWithError.attachView(view)
         return presenterWithError
     }
@@ -93,7 +113,7 @@ class VenuesListPresenterTest {
         verify(view).hideProgress()
         verify(view).displayVenues(venuesList)
         verify(view).showMupButn()
-        Mockito.verifyZeroInteractions(view)
+        verifyZeroInteractions(view)
     }
 
     @Test
@@ -101,7 +121,7 @@ class VenuesListPresenterTest {
         presenterNoView.detachView()
         presenterNoView.getVenues(TEST_QUERY)
         verify(view, never()).displayVenues(venuesList)
-        Mockito.verifyZeroInteractions(view)
+        verifyZeroInteractions(view)
     }
 
     @Test
@@ -109,6 +129,26 @@ class VenuesListPresenterTest {
         presenterWithError.getVenues(TEST_QUERY)
         verify(view).hideProgress()
         verify(view).showError(error)
-        Mockito.verifyZeroInteractions(view)
+        verifyZeroInteractions(view)
+    }
+
+    @Test
+    fun get_favorites_successes() {
+        presenter.getFavorites()
+        verify(favoritesUseCase).getFavorites()
+        verifyZeroInteractions(favoritesUseCase)
+        verify(view).hideProgress()
+        verify(view).displayVenues(venuesList)
+        verifyZeroInteractions(view)
+    }
+
+    @Test
+    fun get_favorites_error() {
+        presenterWithError.getFavorites()
+        verify(errorFavoritesUseCase).getFavorites()
+        verifyZeroInteractions(errorFavoritesUseCase)
+        verify(view).hideProgress()
+        verify(view).showError(error)
+        verifyZeroInteractions(view)
     }
 }

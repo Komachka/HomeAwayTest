@@ -26,6 +26,10 @@ android {
     }
     testOptions {
         animationsDisabled true
+        unitTests {
+            includeAndroidResources = true
+        }
+
     }
 }
 configurations {
@@ -36,15 +40,15 @@ configurations {
 ext {
     // App dependencies
     androidXVersion = '1.1.0'
-    androidXTestCoreVersion = '1.2.0-beta01'
+    androidXTestCoreVersion = '1.2.0'
     androidXTestExtKotlinRunnerVersion = '1.1.1-beta01'
     androidXTestRulesVersion = '1.2.0-beta01'
     androidXLegacySupport = '1.0.0'
     appCompatVersion = '1.1.0'
     archTestingVersion = '2.0.0'
     dexMakerVersion = '2.12.1'
-    espressoVersion = '3.2.0-beta01'
-    fragmentVersion = '1.1.0-alpha07'
+    espressoVersion = '3.2.0'
+    fragmentVersion = '1.1.0'
     junitVersion = '4.12'
     materialVersion = '1.0.0'
     mockitoVersion = '2.8.9'

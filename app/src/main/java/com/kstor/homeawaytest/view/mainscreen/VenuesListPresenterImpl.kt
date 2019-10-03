@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.view.base.AddAndRemoveFavoritesManager
 import com.kstor.homeawaytest.view.base.BasePresenter
 import com.kstor.homeawaytest.view.base.BaseView
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
@@ -15,11 +16,16 @@ import javax.inject.Inject
 class VenuesListPresenterImpl @Inject constructor(
     compositeDisposable: CompositeDisposable,
     private val getVenuesUseCase: VenuesUseCase,
-    private val schedulerProvider: SchedulerProvider,
+    schedulerProvider: SchedulerProvider,
     private val favoritesUseCase: FavoriteUseCase
 ) :
-    VenuesListPresenter, BasePresenter<VenuesListView>(compositeDisposable),
+    VenuesListPresenter, AddAndRemoveFavoritesManager,
+    BasePresenter<VenuesListView>(compositeDisposable, schedulerProvider),
     VenuesMapper {
+
+    override fun addAndRemoveFromFavorites(venue: Venues) {
+        addAndRemoveFromFavorites(venue, favoritesUseCase)
+    }
 
     override fun getFavorites() {
         compositeDisposable.add(favoritesUseCase.getFavorites().subscribeOn(schedulerProvider.io())
@@ -33,28 +39,6 @@ class VenuesListPresenterImpl @Inject constructor(
                     (view as BaseView).showError(it)
                 }
             ))
-    }
-
-    override fun addToFavorite(venues: Venues) {
-        if (!venues.isFavorite) {
-            compositeDisposable.add(favoritesUseCase.addToFavorite(venues)
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
-                .subscribeBy(
-                    onComplete = {
-                        view?.updateItemView(venues)
-                    },
-                    onError = {}))
-        } else {
-            compositeDisposable.add(favoritesUseCase.removeFromFavorite(venues)
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
-                .subscribeBy(
-                    onComplete = {
-                        view?.updateItemView(venues)
-                    },
-                    onError = {}))
-        }
     }
 
     override fun hideMupButton() {
@@ -75,7 +59,9 @@ class VenuesListPresenterImpl @Inject constructor(
     }
 
     override fun getVenues(query: String) {
-        compositeDisposable.add(getVenuesUseCase.loadVenuesDataFromApi(query).subscribeOn(schedulerProvider.io())
+        compositeDisposable.add(getVenuesUseCase.loadVenuesDataFromApi(query).subscribeOn(
+            schedulerProvider.io()
+        )
             .observeOn(schedulerProvider.ui())
             .subscribeBy(
                 onNext = {

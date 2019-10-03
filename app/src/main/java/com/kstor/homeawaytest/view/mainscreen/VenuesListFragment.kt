@@ -26,12 +26,11 @@ import kotlinx.android.synthetic.main.venues_list_fragment.*
 class VenuesListFragment : BaseFragment(), VenuesListView {
 
     override fun updateItemView(venues: Venues) {
-        log("update item view")
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     @Inject
     lateinit var presenter: VenuesListPresenter
-
     private lateinit var compositeDisposable: CompositeDisposable
 
     override fun setUp() {
@@ -50,7 +49,7 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
                 }
             }
             (adapter as VenuesListAdapter).addToFavoriteClickListener = { venue ->
-                presenter.addToFavorite(venue)
+                (presenter as VenuesListPresenterImpl).addAndRemoveFromFavorites(venue)
             }
         }
         presenter.getFavorites()

@@ -3,12 +3,9 @@ package com.kstor.homeawaytest.view.mapscreen
 import android.view.View
 import androidx.navigation.Navigation
 import com.google.android.gms.maps.model.LatLng
-import com.kstor.homeawaytest.data.CENTER_LAT
-import com.kstor.homeawaytest.data.CENTER_LNG
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.base.BasePresenter
-import com.kstor.homeawaytest.view.base.BaseView
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import com.kstor.homeawaytest.view.utils.VenuesMapper
 import io.reactivex.disposables.CompositeDisposable
@@ -18,12 +15,12 @@ import javax.inject.Inject
 class MapPresenterImpl @Inject constructor(
     compositeDisposable: CompositeDisposable,
     private val venuesListUseCase: VenuesUseCase,
-    private val schedulerProvider: SchedulerProvider
-) : MapPresenter, BasePresenter<MapView>(compositeDisposable),
+    schedulerProvider: SchedulerProvider
+) : MapPresenter, BasePresenter<MapView>(compositeDisposable, schedulerProvider),
     VenuesMapper {
 
-    override fun setUpMapToCityCenter() {
-        view?.showCenterOnTheMap(LatLng(CENTER_LAT, CENTER_LNG))
+    override fun setUpMapToCityCenter(lat: Float, lng: Float) {
+        view?.showCenterOnTheMap(LatLng(lat.toDouble(), lng.toDouble()))
     }
 
     private val venuesMap = mutableMapOf<LatLng, Venues>()
@@ -43,12 +40,11 @@ class MapPresenterImpl @Inject constructor(
             .observeOn(schedulerProvider.ui())
             .doOnNext {
                 val (lat, lng) = venuesListUseCase.getCityCenter()
-                view?.showCenterOnTheMap(LatLng(lat.toDouble(), lng.toDouble()))
+                setUpMapToCityCenter(lat, lng)
             }
             .subscribeBy(
                 onError = {
-                    print(it)
-                    (view as BaseView).showError(it)
+                    view?.showError(it)
                 },
                 onNext = {
                     it.createVenuesMap()
