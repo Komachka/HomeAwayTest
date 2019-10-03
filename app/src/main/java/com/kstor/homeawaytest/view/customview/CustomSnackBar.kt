@@ -1,34 +1,31 @@
 package com.kstor.homeawaytest.view.customview
 
-import android.content.Context
-import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.kstor.homeawaytest.R
 import kotlinx.android.synthetic.main.view_error_snackbar.view.*
 
-class ErrorSnackBar(parent:ViewGroup, errorView:ErrorSnackBarView)
-    : BaseTransientBottomBar<ErrorSnackBar>(parent, errorView, errorView) {
+class CustomSnackBar(parent: ViewGroup, errorView: CustomSnackBarView) :
+    BaseTransientBottomBar<CustomSnackBar>(parent, errorView, errorView) {
 
     init {
 
         getView().setBackgroundResource(R.drawable.snack_bar)
         getView().setPadding(0, 0, 0, 0)
-        duration = LENGTH_INDEFINITE
+        duration = LENGTH_LONG
     }
 
     companion object {
-        fun make(view: View, mesage: String? = null): ErrorSnackBar? {
+        fun make(view: View, mesage: String? = null): CustomSnackBar? {
             view.findSuitableParent()?.let { parent ->
-                val customViewSnackbar = ErrorSnackBarView(view.context)
+                val customViewSnackbar = CustomSnackBarView(view.context)
                 if (mesage != null) {
                     customViewSnackbar.message.text = mesage
                 }
-                return ErrorSnackBar(
+                return CustomSnackBar(
                     parent,
                     customViewSnackbar
                 )
@@ -36,9 +33,6 @@ class ErrorSnackBar(parent:ViewGroup, errorView:ErrorSnackBarView)
             return null
         }
     }
-
-
-
 }
 fun View?.findSuitableParent(): ViewGroup? {
     var view = this

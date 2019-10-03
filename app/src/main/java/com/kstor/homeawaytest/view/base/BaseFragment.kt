@@ -3,13 +3,15 @@ package com.kstor.homeawaytest.view.base
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.kstor.homeawaytest.data.log
+import com.kstor.homeawaytest.data.logError
+import com.kstor.homeawaytest.view.customview.CustomSnackBar
 
 abstract class BaseFragment : Fragment(), BaseView {
 
     override fun showError(error: Throwable?) {
-        error?.message?.let {
-            log(it)
+        error?.message?.let { error ->
+            logError(error)
+            view?.let { CustomSnackBar.make(it, error)?.show() }
         }
     }
 

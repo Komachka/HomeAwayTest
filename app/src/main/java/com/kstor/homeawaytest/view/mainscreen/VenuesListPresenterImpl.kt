@@ -1,6 +1,8 @@
 package com.kstor.homeawaytest.view.mainscreen
 
 import androidx.navigation.NavController
+import com.kstor.homeawaytest.data.EMPTY_SEARCH_ERROR_MESSAGE
+import com.kstor.homeawaytest.data.NO_FAVORITE_MESSAGE
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
@@ -30,6 +32,11 @@ class VenuesListPresenterImpl @Inject constructor(
     override fun getFavorites() {
         compositeDisposable.add(favoritesUseCase.getFavorites().subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
+            .doOnSuccess {
+                if (it.isEmpty()) {
+                    throw Throwable(NO_FAVORITE_MESSAGE)
+                }
+            }
             .subscribeBy(
                 onSuccess = {
                     view?.hideProgress()
@@ -65,14 +72,13 @@ class VenuesListPresenterImpl @Inject constructor(
             .observeOn(schedulerProvider.ui())
             .subscribeBy(
                 onNext = {
-                    view?.hideProgress()
                     view?.displayVenues(it)
-                    if (it.isNotEmpty()) view?.showMupButn()
+                    if (it.isEmpty()) { throw Throwable(EMPTY_SEARCH_ERROR_MESSAGE) }
+                    view?.hideProgress()
+                    view?.showMupButn()
                 }, onError = {
                     view?.hideProgress()
                     (view as BaseView).showError(it)
-                }, onComplete = {
-                    println("Complete")
                 }
             ))
     }
