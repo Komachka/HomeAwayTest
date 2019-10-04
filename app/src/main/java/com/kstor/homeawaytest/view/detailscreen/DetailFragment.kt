@@ -138,38 +138,18 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
     }
 
     override fun updateInfo(details: VenueDetails) {
-        log(details.toString())
         details.rating?.let {
             ratingBar.rating = (it * 0.5).toFloat()
             raitingTv.text = it.toString()
         }
-        details.isOpen?.let {
-
-            IsOpenTv.text = if (it) {
-                resources.getString(R.string.open)
-            } else {
-                resources.getString(R.string.close)
-            }
-        }
-        details.bestPhoto?.let {
-
-            bigPictureIV.loadImage(it)
-        }
-        details.hoursPerDay?.let {
-
-            sceduleTV.text = it.joinToString(separator = "\n") { it.days + " " + it.renderedTime }
-        }
-        details.description?.let {
-            descriptionTv.text = it
-        }
+        details.isOpen?.let { IsOpenTv.text = if (it) { resources.getString(R.string.open) } else { resources.getString(R.string.close) } }
+        details.bestPhoto?.let { bigPictureIV.loadImage(it) }
+        details.hoursPerDay?.let { sceduleTV.text = it.joinToString(separator = "\n") { it.days + " " + it.renderedTime } }
+        details.description?.let { descriptionTv.text = it }
         details.url?.let { url ->
             urlTv.text = url
-            urlTv.setOnClickListener {
-                context?.let { presenter.openBrowser(it, url) }
-            }
+            urlTv.setOnClickListener { context?.let { presenter.openBrowser(it, url) } }
         }
-        details.formattedPhone?.let {
-            telephoneTv.text = it
-        }
+        details.formattedPhone?.let { telephoneTv.text = it }
     }
 }

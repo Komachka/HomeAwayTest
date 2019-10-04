@@ -12,6 +12,7 @@ import javax.inject.Singleton
 @Component(modules = [
     TestVenuesRepositoryModule::class,
     TestStaticMapRepositoryModule::class,
+    TestDetailsRepositoryModule::class,
     AppModule::class,
     PresentersModule::class])
 interface TestComponent : AppComponent {

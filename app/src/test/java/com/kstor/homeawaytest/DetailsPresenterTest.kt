@@ -2,7 +2,9 @@ package com.kstor.homeawaytest
 
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
+import com.kstor.homeawaytest.domain.VenueDetailsUseCase
 import com.kstor.homeawaytest.domain.model.Venue
+import com.kstor.homeawaytest.domain.model.VenueDetails
 import com.kstor.homeawaytest.view.detailscreen.DetailsPresenter
 import com.kstor.homeawaytest.view.detailscreen.DetailsPresenterImpl
 import com.kstor.homeawaytest.view.detailscreen.DetailsView
@@ -40,6 +42,11 @@ class DetailsPresenterTest {
     lateinit var errorFavoriteUseCase: FavoriteUseCase
 
     @Mock
+    lateinit var detailUseCase: VenueDetailsUseCase
+    @Mock
+    lateinit var errorDetailUseCase: VenueDetailsUseCase
+
+    @Mock
     lateinit var view: DetailsView
 
     lateinit var testVenues: Venue
@@ -56,14 +63,42 @@ class DetailsPresenterTest {
         createErrorStaticMapUseCase()
         createFavoriteUseCase()
         createErrorFavoriteUseCase()
+        createDetailsUseCase()
+        createErrorDetailsUseCase()
 
         schedulerProvider = TestSchedulerProvider(Schedulers.trampoline())
 
-        testPresenter = DetailsPresenterImpl(compositeDisposable, staticMapUseCase, schedulerProvider, favoriteUseCase)
+        testPresenter = DetailsPresenterImpl(compositeDisposable, staticMapUseCase, schedulerProvider, favoriteUseCase,detailUseCase)
         (testPresenter as DetailsPresenterImpl).attachView(view)
 
-        errorPresenter = DetailsPresenterImpl(compositeDisposable, errorStaticMapUseCase, schedulerProvider, errorFavoriteUseCase)
+        errorPresenter = DetailsPresenterImpl(compositeDisposable, errorStaticMapUseCase, schedulerProvider, errorFavoriteUseCase, errorDetailUseCase)
         (errorPresenter as DetailsPresenterImpl).attachView(view)
+    }
+
+    private fun createErrorDetailsUseCase() {
+        `when`(errorDetailUseCase.getVenueDetails(TEST_ID)).thenReturn(Observable.error<VenueDetails>(testError).firstOrError())
+    }
+
+    private fun createVenueDetails() : VenueDetails {
+        return VenueDetails(
+            TEST_ID,
+            "TestName",
+            "007",
+            "http://test.com",
+            "http://test.com",
+            10.0,
+            "FFFFFF",
+            "Description",
+            "url",
+            true,
+            null,
+            null
+        )
+    }
+
+    private fun createDetailsUseCase() {
+        val details = Observable.just(createVenueDetails()).firstOrError()
+        `when`(detailUseCase.getVenueDetails(TEST_ID)).thenReturn(details)
     }
 
     private fun createErrorFavoriteUseCase() {
@@ -77,7 +112,7 @@ class DetailsPresenterTest {
     }
 
     private fun createTestVenues(): Venue {
-        return Venue("1", "Name1", null, "Adress1", 10, 1.0, 2.0, true)
+        return Venue(TEST_ID, "Name1", null, "Adress1", 10, 1.0, 2.0, true)
     }
 
     private fun createStaticMapUseCase() {
@@ -155,7 +190,22 @@ class DetailsPresenterTest {
         verifyZeroInteractions(view)
     }
 
+    @Test
+    fun load_details_success() {
+        (testPresenter as DetailsPresenterImpl).getVenueDetails(testVenues)
+        verify(view).updateInfo(createVenueDetails())
+        verifyZeroInteractions(view)
+    }
+
+    @Test
+    fun load_details_error() {
+        (errorPresenter as DetailsPresenterImpl).getVenueDetails(testVenues)
+        verify(view).showError(testError)
+        verifyZeroInteractions(view)
+    }
+
     companion object {
         const val TEST_URL = "URL"
+        const val TEST_ID = "ID"
     }
 }

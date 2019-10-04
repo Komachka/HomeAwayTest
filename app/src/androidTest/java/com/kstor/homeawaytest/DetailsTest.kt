@@ -8,10 +8,13 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.kstor.homeawaytest.di.DaggerTestComponent
+import com.kstor.homeawaytest.di.TestDetailsRepositoryModule
 import com.kstor.homeawaytest.di.TestStaticMapRepositoryModule
 import com.kstor.homeawaytest.di.TestVenuesRepositoryModule
 import com.kstor.homeawaytest.domain.StaticMapRepository
+import com.kstor.homeawaytest.domain.VenueDetailsRepository
 import com.kstor.homeawaytest.domain.VenuesRepository
+import com.kstor.homeawaytest.fake.FakeDetailsRepository
 import com.kstor.homeawaytest.fake.FakeStaticMapRepository
 import com.kstor.homeawaytest.view.detailscreen.DetailFragment
 import com.kstor.homeawaytest.view.di.AppModule
@@ -29,6 +32,7 @@ class DetailsTest : VenuesMapper {
 
     private lateinit var venuesRepository: VenuesRepository
     private lateinit var staticMapRepository: StaticMapRepository
+    private lateinit var detailRepository: VenueDetailsRepository
 
     @Before
     fun setup() {
@@ -36,6 +40,7 @@ class DetailsTest : VenuesMapper {
         val app = instr.targetContext.applicationContext as App
         venuesRepository = FakeVenuesRepository()
         staticMapRepository = FakeStaticMapRepository()
+        detailRepository = FakeDetailsRepository()
         MockitoAnnotations.initMocks(this)
         val component = DaggerTestComponent.builder().appModule(AppModule(app))
             .testVenuesRepositoryModule(
@@ -44,6 +49,7 @@ class DetailsTest : VenuesMapper {
                 )
             )
             .testStaticMapRepositoryModule(TestStaticMapRepositoryModule(staticMapRepository))
+            .testDetailsRepositoryModule(TestDetailsRepositoryModule(detailRepository))
             .build()
         component.inject(this)
         app.homeAwayComponents = component
