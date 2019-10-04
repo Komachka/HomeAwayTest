@@ -16,7 +16,7 @@ To biuld the APK run gradle task in the root folder of the project
 ```
 ./gradlew assembleDebug
 ```
-After you with find APK in app/build/outputs/apk
+After you will find APK in app/build/outputs/apk
 
 | ![SCREEN1](https://github.com/Komachka/HomeAwayTest/blob/feature/add-endpoint-for-detail-screen/screens/photo_2019-10-04_12-02-43%20(2).jpg)   | ![SCREEN2](https://github.com/Komachka/HomeAwayTest/blob/feature/add-endpoint-for-detail-screen/screens/photo_2019-10-04_12-02-43.jpg)  | ![SCREEN3](https://github.com/Komachka/HomeAwayTest/blob/feature/add-endpoint-for-detail-screen/screens/photo_2019-10-04_12-02-44%20(4).jpg)   | ![SCREEN4](https://github.com/Komachka/HomeAwayTest/blob/feature/add-endpoint-for-detail-screen/screens/photo_2019-10-04_12-02-44%20(5).jpg)  |
 | ------------- | ------------- | ------------- | ------------- |
