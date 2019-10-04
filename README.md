@@ -12,4 +12,7 @@ minSdkVersion 19
     Google maps, RxJava2, Dagger2, Retrofit, Navigation components, Picasso
     
 
-|---|---|---|---|
+| First Header  | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
