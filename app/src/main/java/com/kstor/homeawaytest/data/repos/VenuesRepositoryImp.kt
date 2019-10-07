@@ -51,11 +51,11 @@ class VenuesRepositoryImp(
     }
 
     override fun getClosestVenuses(limit: Int, query: String): Observable<List<Venue>> {
-        return getRemoteData(limit, query)
+        return Observable.concatArray(getLocalData(), getRemoteData(limit, query)
             .flatMap { list ->
                 localData.removeANdSaveVenues(mapToDBVenuesModelList(list))
                 getLocalData()
-            }
+            })
     }
 
     private fun mapToDBVenuesModelList(list: List<Venue>): List<DBVenuesModel> {
