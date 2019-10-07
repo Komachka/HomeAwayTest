@@ -10,3 +10,15 @@ minSdkVersion 19
 
 ## Addition dependencies :
     Google maps, RxJava2, Dagger2, Retrofit, Navigation components, Picasso
+    
+
+To biuld the APK run gradle task in the root folder of the project
+```
+./gradlew assembleDebug
+```
+After you will find APK in app/build/outputs/apk
+
+| ![SCREEN1](https://github.com/Komachka/HomeAwayTest/blob/feature/add-endpoint-for-detail-screen/screens/photo_2019-10-04_12-02-43%20(2).jpg)   | ![SCREEN2](https://github.com/Komachka/HomeAwayTest/blob/feature/add-endpoint-for-detail-screen/screens/photo_2019-10-04_12-02-43.jpg)  | ![SCREEN3](https://github.com/Komachka/HomeAwayTest/blob/feature/add-endpoint-for-detail-screen/screens/photo_2019-10-04_12-02-44%20(4).jpg)   | ![SCREEN4](https://github.com/Komachka/HomeAwayTest/blob/feature/add-endpoint-for-detail-screen/screens/photo_2019-10-04_12-02-44%20(5).jpg)  |
+| ------------- | ------------- | ------------- | ------------- |
+| ![SCREEN5](https://github.com/Komachka/HomeAwayTest/blob/feature/add-endpoint-for-detail-screen/screens/photo_2019-10-04_12-02-44%20(6).jpg)  | ![SCREEN6](https://github.com/Komachka/HomeAwayTest/blob/feature/add-endpoint-for-detail-screen/screens/photo_2019-10-04_12-02-45%20(3).jpg)  | ![SCREEN7](https://github.com/Komachka/HomeAwayTest/blob/feature/add-endpoint-for-detail-screen/screens/photo_2019-10-04_12-02-45.jpg) | ![SCREEN8](https://github.com/Komachka/HomeAwayTest/blob/feature/add-endpoint-for-detail-screen/screens/photo_2019-10-04_12-02-44%20(7).jpg)  |
+
