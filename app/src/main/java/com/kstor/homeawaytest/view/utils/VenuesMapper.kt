@@ -1,6 +1,6 @@
 package com.kstor.homeawaytest.view.utils
 
-import com.kstor.homeawaytest.data.log
+import com.kstor.homeawaytest.data.logError
 import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.domain.model.VenuesCategory
 import com.kstor.homeawaytest.domain.model.VenuesCategoryParcelize
@@ -21,7 +21,7 @@ interface VenuesMapper {
                 venues.isFavorite
             )
         } catch (e: Throwable) {
-            log(e.message!!)
+            logError(e.message!!)
             null
         }
     }
@@ -34,7 +34,7 @@ interface VenuesMapper {
                 requireNotNull(it?.iconPath)
             )
         } catch (e: IllegalArgumentException) {
-            log(e.message!!)
+            logError(e.message!!)
             null
         }
     }
@@ -52,7 +52,7 @@ interface VenuesMapper {
                 venues.isFavorite
             )
         } catch (e: Throwable) {
-            log(e.message!!)
+            logError(e.message!!)
             null
         }
     }
@@ -65,7 +65,7 @@ interface VenuesMapper {
                 requireNotNull(it?.iconPath)
             )
         } catch (e: IllegalArgumentException) {
-            log(e.message!!)
+            logError(e.message!!)
             null
         }
     }
