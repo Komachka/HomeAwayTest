@@ -21,6 +21,6 @@ class CustomSnackBarView : ConstraintLayout, ContentViewCallback {
 
     init {
         View.inflate(context, R.layout.view_error_snackbar, this)
-        clipToPadding = false // TODO read more about it
+        clipToPadding = false
     }
 }

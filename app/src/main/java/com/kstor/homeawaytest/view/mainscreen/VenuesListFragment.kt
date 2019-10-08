@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.*
@@ -24,20 +26,14 @@ import io.reactivex.rxkotlin.subscribeBy
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.venues_list_fragment.*
+import kotlinx.android.synthetic.main.view_error_snackbar.*
 
 class VenuesListFragment : BaseFragment(), VenuesListView {
 
     override fun updateItemView(venues: Venues) {
-
-        val message = resources.getString(R.string.venues_updated)
         if(queryEditText.text.isEmpty()) {
             presenter.getFavorites()
         }
-        view?.let {
-            val snackBar = CustomSnackBar.make(it, message, { log("venues " + venues + " was updated")})
-            snackBar?.show()
-        }
-
     }
 
     @Inject
@@ -59,8 +55,13 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
                 }
             }
             (adapter as VenuesListAdapter).addToFavoriteClickListener = { venue, pos ->
-                (presenter as VenuesListPresenterImpl).addAndRemoveFromFavorites(venue)
-
+                if (queryEditText.text.isEmpty())
+                {
+                    updateFavorites(venue, pos)
+                }
+                else {
+                    (presenter as VenuesListPresenterImpl).addAndRemoveFromFavorites(venue)
+                }
             }
         }
         presenter.getFavorites()
@@ -81,6 +82,34 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
                     presenter.getVenues(it)
                 })
         )
+    }
+
+    private fun updateFavorites(venue: Venues, pos: Int) {
+        var removeIt = true
+        val message = "${venue.name}  ${resources.getString(R.string.venues_updated)}"
+        if (venue.isFavorite){
+            (list.adapter as VenuesListAdapter).removeFromList(venue, pos)
+            view?.let {
+                val snackBar = CustomSnackBar.make(it, message)
+                snackBar?.addListener {
+                    (list.adapter as VenuesListAdapter).addToList(venue, pos)
+                    removeIt = false
+                    snackBar.dismiss()
+                }
+                snackBar?.addCallback(object : BaseTransientBottomBar.BaseCallback<CustomSnackBar>() {
+                    override fun onDismissed(transientBottomBar: CustomSnackBar?, event: Int) {
+                        super.onDismissed(transientBottomBar, event)
+                        if (removeIt)
+                            (presenter as VenuesListPresenterImpl).addAndRemoveFromFavorites(venue)
+                    }
+                })
+                snackBar?.show()
+            }
+        }
+        else
+        {
+            (presenter as VenuesListPresenterImpl).addAndRemoveFromFavorites(venue)
+        }
     }
 
     override fun destroy() {

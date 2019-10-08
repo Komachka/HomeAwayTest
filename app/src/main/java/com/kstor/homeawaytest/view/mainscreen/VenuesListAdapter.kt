@@ -11,6 +11,7 @@ import com.kstor.homeawaytest.domain.model.Venues
 import com.kstor.homeawaytest.view.utils.FavoriteImageRes
 import com.kstor.homeawaytest.view.utils.ImageLoader
 import kotlinx.android.synthetic.main.list_item.view.*
+import java.lang.Exception
 
 class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     ImageLoader {
@@ -35,18 +36,37 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
 
         override fun onClick(item: View) {
 
-            val position = adapterPosition
+
             if (item.id == R.id.imageFavorite) {
                 val animation = AnimationUtils.loadAnimation(
                     view.context.applicationContext,
                     R.anim.zoomin
                 )
                 view.imageFavorite.startAnimation(animation)
-                addToFavoriteClickListener.invoke(venues[position], position)
-                venues[position].isFavorite = !venues[position].isFavorite
-                notifyItemChanged(position)
+
+                if (adapterPosition != RecyclerView.NO_POSITION)
+                {
+
+                    addToFavoriteClickListener.invoke(venues[adapterPosition], adapterPosition)
+
+                    try {
+                        venues[adapterPosition].isFavorite = !venues[adapterPosition].isFavorite // TODO move it to another place
+                        notifyItemChanged(adapterPosition) // TODO move it to another place
+                    }
+                    catch (e:Exception)
+                    {
+                        log("adapter_position " + adapterPosition)
+                        log(e.toString())
+                    }
+
+                }
+
             } else {
-                detailsOnClickListener.invoke(venues[position])
+                if (adapterPosition != RecyclerView.NO_POSITION)
+                {
+                    detailsOnClickListener.invoke(venues[adapterPosition])
+                }
+
             }
         }
 
@@ -93,6 +113,21 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
 
     private fun clearData() {
         this.venues.clear()
+    }
+
+    fun removeFromList(venue: Venues, pos: Int) {
+        venues.remove(venue)
+        notifyItemRemoved(pos)
+        notifyItemRangeChanged(pos, venues.size)
+
+    }
+
+    fun addToList(venue: Venues, pos: Int)
+    {
+        venues.add(pos, venue)
+        notifyItemInserted(pos)
+        notifyItemRangeChanged(pos, venues.size)
+
     }
 
 }
