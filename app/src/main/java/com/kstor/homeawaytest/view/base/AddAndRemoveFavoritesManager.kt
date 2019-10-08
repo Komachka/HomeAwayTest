@@ -1,5 +1,6 @@
 package com.kstor.homeawaytest.view.base
 
+import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.model.Venues
 import io.reactivex.rxkotlin.subscribeBy
@@ -9,7 +10,8 @@ interface AddAndRemoveFavoritesManager {
         val act = if (!venues.isFavorite) {
             { favoritesUseCase.addToFavorite(venues) }
         } else {
-            { favoritesUseCase.removeFromFavorite(venues) }
+            {
+                favoritesUseCase.removeFromFavorite(venues) }
         }
         compositeDisposable.add(
             act.invoke()

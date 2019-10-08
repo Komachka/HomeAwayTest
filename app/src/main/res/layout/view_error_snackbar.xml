@@ -38,4 +38,12 @@
         android:layout_marginLeft="9dp"
         app:layout_constraintTop_toTopOf="@+id/info_image"/>
 
+    <Button
+        android:id="@+id/snackBarButn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="UNDO"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </merge>

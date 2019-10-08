@@ -10,5 +10,6 @@
     <dimen name="name_top_margin">24dp</dimen>
     <dimen name="name_fields_text_size">18sp</dimen>
     <dimen name="reqular_text_size">14sp</dimen>
+    <dimen name="favorites_padding">12dp</dimen>
 
 </resources>

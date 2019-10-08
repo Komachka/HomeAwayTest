@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kstor.homeawaytest.App
@@ -28,9 +29,15 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
 
     override fun updateItemView(venues: Venues) {
 
-        view?.let {
-            CustomSnackBar.make(it, resources.getString(R.string.venues_updated))?.show()
+        val message = resources.getString(R.string.venues_updated)
+        if(queryEditText.text.isEmpty()) {
+            presenter.getFavorites()
         }
+        view?.let {
+            val snackBar = CustomSnackBar.make(it, message, { log("venues " + venues + " was updated")})
+            snackBar?.show()
+        }
+
     }
 
     @Inject
@@ -51,8 +58,9 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
                     presenter.navigateToDetailScreen(Navigation.findNavController(it), venue)
                 }
             }
-            (adapter as VenuesListAdapter).addToFavoriteClickListener = { venue ->
+            (adapter as VenuesListAdapter).addToFavoriteClickListener = { venue, pos ->
                 (presenter as VenuesListPresenterImpl).addAndRemoveFromFavorites(venue)
+
             }
         }
         presenter.getFavorites()
@@ -137,4 +145,5 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
         return textChangeObservable
             .debounce(LOADING_TIMEOUT, TimeUnit.MILLISECONDS)
     }
+
 }
