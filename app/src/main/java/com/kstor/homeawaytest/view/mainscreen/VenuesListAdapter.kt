@@ -18,7 +18,7 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
 
     lateinit var detailsOnClickListener: (venues: Venues) -> Unit
     lateinit var addToFavoriteClickListener: (venues: Venues, pos: Int) -> Unit
-    val venues = ArrayList<Venues>()
+    private val venues = ArrayList<Venues>()
 
     fun updateData(venues: List<Venues>) {
         clearData()
@@ -35,8 +35,6 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
         }
 
         override fun onClick(item: View) {
-
-
             if (item.id == R.id.imageFavorite) {
                 val animation = AnimationUtils.loadAnimation(
                     view.context.applicationContext,
@@ -46,19 +44,15 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
 
                 if (adapterPosition != RecyclerView.NO_POSITION)
                 {
-
                     addToFavoriteClickListener.invoke(venues[adapterPosition], adapterPosition)
-
                     try {
-                        venues[adapterPosition].isFavorite = !venues[adapterPosition].isFavorite // TODO move it to another place
-                        notifyItemChanged(adapterPosition) // TODO move it to another place
+                        venues[adapterPosition].isFavorite = !venues[adapterPosition].isFavorite
+                        notifyItemChanged(adapterPosition)
                     }
                     catch (e:Exception)
                     {
-                        log("adapter_position " + adapterPosition)
-                        log(e.toString())
+                        log(e.toString() + "adapter position $adapterPosition")
                     }
-
                 }
 
             } else {
@@ -66,7 +60,6 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
                 {
                     detailsOnClickListener.invoke(venues[adapterPosition])
                 }
-
             }
         }
 
@@ -119,7 +112,6 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
         venues.remove(venue)
         notifyItemRemoved(pos)
         notifyItemRangeChanged(pos, venues.size)
-
     }
 
     fun addToList(venue: Venues, pos: Int)
@@ -127,7 +119,6 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
         venues.add(pos, venue)
         notifyItemInserted(pos)
         notifyItemRangeChanged(pos, venues.size)
-
     }
 
 }

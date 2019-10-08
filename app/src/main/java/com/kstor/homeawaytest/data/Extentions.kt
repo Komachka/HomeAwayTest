@@ -94,7 +94,7 @@ private fun Double.toRadians(): Double {
 
 private fun mapToCategory(categories: List<NetworkCategory>?): VenuesCategory? {
     return categories?.let {
-        it.first()?.let { category ->
+        it.first().let { category ->
             VenuesCategory(
                 category.id,
                 category.name,

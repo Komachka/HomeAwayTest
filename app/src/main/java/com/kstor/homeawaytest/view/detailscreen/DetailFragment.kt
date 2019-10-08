@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.domain.model.Venues
@@ -61,6 +62,11 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
                 }
             }
         }
+        val animation = AnimationUtils.loadAnimation(
+            context?.applicationContext,
+            R.anim.rotate
+        )
+        load_more.startAnimation(animation)
     }
 
     override fun updateItemView(venues: Venues) {
