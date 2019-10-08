@@ -29,6 +29,15 @@ import kotlinx.android.synthetic.main.venues_list_fragment.*
 import kotlinx.android.synthetic.main.view_error_snackbar.*
 
 class VenuesListFragment : BaseFragment(), VenuesListView {
+    override fun showNoResult() {
+        no_res_img.visibility = VISIBLE
+        no_res_text.visibility = VISIBLE
+    }
+
+    override fun hideNoResult() {
+        no_res_img.visibility = GONE
+        no_res_text.visibility = GONE
+    }
 
     override fun updateItemView(venues: Venues) {
         if(queryEditText.text.isEmpty()) {

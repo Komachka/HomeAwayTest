@@ -3,6 +3,7 @@ package com.kstor.homeawaytest.view.mainscreen
 import androidx.navigation.NavController
 import com.kstor.homeawaytest.data.EMPTY_SEARCH_ERROR_MESSAGE
 import com.kstor.homeawaytest.data.NO_FAVORITE_MESSAGE
+import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venues
@@ -40,10 +41,13 @@ class VenuesListPresenterImpl @Inject constructor(
             .subscribeBy(
                 onSuccess = {
                     view?.hideProgress()
+                    view?.hideNoResult()
                     view?.displayVenues(it)
                 }, onError = {
+                    log(it.toString())
                     view?.hideProgress()
-                    (view as BaseView).showError(it)
+                    view?.showError(it)
+                    view?.showNoResult()
                 }
             ))
     }
@@ -72,13 +76,17 @@ class VenuesListPresenterImpl @Inject constructor(
             .observeOn(schedulerProvider.ui())
             .subscribeBy(
                 onNext = {
+                    view?.hideNoResult()
                     view?.displayVenues(it)
                     if (it.isEmpty()) { throw Throwable(EMPTY_SEARCH_ERROR_MESSAGE) }
                     view?.hideProgress()
                     view?.showMupButn()
                 }, onError = {
+                    log(it.toString())
                     view?.hideProgress()
-                    (view as BaseView).showError(it)
+                    view?.showError(it)
+                    view?.displayVenues(emptyList())
+                    view?.showNoResult()
                 }
             ))
     }

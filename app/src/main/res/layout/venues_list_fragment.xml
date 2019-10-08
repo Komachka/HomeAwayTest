@@ -24,16 +24,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        app:layout_constrainedHeight="true"
         android:id="@+id/list"
         android:layout_width="@dimen/zero_size"
         android:layout_height="@dimen/zero_size"
         android:layout_marginTop="@dimen/default_margin"
         android:visibility="visible"
+        app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/queryEditText"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/queryEditText"
         tools:listitem="@layout/list_item" />
 
     <ProgressBar
@@ -50,17 +50,41 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:layout_margin="13dp"
+        android:scaleType="centerCrop"
+        android:id="@+id/no_res_img"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:src="@drawable/no_result_491590"
+        android:tint="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
+
+    <TextView
+        android:textStyle="bold|italic"
+        android:id="@+id/no_res_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No results found :( Try to search something else"
+        app:layout_constraintEnd_toStartOf="@+id/list"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/list"
+        app:layout_constraintTop_toBottomOf="@+id/no_res_img" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:visibility="invisible"
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_map_black_24dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/ic_map_black_24dp" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

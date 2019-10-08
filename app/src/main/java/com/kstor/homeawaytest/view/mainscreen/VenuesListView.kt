@@ -9,4 +9,6 @@ interface VenuesListView : ViewWithFavorites {
     fun hideProgress()
     fun showMupButn()
     fun hideMupButn()
+    fun showNoResult()
+    fun hideNoResult()
 }
