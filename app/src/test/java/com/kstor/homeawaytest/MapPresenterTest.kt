@@ -2,7 +2,7 @@ package com.kstor.homeawaytest
 
 import com.google.android.gms.maps.model.LatLng
 import com.kstor.homeawaytest.domain.VenuesUseCase
-import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.mapscreen.MapPresenterImpl
 import com.kstor.homeawaytest.view.mapscreen.MapView
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
@@ -39,8 +39,8 @@ class MapPresenterTest {
 
     private lateinit var schedulerProvider: SchedulerProvider
 
-    private lateinit var venuesList: List<Venues>
-    private lateinit var venuesMap: Map<LatLng, Venues>
+    private lateinit var venuesList: List<Venue>
+    private lateinit var venuesMap: Map<LatLng, Venue>
     private lateinit var error: Throwable
 
     private lateinit var presenter: MapPresenterImpl
@@ -54,8 +54,8 @@ class MapPresenterTest {
         MockitoAnnotations.initMocks(this)
         compositeDisposable = CompositeDisposable()
         venuesList = listOf(
-            Venues("1", "Name1", null, "Adress1", 10, 1.0, 2.0),
-            Venues("2", "Name2", null, "Adress2", 20, 2.0, 3.0)
+            Venue("1", "Name1", null, "Adress1", 10, 1.0, 2.0),
+            Venue("2", "Name2", null, "Adress2", 20, 2.0, 3.0)
         )
 
         centerLatLng = LatLng(0.0, 0.0)
@@ -89,7 +89,7 @@ class MapPresenterTest {
     }
 
     private fun createPresenterWithError(): MapPresenterImpl {
-        val bedResult = Observable.error<List<Venues>>(error)
+        val bedResult = Observable.error<List<Venue>>(error)
         `when`(useCaseResultWithError.loadVenuesCache()).thenReturn(bedResult)
         presenterWithError =
             MapPresenterImpl(compositeDisposable, useCaseResultWithError, schedulerProvider)

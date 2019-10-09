@@ -1,0 +1,188 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/start_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/spacing_normal" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/end_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/spacing_normal" />
+    <ImageView
+        android:id="@+id/venuesPlaceImgView"
+        android:layout_width="@dimen/image_size"
+        android:layout_height="@dimen/image_size"
+        android:background="@color/colorPrimary"
+        android:padding="@dimen/default_padding"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_place_black_24dp"
+        app:layout_constraintEnd_toEndOf="@+id/venuesCategory"
+        app:layout_constraintStart_toStartOf="@+id/venuesCategory"
+        app:layout_constraintTop_toTopOf="@+id/venuesNameNameTextView" />
+
+    <TextView
+        android:id="@+id/venuesCategory"
+        android:layout_width="@dimen/categories_width"
+        android:layout_height="@dimen/zero_size"
+        android:layout_marginTop="@dimen/default_margin"
+        android:textAlignment="center"
+        app:layout_constraintStart_toStartOf="@+id/start_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/venuesPlaceImgView"
+        tools:text="Category" />
+
+    <TextView
+        android:id="@+id/venuesNameNameTextView"
+        android:layout_width="@dimen/zero_size"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/name_start_margin"
+        android:layout_marginTop="@dimen/name_top_margin"
+        android:textSize="@dimen/name_fields_text_size"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+        app:layout_constraintStart_toEndOf="@+id/venuesPlaceImgView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Name" />
+
+    <TextView
+        android:id="@+id/venuesNameAdressTextView"
+        android:layout_width="@dimen/zero_size"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin"
+        android:textSize="@dimen/reqular_text_size"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+        app:layout_constraintStart_toStartOf="@+id/venuesNameNameTextView"
+        app:layout_constraintTop_toBottomOf="@+id/venuesNameNameTextView"
+        tools:text="adress" />
+
+    <TextView
+        android:id="@+id/venuesDistanceFromCenterTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin"
+        android:textStyle="italic"
+        app:layout_constraintStart_toStartOf="@+id/venuesNameAdressTextView"
+        app:layout_constraintTop_toBottomOf="@+id/venuesNameAdressTextView"
+        tools:text="Distance" />
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margin"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/raitingTv"
+        app:layout_constraintStart_toEndOf="@+id/raitingTv" />
+
+    <TextView
+
+        android:id="@+id/IsOpenTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+        app:layout_constraintTop_toTopOf="@+id/raitingTv"
+        tools:text="isOpen" />
+
+    <TextView
+
+        android:id="@+id/raitingTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin"
+        app:layout_constraintStart_toStartOf="@+id/start_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/venuesCategory"
+        tools:text="raiting" />
+
+    <TextView
+        android:id="@+id/sceduleTV"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/zero_size"
+        android:layout_marginTop="@dimen/default_margin"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/IsOpenTv"
+        tools:text="Mon-Sun 6:30 AM - 7-00PM\nMon-Sun 6:30 AM - 7-00PM" />
+
+    <TextView
+
+        android:id="@+id/descriptionTv"
+        android:layout_width="@dimen/zero_size"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/sceduleTV"
+        app:layout_constraintStart_toStartOf="@+id/start_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/sceduleTV"
+        tools:text="Description" />
+
+    <ImageView
+        android:id="@+id/bigPictureIV"
+        android:layout_width="@dimen/zero_size"
+        android:layout_height="@dimen/details_image_size"
+        android:layout_marginTop="@dimen/name_top_margin"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/telephoneTv" />
+
+    <TextView
+        android:id="@+id/urlTv"
+        android:layout_width="@dimen/zero_size"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margin"
+        android:text="@string/no_info"
+        android:textStyle=""
+        app:layout_constraintBottom_toBottomOf="@+id/urlIv"
+        app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+        app:layout_constraintStart_toEndOf="@+id/urlIv" />
+
+    <ImageView
+        android:id="@+id/urlIv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin"
+        app:layout_constraintEnd_toStartOf="@+id/urlTv"
+        app:layout_constraintStart_toStartOf="@+id/start_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionTv"
+        app:srcCompat="@drawable/ic_toys_black_24dp" />
+
+    <TextView
+        android:id="@+id/telephoneTv"
+        android:layout_width="@dimen/zero_size"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margin"
+        android:text="@string/no_info"
+        app:layout_constraintBottom_toBottomOf="@+id/telephoneIv"
+        app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+        app:layout_constraintStart_toEndOf="@+id/telephoneIv" />
+
+    <ImageView
+        android:id="@+id/telephoneIv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin"
+        android:contentDescription="TODO"
+        app:layout_constraintEnd_toStartOf="@+id/telephoneTv"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="@+id/start_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/urlTv"
+        app:srcCompat="@drawable/ic_local_phone_black_24dp" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

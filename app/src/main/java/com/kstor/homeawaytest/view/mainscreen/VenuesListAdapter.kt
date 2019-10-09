@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.kstor.homeawaytest.R
-import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.utils.FavoriteImageRes
 import com.kstor.homeawaytest.view.utils.ImageLoader
 import kotlinx.android.synthetic.main.list_item.view.*
@@ -14,11 +14,13 @@ import kotlinx.android.synthetic.main.list_item.view.*
 class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     ImageLoader {
 
+
     lateinit var detailsOnClickListener: (venues: Venues) -> Unit
     lateinit var addToFavoriteClickListener: (venues: Venues) -> Unit
     val venues = ArrayList<Venues>()
 
-    fun updateData(venues: List<Venues>) {
+
+    fun updateData(venues: List<Venue>) {
         clearData()
         this.venues.addAll(venues)
         notifyDataSetChanged()
@@ -47,7 +49,7 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
                 detailsOnClickListener.invoke(venues[adapterPosition])
         }
 
-        fun bind(venue: Venues) {
+        fun bind(venue: Venue) {
             view.venuesNameNameTextViewItem.text = venue.name
             view.venuesCategory.text =
                 venue.categories?.name

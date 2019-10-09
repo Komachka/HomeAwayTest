@@ -6,7 +6,7 @@ import com.kstor.homeawaytest.data.network.RemoteData
 import com.kstor.homeawaytest.data.network.model.*
 import com.kstor.homeawaytest.data.repos.VenuesRepositoryImp
 import com.kstor.homeawaytest.data.sp.SharedPreferenceData
-import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.domain.model.Venue
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.junit.Before
@@ -181,7 +181,7 @@ class VenuesRepositoryTest {
             .assertValue {
                         it.size == 2 &&
                 Observable.fromIterable(it)
-                    .map(Venues::name)
+                    .map(Venue::name)
                     .toList()
                     .blockingGet() == listOf("Storyville Coffee Company", "Anchorhead Coffee Co")
             }

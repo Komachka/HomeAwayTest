@@ -5,7 +5,7 @@ import com.kstor.homeawaytest.data.EMPTY_SEARCH_ERROR_MESSAGE
 import com.kstor.homeawaytest.data.NO_FAVORITE_MESSAGE
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.VenuesUseCase
-import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.base.AddAndRemoveFavoritesManager
 import com.kstor.homeawaytest.view.base.BasePresenter
 import com.kstor.homeawaytest.view.base.BaseView
@@ -25,7 +25,7 @@ class VenuesListPresenterImpl @Inject constructor(
     BasePresenter<VenuesListView>(compositeDisposable, schedulerProvider),
     VenuesMapper {
 
-    override fun addAndRemoveFromFavorites(venue: Venues) {
+    override fun addAndRemoveFromFavorites(venue: Venue) {
         addAndRemoveFromFavorites(venue, favoritesUseCase)
     }
 
@@ -83,7 +83,7 @@ class VenuesListPresenterImpl @Inject constructor(
             ))
     }
 
-    override fun navigateToDetailScreen(navController: NavController, venue: Venues) {
+    override fun navigateToDetailScreen(navController: NavController, venue: Venue) {
         mapToParcelize(venue)?.let {
             val action =
                 VenuesListFragmentDirections.actionVenuesListFragmentToDetailFragment(it)

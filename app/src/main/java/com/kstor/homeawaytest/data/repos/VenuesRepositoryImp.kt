@@ -8,7 +8,7 @@ import com.kstor.homeawaytest.data.mapToVenuesData
 import com.kstor.homeawaytest.data.network.RemoteData
 import com.kstor.homeawaytest.data.sp.SharedPreferenceData
 import com.kstor.homeawaytest.domain.VenuesRepository
-import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.domain.model.VenuesData
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -20,7 +20,7 @@ class VenuesRepositoryImp(
     private val localData: LocalData
 ) : VenuesRepository {
 
-    override fun getClosestVenusesCache(): Observable<List<Venues>> {
+    override fun getClosestVenusesCache(): Observable<List<Venue>> {
         return getLocalData()
     }
 
@@ -28,7 +28,7 @@ class VenuesRepositoryImp(
         return preferenceData.getCityCenterInfo()
     }
 
-    override fun removeFromFavorite(venues: Venues): Completable {
+    override fun removeFromFavorite(venues: Venue): Completable {
         return Completable.fromRunnable {
             mapToDBVenuesModel(venues)?.let {
                 localData.removeFromFavorite(it)
@@ -36,13 +36,13 @@ class VenuesRepositoryImp(
         }
     }
 
-    override fun getFavorites(): Single<List<Venues>> {
+    override fun getFavorites(): Single<List<Venue>> {
         return localData.getFavorites().map {
             return@map mapToListOfVenues(it)
         }
     }
 
-    override fun saveToFavorite(venues: Venues): Completable {
+    override fun saveToFavorite(venues: Venue): Completable {
         return Completable.fromRunnable {
             mapToDBVenuesModel(venues)?.let {
                 localData.addToFavorites(it)
@@ -50,15 +50,15 @@ class VenuesRepositoryImp(
         }
     }
 
-    override fun getClosestVenuses(limit: Int, query: String): Observable<List<Venues>> {
-        return getRemoteData(limit, query)
+    override fun getClosestVenuses(limit: Int, query: String): Observable<List<Venue>> {
+        return Observable.concatArray(getLocalData(), getRemoteData(limit, query)
             .flatMap { list ->
                 localData.removeANdSaveVenues(mapToDBVenuesModelList(list))
                 getLocalData()
-            }
+            })
     }
 
-    private fun mapToDBVenuesModelList(list: List<Venues>): List<DBVenuesModel> {
+    private fun mapToDBVenuesModelList(list: List<Venue>): List<DBVenuesModel> {
         val newList = mutableListOf<DBVenuesModel>()
         list.forEach {
             mapToDBVenuesModel(it)?.let { newModel -> newList.add(newModel) }
@@ -66,13 +66,13 @@ class VenuesRepositoryImp(
         return newList
     }
 
-    private fun getLocalData(): Observable<List<Venues>> {
+    private fun getLocalData(): Observable<List<Venue>> {
         return localData.getAllVenues().map {
             return@map mapToListOfVenues(it)
         }.toObservable()
     }
 
-    private fun getRemoteData(limit: Int, query: String): Observable<List<Venues>> {
+    private fun getRemoteData(limit: Int, query: String): Observable<List<Venue>> {
         return remoteData.closedVenues(limit, query).map<VenuesData> {
             val venuesData = it.mapToVenuesData()
             preferenceData.setCityCenterInfo(venuesData.citCenterlat, venuesData.citCenterlng)

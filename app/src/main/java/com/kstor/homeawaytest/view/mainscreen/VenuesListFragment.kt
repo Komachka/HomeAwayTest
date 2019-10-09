@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.*
-import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.base.BaseFragment
 import com.kstor.homeawaytest.view.customview.CustomSnackBar
 import io.reactivex.Observable
@@ -26,11 +26,13 @@ import kotlinx.android.synthetic.main.venues_list_fragment.*
 
 class VenuesListFragment : BaseFragment(), VenuesListView {
 
+
     override fun updateItemView(venues: Venues) {
 
         view?.let {
             CustomSnackBar.make(it, resources.getString(R.string.venues_updated))?.show()
         }
+
     }
 
     @Inject
@@ -80,7 +82,7 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
         (presenter as VenuesListPresenterImpl).detachView()
     }
 
-    override fun displayVenues(results: List<Venues>) {
+    override fun displayVenues(results: List<Venue>) {
         (list.adapter as VenuesListAdapter).updateData(results)
     }
 

@@ -13,7 +13,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
-import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.base.BaseFragment
 import javax.inject.Inject
 
@@ -28,13 +28,13 @@ class MapFragment : BaseFragment(), OnMapReadyCallback, MapView {
         myMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 12.0f))
     }
 
-    override fun showVenuesOnTheMap(venuesMap: Map<LatLng, Venues>) {
+    override fun showVenuesOnTheMap(venuesMap: Map<LatLng, Venue>) {
         venuesMap.forEach {
             addVenuesMarker(it)
         }
     }
 
-    private fun addVenuesMarker(venues: Map.Entry<LatLng, Venues>) {
+    private fun addVenuesMarker(venues: Map.Entry<LatLng, Venue>) {
         myMap?.addMarker(MarkerOptions().position(venues.key).title(venues.value.name))
     }
 

@@ -6,6 +6,10 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="close">Close</string>
+    <string name="open">Open</string>
+    <string name="no_info">no info</string>
     <string name="errorMessage">Some error</string>
     <string name="venues_updated">Venues was updated</string>
+
 </resources>
