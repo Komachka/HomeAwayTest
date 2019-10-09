@@ -44,7 +44,7 @@ class VenuesListPresenterImpl @Inject constructor(
                     view?.hideNoResult()
                     view?.displayVenues(it)
                 }, onError = {
-                    log(it.toString())
+                    view?.displayVenues(emptyList())
                     view?.hideProgress()
                     view?.showError(it)
                     view?.showNoResult()
@@ -76,10 +76,17 @@ class VenuesListPresenterImpl @Inject constructor(
             .observeOn(schedulerProvider.ui())
             .subscribeBy(
                 onNext = {
-                    view?.hideNoResult()
-                    view?.displayVenues(it)
                     view?.hideProgress()
-                    view?.showMupButn()
+                    if (it.isEmpty()){
+                        view?.displayVenues(emptyList())
+                        view?.showNoResult()
+                    }
+                    else
+                    {
+                        view?.hideNoResult()
+                        view?.displayVenues(it)
+                        view?.showMupButn()
+                    }
                 }, onError = {
                     log(it.toString())
                     view?.hideProgress()
