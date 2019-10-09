@@ -111,16 +111,6 @@ fun logError(message: String) {
     Log.e("MainActivity", message)
 }
 
-fun countZoom(distance: Int?): Int {
-    return when (distance) {
-        in 0..100 -> 17
-        in 100..500 -> 15
-        in 500..2000 -> 13
-        in 2000..4000 -> 12
-        else -> 10
-    }
-}
-
 fun mapToVenueDetails(networkDetailsModel: NetworkDetailsModel): VenueDetails {
     return VenueDetails(
         networkDetailsModel.response?.venue?.id,

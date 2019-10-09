@@ -1,8 +1,6 @@
 package com.kstor.homeawaytest.view.detailscreen
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +12,6 @@ import com.google.android.material.appbar.AppBarLayout
 
 import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
-import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.domain.model.VenueDetails
 import com.kstor.homeawaytest.view.base.BaseFragment
@@ -55,6 +52,11 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
             }
         }
         presenter.attachView(this)
+        val animation = AnimationUtils.loadAnimation(
+            context?.applicationContext,
+            R.anim.rotate
+        )
+        load_more.startAnimation(animation)
         arguments?.let { bundle ->
             val venuesParselize = DetailFragmentArgs.fromBundle(bundle).venues
             mapToVenues(venuesParselize)?.let { venues ->
@@ -82,7 +84,9 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
                         //  Collapsed first time
                         wasCollapsed = true
                         presenter.getVenueDetails(venues)
+
                         setAdditionalFieldsVisible()
+                        turnOffAnimation()
                     } else if (abs(verticalOffset) - appBarLayout.totalScrollRange != 0) {
                         // Expanded
                         setAdditionalFieldsInvisible()
@@ -93,11 +97,12 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
                 })
             }
         }
-        val animation = AnimationUtils.loadAnimation(
-            context?.applicationContext,
-            R.anim.rotate
-        )
-        load_more.startAnimation(animation)
+
+    }
+
+    private fun turnOffAnimation() {
+        load_more.clearAnimation()
+        load_more.visibility = View.INVISIBLE
     }
 
     private fun setAdditionalFieldsInvisible() {
@@ -150,9 +155,17 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
             ratingBar.rating = (it * 0.5).toFloat()
             raitingTv.text = it.toString()
         }
-        details.isOpen?.let { IsOpenTv.text = if (it) { resources.getString(R.string.open) } else { resources.getString(R.string.close) } }
+        details.isOpen?.let {
+            IsOpenTv.text = if (it) {
+                resources.getString(R.string.open)
+            } else {
+                resources.getString(R.string.close)
+            }
+        }
         details.bestPhoto?.let { bigPictureIV.loadImage(it) }
-        details.hoursPerDay?.let { sceduleTV.text = it.joinToString(separator = "\n") { it.days + " " + it.renderedTime } }
+        details.hoursPerDay?.let {
+            sceduleTV.text = it.joinToString(separator = "\n") { it.days + " " + it.renderedTime }
+        }
         details.description?.let { descriptionTv.text = it }
         details.url?.let { url ->
             urlTv.text = url
