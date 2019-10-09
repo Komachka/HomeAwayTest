@@ -2,6 +2,7 @@ package com.kstor.homeawaytest.data.repos
 
 import com.kstor.homeawaytest.data.db.LocalData
 import com.kstor.homeawaytest.data.db.model.DBVenuesModel
+import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.data.mapToDBVenuesModel
 import com.kstor.homeawaytest.data.mapToListOfVenues
 import com.kstor.homeawaytest.data.mapToVenuesData
@@ -53,9 +54,14 @@ class VenuesRepositoryImp(
     override fun getClosestVenuses(limit: Int, query: String): Observable<List<Venue>> {
         return Observable.concatArray(getLocalData(), getRemoteData(limit, query)
             .flatMap { list ->
+                log("flatmap " + list.toString())
                 localData.removeANdSaveVenues(mapToDBVenuesModelList(list))
                 getLocalData()
-            })
+            }
+            .doOnError {
+                log(it.toString())
+            }
+        )
     }
 
     private fun mapToDBVenuesModelList(list: List<Venue>): List<DBVenuesModel> {
@@ -67,13 +73,16 @@ class VenuesRepositoryImp(
     }
 
     private fun getLocalData(): Observable<List<Venue>> {
+        log("get local data")
         return localData.getAllVenues().map {
             return@map mapToListOfVenues(it)
         }.toObservable()
     }
 
     private fun getRemoteData(limit: Int, query: String): Observable<List<Venue>> {
+        log("get remote data")
         return remoteData.closedVenues(limit, query).map<VenuesData> {
+            log("in map " + it.toString())
             val venuesData = it.mapToVenuesData()
             preferenceData.setCityCenterInfo(venuesData.citCenterlat, venuesData.citCenterlng)
             return@map venuesData

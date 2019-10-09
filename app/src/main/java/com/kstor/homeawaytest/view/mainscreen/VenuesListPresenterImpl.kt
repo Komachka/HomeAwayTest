@@ -78,7 +78,6 @@ class VenuesListPresenterImpl @Inject constructor(
                 onNext = {
                     view?.hideNoResult()
                     view?.displayVenues(it)
-                    if (it.isEmpty()) { throw Throwable(EMPTY_SEARCH_ERROR_MESSAGE) }
                     view?.hideProgress()
                     view?.showMupButn()
                 }, onError = {
