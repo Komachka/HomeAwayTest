@@ -3,12 +3,8 @@ package com.kstor.homeawaytest.data
 import android.util.Log
 import com.kstor.homeawaytest.data.db.model.DBFavoriteModel
 import com.kstor.homeawaytest.data.db.model.DBVenuesModel
-import com.kstor.homeawaytest.data.network.model.NetworkCategory
-import com.kstor.homeawaytest.data.network.model.NetworkVenue
-import com.kstor.homeawaytest.data.network.model.NetworkVenuesModel
-import com.kstor.homeawaytest.domain.model.Venues
-import com.kstor.homeawaytest.domain.model.VenuesCategory
-import com.kstor.homeawaytest.domain.model.VenuesData
+import com.kstor.homeawaytest.data.network.model.*
+import com.kstor.homeawaytest.domain.model.*
 import java.lang.Exception
 import kotlin.math.*
 
@@ -24,9 +20,9 @@ fun NetworkVenuesModel.mapToVenuesData(): VenuesData {
     )
 }
 
-fun mapToListOfVenues(list: List<DBVenuesModel>): List<Venues> {
+fun mapToListOfVenues(list: List<DBVenuesModel>): List<Venue> {
     return list.map {
-        Venues(
+        Venue(
             it.id,
             it.name,
             VenuesCategory(it.categoryId, it.categoryName, it.iconPath),
@@ -37,7 +33,7 @@ fun mapToListOfVenues(list: List<DBVenuesModel>): List<Venues> {
     }
 }
 
-fun mapToDBVenuesModel(venues: Venues): DBVenuesModel? {
+fun mapToDBVenuesModel(venues: Venue): DBVenuesModel? {
         return try {
             DBVenuesModel(
                 requireNotNull(venues.id),
@@ -53,10 +49,10 @@ fun mapToDBVenuesModel(venues: Venues): DBVenuesModel? {
         } catch (e: Exception) { null }
 }
 
-private fun createListOfCategories(venues: List<NetworkVenue>?, centerLat: Double, centerLng: Double): List<Venues> {
+private fun createListOfCategories(venues: List<NetworkVenue>?, centerLat: Double, centerLng: Double): List<Venue> {
     return venues?.let {
         it.map {
-            Venues().apply {
+            Venue().apply {
                 id = it.id
                 name = it.name
                 categories = mapToCategory(it.categories)
@@ -123,4 +119,34 @@ fun countZoom(distance: Int?): Int {
         in 2000..4000 -> 12
         else -> 10
     }
+}
+
+fun mapToVenueDetails(networkDetailsModel: NetworkDetailsModel): VenueDetails {
+    return VenueDetails(
+        networkDetailsModel.response?.venue?.id,
+        networkDetailsModel.response?.venue?.name,
+        networkDetailsModel.response?.venue?.contact?.formattedPhone,
+        networkDetailsModel.response?.venue?.canonicalUrl,
+        networkDetailsModel.response?.venue?.url,
+        networkDetailsModel.response?.venue?.rating,
+        networkDetailsModel.response?.venue?.ratingColor,
+        networkDetailsModel.response?.venue?.description,
+        networkDetailsModel.response?.venue?.shortUrl,
+        networkDetailsModel.response?.venue?.hours?.isOpen,
+        mapToListOfWorkingHours(networkDetailsModel.response?.venue?.hours?.timeframes),
+        createBestPhotoUrl(networkDetailsModel.response?.venue?.bestPhoto)
+
+    )
+}
+
+fun createBestPhotoUrl(bestPhoto: BestPhoto?): String? {
+    return bestPhoto?.prefix + SIZE_400 + bestPhoto?.suffix
+}
+
+fun mapToListOfWorkingHours(timeframes: List<Timeframe>?): List<HoursPerDay>? {
+    return timeframes?.let {
+            it.map { timeframe ->
+                HoursPerDay(timeframe.days, timeframe.open?.first()?.renderedTime)
+            }
+        }
 }

@@ -20,10 +20,13 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.kstor.homeawaytest.di.DaggerTestComponent
+import com.kstor.homeawaytest.di.TestDetailsRepositoryModule
 import com.kstor.homeawaytest.di.TestStaticMapRepositoryModule
 import com.kstor.homeawaytest.di.TestVenuesRepositoryModule
 import com.kstor.homeawaytest.domain.StaticMapRepository
+import com.kstor.homeawaytest.domain.VenueDetailsRepository
 import com.kstor.homeawaytest.domain.VenuesRepository
+import com.kstor.homeawaytest.fake.FakeDetailsRepository
 import com.kstor.homeawaytest.fake.FakeStaticMapRepository
 import com.kstor.homeawaytest.utils.StringContainsIgnoringCase.Companion.containsStringIgnoreCase
 import com.kstor.homeawaytest.view.di.AppModule
@@ -61,6 +64,7 @@ class VenuesListTest : VenuesMapper {
     private lateinit var navController: NavController
     private lateinit var venuesRepository: VenuesRepository
     private lateinit var staticMapRepository: StaticMapRepository
+    private lateinit var detailRepository:VenueDetailsRepository
 
     @Before
     fun setup() {
@@ -68,6 +72,7 @@ class VenuesListTest : VenuesMapper {
         val app = instr.targetContext.applicationContext as App
         venuesRepository = FakeVenuesRepository()
         staticMapRepository = FakeStaticMapRepository()
+        detailRepository = FakeDetailsRepository()
         MockitoAnnotations.initMocks(this)
         val component = DaggerTestComponent.builder().appModule(AppModule(app))
             .testVenuesRepositoryModule(
@@ -75,6 +80,7 @@ class VenuesListTest : VenuesMapper {
                     venuesRepository
                 )
             )
+            .testDetailsRepositoryModule(TestDetailsRepositoryModule(detailRepository))
             .testStaticMapRepositoryModule(TestStaticMapRepositoryModule(staticMapRepository))
             .build()
         component.inject(this)

@@ -6,6 +6,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+  <androidx.constraintlayout.widget.Guideline
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:layout_constraintGuide_begin="@dimen/spacing_normal"
+    android:id="@+id/start_guideline"/>
+
+  <androidx.constraintlayout.widget.Guideline
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_end="@dimen/spacing_normal"
+      android:id="@+id/end_guideline"/>
+
   <ImageView
       android:id="@+id/venuesPlaceImgView"
       android:layout_width="@dimen/image_size"
@@ -23,10 +37,9 @@
       android:id="@+id/venuesCategory"
       android:layout_width="@dimen/categories_width"
       android:layout_height="@dimen/zero_size"
-      android:layout_marginStart="@dimen/default_margin"
       android:layout_marginTop="@dimen/default_margin"
       android:textAlignment="center"
-      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/start_guideline"
       app:layout_constraintTop_toBottomOf="@+id/venuesPlaceImgView"
       tools:text="Category" />
 
@@ -38,7 +51,8 @@
       android:layout_marginTop="@dimen/name_top_margin"
       android:textSize="@dimen/name_fields_text_size"
       android:textStyle="bold"
-      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+      app:layout_constraintHorizontal_bias="0.0"
       app:layout_constraintStart_toEndOf="@+id/venuesPlaceImgView"
       app:layout_constraintTop_toTopOf="parent"
       tools:text="Name" />
@@ -50,7 +64,7 @@
       android:layout_marginTop="@dimen/default_margin"
       android:textSize="@dimen/reqular_text_size"
       android:textStyle="bold"
-      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintEnd_toStartOf="@+id/end_guideline"
       app:layout_constraintStart_toStartOf="@+id/venuesNameNameTextViewItem"
       app:layout_constraintTop_toBottomOf="@+id/venuesNameNameTextViewItem"
       tools:text="adress" />
@@ -71,14 +85,14 @@
       android:id="@+id/imageFavorite"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginEnd="@dimen/default_margin"
+      android:layout_marginTop="@dimen/default_margin"
       android:layout_marginBottom="@dimen/default_margin"
       android:background="@android:color/transparent"
+      android:contentDescription="TODO"
       android:src="@drawable/ic_favorite_border_black_24dp"
       android:tint="@color/colorPrimaryDark"
       app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@+id/end_guideline"
       app:layout_constraintRight_toRightOf="parent"
-      app:layout_constraintTop_toTopOf="@+id/venuesDistanceFromCenterTextView"
-      android:layout_marginTop="@dimen/default_margin"
-      android:contentDescription="TODO" />
+      app:layout_constraintTop_toTopOf="@+id/venuesDistanceFromCenterTextView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,7 +7,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.log
-import com.kstor.homeawaytest.domain.model.Venues
+
 import kotlinx.android.synthetic.main.view_error_snackbar.view.*
 
 class CustomSnackBar(parent: ViewGroup, customView: CustomSnackBarView) :

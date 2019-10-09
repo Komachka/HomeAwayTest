@@ -4,7 +4,7 @@ import android.view.View
 import androidx.navigation.Navigation
 import com.google.android.gms.maps.model.LatLng
 import com.kstor.homeawaytest.domain.VenuesUseCase
-import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.base.BasePresenter
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import com.kstor.homeawaytest.view.utils.VenuesMapper
@@ -23,7 +23,7 @@ class MapPresenterImpl @Inject constructor(
         view?.showCenterOnTheMap(LatLng(lat.toDouble(), lng.toDouble()))
     }
 
-    private val venuesMap = mutableMapOf<LatLng, Venues>()
+    private val venuesMap = mutableMapOf<LatLng, Venue>()
 
     override fun navigateToDetailsScreen(view: View, position: LatLng) {
         venuesMap[position]?.let { venues ->
@@ -53,7 +53,7 @@ class MapPresenterImpl @Inject constructor(
             ))
     }
 
-    private fun List<Venues>.createVenuesMap(): Map<LatLng, Venues> {
+    private fun List<Venue>.createVenuesMap(): Map<LatLng, Venue> {
         this.forEach {
             it.lat?.let { lat ->
                 it.lng?.let { lng ->

@@ -6,8 +6,9 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.kstor.homeawaytest.R
+
 import com.kstor.homeawaytest.data.log
-import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.utils.FavoriteImageRes
 import com.kstor.homeawaytest.view.utils.ImageLoader
 import kotlinx.android.synthetic.main.list_item.view.*
@@ -16,11 +17,13 @@ import java.lang.Exception
 class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     ImageLoader {
 
-    lateinit var detailsOnClickListener: (venues: Venues) -> Unit
-    lateinit var addToFavoriteClickListener: (venues: Venues, pos: Int) -> Unit
-    private val venues = ArrayList<Venues>()
 
-    fun updateData(venues: List<Venues>) {
+    lateinit var detailsOnClickListener: (venues: Venue) -> Unit
+    lateinit var addToFavoriteClickListener: (venues: Venue, pos: Int) -> Unit
+    private val venues = ArrayList<Venue>()
+
+
+    fun updateData(venues: List<Venue>) {
         clearData()
         this.venues.addAll(venues)
         notifyDataSetChanged()
@@ -63,7 +66,7 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
             }
         }
 
-        fun bind(venue: Venues) {
+        fun bind(venue: Venue) {
             view.venuesNameNameTextViewItem.text = venue.name
             view.venuesCategory.text =
                 venue.categories?.name
@@ -108,13 +111,13 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
         this.venues.clear()
     }
 
-    fun removeFromList(venue: Venues, pos: Int) {
+    fun removeFromList(venue: Venue, pos: Int) {
         venues.remove(venue)
         notifyItemRemoved(pos)
         notifyItemRangeChanged(pos, venues.size)
     }
 
-    fun addToList(venue: Venues, pos: Int)
+    fun addToList(venue: Venue, pos: Int)
     {
         venues.add(pos, venue)
         notifyItemInserted(pos)

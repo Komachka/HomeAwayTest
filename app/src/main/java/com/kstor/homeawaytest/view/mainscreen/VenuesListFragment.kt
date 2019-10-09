@@ -16,7 +16,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.*
-import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.base.BaseFragment
 import com.kstor.homeawaytest.view.customview.CustomSnackBar
 import io.reactivex.Observable
@@ -34,15 +34,18 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
         no_res_text.visibility = VISIBLE
     }
 
+
     override fun hideNoResult() {
         no_res_img.visibility = GONE
         no_res_text.visibility = GONE
     }
 
-    override fun updateItemView(venues: Venues) {
+
+    override fun updateItemView(venues: Venue) {
         if(queryEditText.text.isEmpty()) {
             presenter.getFavorites()
         }
+
     }
 
     @Inject
@@ -93,7 +96,7 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
         )
     }
 
-    private fun updateFavorites(venue: Venues, pos: Int) {
+    private fun updateFavorites(venue: Venue, pos: Int) {
         var removeIt = true
         val message = "${venue.name}  ${resources.getString(R.string.venues_updated)}"
         if (venue.isFavorite){
@@ -126,7 +129,7 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
         (presenter as VenuesListPresenterImpl).detachView()
     }
 
-    override fun displayVenues(results: List<Venues>) {
+    override fun displayVenues(results: List<Venue>) {
         (list.adapter as VenuesListAdapter).updateData(results)
     }
 

@@ -16,12 +16,12 @@ import com.kstor.homeawaytest.data.colour1
 import com.kstor.homeawaytest.data.colour2
 import com.kstor.homeawaytest.data.countZoom
 import com.kstor.homeawaytest.domain.StaticMapRepository
-import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.domain.model.Venue
 import io.reactivex.Observable
 
 class FakeStaticMapRepository : StaticMapRepository {
 
-    override fun createStaticMapUrl(venues: Venues): Observable<String> {
+    override fun createStaticMapUrl(venues: Venue): Observable<String> {
         val (latCenter, lngCenter) = CENTER_LAT to CENTER_LNG
         val latPoint = venues.lat
         val lngPoint = venues.lng

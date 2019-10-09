@@ -1,12 +1,12 @@
 package com.kstor.homeawaytest.domain.model
 
 data class VenuesData(
-    val venues: List<Venues>,
+    val venues: List<Venue>,
     val citCenterlat: Double,
     val citCenterlng: Double
 )
 
-data class Venues(
+data class Venue(
     var id: String? = null,
     var name: String? = null,
     var categories: VenuesCategory? = null,

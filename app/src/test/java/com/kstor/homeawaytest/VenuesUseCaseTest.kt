@@ -3,7 +3,7 @@ package com.kstor.homeawaytest
 import com.kstor.homeawaytest.data.LOAD_LIMIT
 import com.kstor.homeawaytest.domain.VenuesRepository
 import com.kstor.homeawaytest.domain.VenuesUseCase
-import com.kstor.homeawaytest.domain.model.Venues
+import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.domain.model.VenuesCategory
 import io.reactivex.Observable
 import org.junit.Before
@@ -41,14 +41,14 @@ class VenuesUseCaseTest {
         useCase = VenuesUseCase(repository)
     }
 
-    private fun createSingleWithError(): Observable<List<Venues>> {
-        return Observable.error<List<Venues>>(error)
+    private fun createSingleWithError(): Observable<List<Venue>> {
+        return Observable.error<List<Venue>>(error)
     }
 
-    private fun createSingleWithCorrectData(): Observable<List<Venues>> {
+    private fun createSingleWithCorrectData(): Observable<List<Venue>> {
         return Observable.just(
-            listOf<Venues>(
-                Venues(
+            listOf<Venue>(
+                Venue(
                     "52d456c811d24128cdd7bc8b",
                     "Storyville Coffee Company",
 
@@ -63,7 +63,7 @@ class VenuesUseCaseTest {
                     47.60475923205166,
                     -122.33636210125788
                 ),
-                Venues(
+                Venue(
                     "57e95a82498e0a3995a43e90",
                     "Anchorhead Coffee Co",
 

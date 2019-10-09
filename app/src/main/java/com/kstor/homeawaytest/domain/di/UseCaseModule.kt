@@ -22,4 +22,9 @@ class UseCaseModule {
     @Singleton
     fun provideFavoritesUseCase(repository: VenuesRepository) =
         FavoriteUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideVenueDetailsUseCase(repository: VenueDetailsRepository) =
+        VenueDetailsUseCase(repository)
 }
