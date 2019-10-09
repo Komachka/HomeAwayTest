@@ -5,6 +5,7 @@ import com.squareup.picasso.Picasso
 
 interface ImageLoader {
     fun ImageView.loadImage(iconPath: String) {
-        Picasso.get().load(iconPath).into(this)
+        if(iconPath.isNotEmpty())
+            Picasso.get().load(iconPath).into(this)
     }
 }

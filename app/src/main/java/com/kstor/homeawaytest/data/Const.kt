@@ -42,7 +42,7 @@ const val API_KEY = "AIzaSyC6SflSVpRXbS2qbY0P7yJ1THGl-dOJiUQ"
 const val STATIC_MAP_BASE_URL = "https://maps.googleapis.com/maps/api/staticmap?"
 
 const val colour1 = "blue"
-const val colour2 = "green"
+const val colour2 = "red"
 
 const val CENTER = "center"
 const val ZOOM = "zoom"
