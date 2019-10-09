@@ -146,15 +146,17 @@ class VenuesListTest : VenuesMapper {
                 action
             )
         )
-        // icon  drawable was changed
+        // remove from recycler
+        Thread.sleep(3000)
         onView(withId(R.id.list)).check(
             ViewAssertions.matches(
                 atPositionItem(
                     0,
-                    hasDescendant(withTagValue(equalTo(FavoriteImageRes.IS_NOT_FAVORITE.resId)))
+                    not(isDisplayed())
                 )
             )
         )
+
     }
 
     @Test

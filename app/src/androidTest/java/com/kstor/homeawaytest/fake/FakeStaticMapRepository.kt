@@ -14,7 +14,6 @@ import com.kstor.homeawaytest.data.STATIC_MAP_BASE_URL
 import com.kstor.homeawaytest.data.ZOOM
 import com.kstor.homeawaytest.data.colour1
 import com.kstor.homeawaytest.data.colour2
-import com.kstor.homeawaytest.data.countZoom
 import com.kstor.homeawaytest.domain.StaticMapRepository
 import com.kstor.homeawaytest.domain.model.Venue
 import io.reactivex.Observable
@@ -25,10 +24,8 @@ class FakeStaticMapRepository : StaticMapRepository {
         val (latCenter, lngCenter) = CENTER_LAT to CENTER_LNG
         val latPoint = venues.lat
         val lngPoint = venues.lng
-        val zoom = countZoom(venues.distance)
         val url = STATIC_MAP_BASE_URL +
                 "$CENTER=$latCenter,$lngCenter" +
-                "&$ZOOM=$zoom" +
                 "&$SIZE=$IMAGE_SIZE" +
                 "&$MAPTYPE=$MAP_TYPE_TERRIAN" +
                 "&$MARKERS=color:$colour1%7Clabel:C%7C$latCenter,$lngCenter" +

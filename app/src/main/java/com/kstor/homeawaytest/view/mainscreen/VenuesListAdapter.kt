@@ -18,7 +18,7 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
 
     lateinit var detailsOnClickListener: (venues: Venue) -> Unit
     lateinit var addToFavoriteClickListener: (venues: Venue, pos: Int) -> Unit
-    private val venues = ArrayList<Venue>()
+    val venues = ArrayList<Venue>()
 
     fun updateData(venues: List<Venue>) {
         clearData()
