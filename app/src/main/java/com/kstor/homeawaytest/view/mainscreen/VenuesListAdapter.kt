@@ -14,9 +14,11 @@ import kotlinx.android.synthetic.main.list_item.view.*
 class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     ImageLoader {
 
-    lateinit var detailsOnClickListener: (venues: Venue) -> Unit
-    lateinit var addToFavoriteClickListener: (venues: Venue) -> Unit
-    private val venues = mutableListOf<Venue>()
+
+    lateinit var detailsOnClickListener: (venues: Venues) -> Unit
+    lateinit var addToFavoriteClickListener: (venues: Venues) -> Unit
+    val venues = ArrayList<Venues>()
+
 
     fun updateData(venues: List<Venue>) {
         clearData()

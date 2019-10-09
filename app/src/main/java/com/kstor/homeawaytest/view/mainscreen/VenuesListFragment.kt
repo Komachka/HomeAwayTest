@@ -15,6 +15,7 @@ import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.*
 import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.base.BaseFragment
+import com.kstor.homeawaytest.view.customview.CustomSnackBar
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -25,7 +26,12 @@ import kotlinx.android.synthetic.main.venues_list_fragment.*
 
 class VenuesListFragment : BaseFragment(), VenuesListView {
 
-    override fun updateItemView(venues: Venue) {
+
+    override fun updateItemView(venues: Venues) {
+
+        view?.let {
+            CustomSnackBar.make(it, resources.getString(R.string.venues_updated))?.show()
+        }
 
     }
 
@@ -35,7 +41,6 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
 
     override fun setUp() {
         compositeDisposable = CompositeDisposable()
-
         (presenter as VenuesListPresenterImpl).attachView(this)
         fab.setOnClickListener { view ->
             presenter.navigateToMapScreen(Navigation.findNavController(view), queryEditText.text.toString())
