@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.navigation.NavController
+import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
 import com.kstor.homeawaytest.domain.VenueDetailsUseCase
@@ -45,9 +46,9 @@ class DetailsPresenterImpl @Inject constructor(
     }
 
     override fun setFavorite(venues: Venue) {
-        val imageFavorite =
-            if (venues.isFavorite) FavoriteImageRes.IS_FAVORITE.resId else FavoriteImageRes.IS_NOT_FAVORITE.resId
-        (view as DetailsView).setIfFavorite(imageFavorite)
+        val favoriteLevel =
+            if (venues.isFavorite) 1 else 0
+        (view as DetailsView).setFavoriteDrawableLevel(favoriteLevel)
     }
 
     override fun createStaticMapUrl(venues: Venue) {

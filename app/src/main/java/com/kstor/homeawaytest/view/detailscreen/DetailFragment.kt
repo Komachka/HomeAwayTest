@@ -1,12 +1,15 @@
 package com.kstor.homeawaytest.view.detailscreen
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
 import android.view.animation.AnimationUtils
+import androidx.core.content.ContextCompat
+import androidx.core.widget.ImageViewCompat
 import androidx.navigation.Navigation
 import com.google.android.material.appbar.AppBarLayout
 
@@ -24,6 +27,10 @@ import kotlinx.android.synthetic.main.details.*
 
 class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
     VenuesMapper {
+
+    override fun setFavoriteDrawableLevel(level: Int) {
+        fabFavorite.setImageLevel(level)
+    }
 
     @Inject
     lateinit var presenter: DetailsPresenterImpl
@@ -145,10 +152,14 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
         }
     }
 
-    override fun setIfFavorite(resFavorites: Int) {
-        fabFavorite.setImageResource(resFavorites)
-        fabFavorite.tag = resFavorites
-    }
+    /*override fun setIfFavorite(resFavorites: Int) {
+        context?.let {
+            ImageViewCompat.setImageTintList(fabFavorite, ColorStateList.valueOf(ContextCompat.getColor(it, R.color.black)))
+            fabFavorite.setImageResource(resFavorites)
+            fabFavorite.tag = resFavorites
+        }
+
+    }*/
 
     override fun updateInfo(details: VenueDetails) {
         details.rating?.let {
