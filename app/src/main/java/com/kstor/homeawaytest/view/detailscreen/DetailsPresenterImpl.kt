@@ -25,6 +25,10 @@ class DetailsPresenterImpl @Inject constructor(
 ) : DetailsPresenter, AddAndRemoveFavoritesManager,
     BasePresenter<DetailsView>(compositeDisposable, schedulerProvider) {
 
+    override fun fillDetailsScreen(venues: Venue) {
+        view?.fillDetailsScreen(venues)
+    }
+
     override fun openBrowser(context: Context, url: String) {
         context.startActivity(
             Intent(

@@ -111,6 +111,7 @@ class VenuesListPresenterTest {
     fun show_venues_list_after_presenter_call_get_venues() {
         presenter.getVenues(TEST_QUERY)
         verify(view).hideProgress()
+        verify(view).hideNoResult()
         verify(view).displayVenues(venuesList)
         verify(view).showMupButn()
         verifyZeroInteractions(view)
@@ -128,7 +129,9 @@ class VenuesListPresenterTest {
     fun show_error_and_hide_progress_if_use_case_return_error() {
         presenterWithError.getVenues(TEST_QUERY)
         verify(view).hideProgress()
+        verify(view).displayVenues(emptyList())
         verify(view).showError(error)
+        verify(view).showNoResult()
         verifyZeroInteractions(view)
     }
 
@@ -138,8 +141,10 @@ class VenuesListPresenterTest {
         verify(favoritesUseCase).getFavorites()
         verifyZeroInteractions(favoritesUseCase)
         verify(view).hideProgress()
+        verify(view).hideNoResult()
         verify(view).displayVenues(venuesList)
         verifyZeroInteractions(view)
+
     }
 
     @Test
@@ -147,8 +152,10 @@ class VenuesListPresenterTest {
         presenterWithError.getFavorites()
         verify(errorFavoritesUseCase).getFavorites()
         verifyZeroInteractions(errorFavoritesUseCase)
+        verify(view).displayVenues(emptyList())
         verify(view).hideProgress()
         verify(view).showError(error)
+        verify(view).showNoResult()
         verifyZeroInteractions(view)
     }
 }

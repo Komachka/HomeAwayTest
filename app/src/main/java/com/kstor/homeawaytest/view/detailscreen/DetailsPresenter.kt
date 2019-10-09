@@ -11,4 +11,5 @@ interface DetailsPresenter {
     fun getVenueDetails(venues: Venue)
     fun navigateBack(findNavController: NavController)
     fun openBrowser(context: Context, url: String)
+    fun fillDetailsScreen(venues: Venue)
 }

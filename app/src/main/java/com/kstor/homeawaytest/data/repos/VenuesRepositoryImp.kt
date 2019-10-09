@@ -54,7 +54,6 @@ class VenuesRepositoryImp(
     override fun getClosestVenuses(limit: Int, query: String): Observable<List<Venue>> {
         return Observable.concatArray(getLocalData(), getRemoteData(limit, query)
             .flatMap { list ->
-                log("flatmap " + list.toString())
                 localData.removeANdSaveVenues(mapToDBVenuesModelList(list))
                 getLocalData()
             }
@@ -73,16 +72,13 @@ class VenuesRepositoryImp(
     }
 
     private fun getLocalData(): Observable<List<Venue>> {
-        log("get local data")
         return localData.getAllVenues().map {
             return@map mapToListOfVenues(it)
         }.toObservable()
     }
 
     private fun getRemoteData(limit: Int, query: String): Observable<List<Venue>> {
-        log("get remote data")
         return remoteData.closedVenues(limit, query).map<VenuesData> {
-            log("in map " + it.toString())
             val venuesData = it.mapToVenuesData()
             preferenceData.setCityCenterInfo(venuesData.citCenterlat, venuesData.citCenterlng)
             return@map venuesData

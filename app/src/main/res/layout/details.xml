@@ -10,7 +10,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="@dimen/spacing_normal" />
+        app:layout_constraintGuide_begin="@dimen/spacing_normal"
+        />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/end_guideline"
@@ -18,6 +19,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_end="@dimen/spacing_normal" />
+
     <ImageView
         android:id="@+id/venuesPlaceImgView"
         android:layout_width="@dimen/image_size"
@@ -75,53 +77,57 @@
         app:layout_constraintTop_toBottomOf="@+id/venuesNameAdressTextView"
         tools:text="Distance" />
 
+
+
     <RatingBar
+        android:visibility="invisible"
         android:id="@+id/ratingBar"
         style="?android:attr/ratingBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/default_margin"
-        android:visibility="gone"
+        android:layout_marginStart="8dp"
+        android:numStars="5"
         app:layout_constraintBottom_toBottomOf="@+id/raitingTv"
         app:layout_constraintStart_toEndOf="@+id/raitingTv" />
 
     <TextView
-
+        android:visibility="invisible"
         android:id="@+id/IsOpenTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@+id/end_guideline"
-        app:layout_constraintTop_toTopOf="@+id/raitingTv"
+        app:layout_constraintEnd_toEndOf="@id/end_guideline"
+        app:layout_constraintTop_toTopOf="@+id/load_more"
         tools:text="isOpen" />
 
     <TextView
-
+        android:visibility="invisible"
         android:id="@+id/raitingTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin"
-        app:layout_constraintStart_toStartOf="@+id/start_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/venuesCategory"
+        app:layout_constraintStart_toStartOf="@id/start_guideline"
+        app:layout_constraintTop_toTopOf="@+id/load_more"
         tools:text="raiting" />
 
     <TextView
+        android:visibility="invisible"
         android:id="@+id/sceduleTV"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/zero_size"
-        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginTop="8dp"
         android:textSize="12sp"
         android:textStyle="italic"
-        app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+        app:layout_constraintEnd_toEndOf="@id/end_guideline"
         app:layout_constraintTop_toBottomOf="@+id/IsOpenTv"
         tools:text="Mon-Sun 6:30 AM - 7-00PM\nMon-Sun 6:30 AM - 7-00PM" />
 
     <TextView
-
+        android:visibility="invisible"
         android:id="@+id/descriptionTv"
         android:layout_width="@dimen/zero_size"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@+id/sceduleTV"
-        app:layout_constraintStart_toStartOf="@+id/start_guideline"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@id/end_guideline"
+        app:layout_constraintStart_toStartOf="@id/start_guideline"
         app:layout_constraintTop_toBottomOf="@+id/sceduleTV"
         tools:text="Description" />
 
@@ -136,6 +142,7 @@
         app:layout_constraintTop_toBottomOf="@+id/telephoneTv" />
 
     <TextView
+        android:visibility="invisible"
         android:id="@+id/urlTv"
         android:layout_width="@dimen/zero_size"
         android:layout_height="wrap_content"
@@ -147,16 +154,18 @@
         app:layout_constraintStart_toEndOf="@+id/urlIv" />
 
     <ImageView
+        android:visibility="invisible"
         android:id="@+id/urlIv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toStartOf="@+id/urlTv"
-        app:layout_constraintStart_toStartOf="@+id/start_guideline"
+        app:layout_constraintStart_toStartOf="@id/start_guideline"
         app:layout_constraintTop_toBottomOf="@+id/descriptionTv"
         app:srcCompat="@drawable/ic_toys_black_24dp" />
 
     <TextView
+        android:visibility="invisible"
         android:id="@+id/telephoneTv"
         android:layout_width="@dimen/zero_size"
         android:layout_height="wrap_content"
@@ -167,21 +176,19 @@
         app:layout_constraintStart_toEndOf="@+id/telephoneIv" />
 
     <ImageView
+        android:visibility="invisible"
         android:id="@+id/telephoneIv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginTop="8dp"
         android:contentDescription="TODO"
         app:layout_constraintEnd_toStartOf="@+id/telephoneTv"
         app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintStart_toStartOf="@+id/start_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/urlTv"
+        app:layout_constraintStart_toStartOf="@id/start_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/urlIv"
         app:srcCompat="@drawable/ic_local_phone_black_24dp" />
 
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+
 
     <ImageView
         android:id="@+id/load_more"
@@ -194,7 +201,6 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/venuesDistanceFromCenterTextView" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

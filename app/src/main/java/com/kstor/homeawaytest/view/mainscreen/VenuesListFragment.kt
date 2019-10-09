@@ -24,9 +24,9 @@ import io.reactivex.rxkotlin.subscribeBy
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.venues_list_fragment.*
-import kotlinx.android.synthetic.main.view_error_snackbar.*
 
 class VenuesListFragment : BaseFragment(), VenuesListView {
+
     override fun showNoResult() {
         no_res_img.visibility = VISIBLE
         no_res_text.visibility = VISIBLE
@@ -90,7 +90,7 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
     }
 
     private fun updateFavorites(venue: Venue, pos: Int) {
-        var removeIt = true
+        var removeItFromFavorite = true
         val message = "${venue.name}  ${resources.getString(R.string.venues_updated)}"
         if (venue.isFavorite) {
             (list.adapter as VenuesListAdapter).removeFromList(venue, pos)
@@ -98,13 +98,13 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
                 val snackBar = CustomSnackBar.make(it, message)
                 snackBar?.addListener {
                     (list.adapter as VenuesListAdapter).addToList(venue, pos)
-                    removeIt = false
+                    removeItFromFavorite = false
                     snackBar.dismiss()
                 }
                 snackBar?.addCallback(object : BaseTransientBottomBar.BaseCallback<CustomSnackBar>() {
                     override fun onDismissed(transientBottomBar: CustomSnackBar?, event: Int) {
                         super.onDismissed(transientBottomBar, event)
-                        if (removeIt)
+                        if (removeItFromFavorite)
                             (presenter as VenuesListPresenterImpl).addAndRemoveFromFavorites(venue)
                     }
                 })

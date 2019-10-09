@@ -84,7 +84,6 @@ class VenuesListPresenterImpl @Inject constructor(
                         view?.showMupButn()
                     }
                 }, onError = {
-                    log(it.toString())
                     view?.hideProgress()
                     view?.showError(it)
                     view?.displayVenues(emptyList())
