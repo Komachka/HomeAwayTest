@@ -1,7 +1,6 @@
 package com.kstor.homeawaytest.view.mainscreen
 
 import androidx.navigation.NavController
-import com.kstor.homeawaytest.data.EMPTY_SEARCH_ERROR_MESSAGE
 import com.kstor.homeawaytest.data.NO_FAVORITE_MESSAGE
 import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.FavoriteUseCase
@@ -9,7 +8,6 @@ import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.base.AddAndRemoveFavoritesManager
 import com.kstor.homeawaytest.view.base.BasePresenter
-import com.kstor.homeawaytest.view.base.BaseView
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import com.kstor.homeawaytest.view.utils.VenuesMapper
 import io.reactivex.disposables.CompositeDisposable
@@ -77,12 +75,10 @@ class VenuesListPresenterImpl @Inject constructor(
             .subscribeBy(
                 onNext = {
                     view?.hideProgress()
-                    if (it.isEmpty()){
+                    if (it.isEmpty()) {
                         view?.displayVenues(emptyList())
                         view?.showNoResult()
-                    }
-                    else
-                    {
+                    } else {
                         view?.hideNoResult()
                         view?.displayVenues(it)
                         view?.showMupButn()

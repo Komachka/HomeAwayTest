@@ -1,6 +1,5 @@
 package com.kstor.homeawaytest.view.base
 
-import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.model.Venue
 import io.reactivex.rxkotlin.subscribeBy

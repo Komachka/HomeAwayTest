@@ -6,22 +6,19 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.kstor.homeawaytest.R
-
 import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.utils.FavoriteImageRes
 import com.kstor.homeawaytest.view.utils.ImageLoader
-import kotlinx.android.synthetic.main.list_item.view.*
 import java.lang.Exception
+import kotlinx.android.synthetic.main.list_item.view.*
 
 class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     ImageLoader {
 
-
     lateinit var detailsOnClickListener: (venues: Venue) -> Unit
     lateinit var addToFavoriteClickListener: (venues: Venue, pos: Int) -> Unit
     private val venues = ArrayList<Venue>()
-
 
     fun updateData(venues: List<Venue>) {
         clearData()
@@ -45,22 +42,17 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
                 )
                 view.imageFavorite.startAnimation(animation)
 
-                if (adapterPosition != RecyclerView.NO_POSITION)
-                {
+                if (adapterPosition != RecyclerView.NO_POSITION) {
                     addToFavoriteClickListener.invoke(venues[adapterPosition], adapterPosition)
                     try {
                         venues[adapterPosition].isFavorite = !venues[adapterPosition].isFavorite
                         notifyItemChanged(adapterPosition)
-                    }
-                    catch (e:Exception)
-                    {
+                    } catch (e: Exception) {
                         log(e.toString() + "adapter position $adapterPosition")
                     }
                 }
-
             } else {
-                if (adapterPosition != RecyclerView.NO_POSITION)
-                {
+                if (adapterPosition != RecyclerView.NO_POSITION) {
                     detailsOnClickListener.invoke(venues[adapterPosition])
                 }
             }
@@ -117,11 +109,9 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
         notifyItemRangeChanged(pos, venues.size)
     }
 
-    fun addToList(venue: Venue, pos: Int)
-    {
+    fun addToList(venue: Venue, pos: Int) {
         venues.add(pos, venue)
         notifyItemInserted(pos)
         notifyItemRangeChanged(pos, venues.size)
     }
-
 }

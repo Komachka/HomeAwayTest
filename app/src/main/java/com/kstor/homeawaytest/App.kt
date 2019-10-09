@@ -1,6 +1,5 @@
 package com.kstor.homeawaytest
 
-import android.app.Application
 import androidx.multidex.MultiDexApplication
 import com.kstor.homeawaytest.data.di.NetworkModule
 import com.kstor.homeawaytest.data.di.RepositoryModule

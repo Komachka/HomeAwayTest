@@ -68,7 +68,7 @@ class DetailsPresenterTest {
 
         schedulerProvider = TestSchedulerProvider(Schedulers.trampoline())
 
-        testPresenter = DetailsPresenterImpl(compositeDisposable, staticMapUseCase, schedulerProvider, favoriteUseCase,detailUseCase)
+        testPresenter = DetailsPresenterImpl(compositeDisposable, staticMapUseCase, schedulerProvider, favoriteUseCase, detailUseCase)
         (testPresenter as DetailsPresenterImpl).attachView(view)
 
         errorPresenter = DetailsPresenterImpl(compositeDisposable, errorStaticMapUseCase, schedulerProvider, errorFavoriteUseCase, errorDetailUseCase)
@@ -79,7 +79,7 @@ class DetailsPresenterTest {
         `when`(errorDetailUseCase.getVenueDetails(TEST_ID)).thenReturn(Observable.error<VenueDetails>(testError).firstOrError())
     }
 
-    private fun createVenueDetails() : VenueDetails {
+    private fun createVenueDetails(): VenueDetails {
         return VenueDetails(
             TEST_ID,
             "TestName",

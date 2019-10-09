@@ -8,11 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.google.android.material.snackbar.Snackbar
 import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.*
@@ -34,18 +32,15 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
         no_res_text.visibility = VISIBLE
     }
 
-
     override fun hideNoResult() {
         no_res_img.visibility = GONE
         no_res_text.visibility = GONE
     }
 
-
     override fun updateItemView(venues: Venue) {
-        if(queryEditText.text.isEmpty()) {
+        if (queryEditText.text.isEmpty()) {
             presenter.getFavorites()
         }
-
     }
 
     @Inject
@@ -67,11 +62,9 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
                 }
             }
             (adapter as VenuesListAdapter).addToFavoriteClickListener = { venue, pos ->
-                if (queryEditText.text.isEmpty())
-                {
+                if (queryEditText.text.isEmpty()) {
                     updateFavorites(venue, pos)
-                }
-                else {
+                } else {
                     (presenter as VenuesListPresenterImpl).addAndRemoveFromFavorites(venue)
                 }
             }
@@ -99,7 +92,7 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
     private fun updateFavorites(venue: Venue, pos: Int) {
         var removeIt = true
         val message = "${venue.name}  ${resources.getString(R.string.venues_updated)}"
-        if (venue.isFavorite){
+        if (venue.isFavorite) {
             (list.adapter as VenuesListAdapter).removeFromList(venue, pos)
             view?.let {
                 val snackBar = CustomSnackBar.make(it, message)
@@ -117,9 +110,7 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
                 })
                 snackBar?.show()
             }
-        }
-        else
-        {
+        } else {
             (presenter as VenuesListPresenterImpl).addAndRemoveFromFavorites(venue)
         }
     }
@@ -186,5 +177,4 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
         return textChangeObservable
             .debounce(LOADING_TIMEOUT, TimeUnit.MILLISECONDS)
     }
-
 }

@@ -4,14 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.navigation.NavController
-import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
 import com.kstor.homeawaytest.domain.VenueDetailsUseCase
 import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.base.AddAndRemoveFavoritesManager
 import com.kstor.homeawaytest.view.base.BasePresenter
-import com.kstor.homeawaytest.view.utils.FavoriteImageRes
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
@@ -35,7 +33,6 @@ class DetailsPresenterImpl @Inject constructor(
             )
         )
     }
-
 
     override fun navigateBack(navController: NavController) {
         navController.popBackStack()

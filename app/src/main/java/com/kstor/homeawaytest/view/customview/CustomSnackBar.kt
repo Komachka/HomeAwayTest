@@ -7,7 +7,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.kstor.homeawaytest.R
 import com.kstor.homeawaytest.data.log
-
 import kotlinx.android.synthetic.main.view_error_snackbar.view.*
 
 class CustomSnackBar(parent: ViewGroup, customView: CustomSnackBarView) :
@@ -17,11 +16,9 @@ class CustomSnackBar(parent: ViewGroup, customView: CustomSnackBarView) :
         getView().setBackgroundResource(R.drawable.snack_bar)
         getView().setPadding(0, 0, 0, 0)
         duration = LENGTH_LONG
-
     }
 
-    fun addListener(onclick: (() -> Unit))
-    {
+    fun addListener(onclick: (() -> Unit)) {
         log(onclick.toString())
         getView().snackBarButn.visibility = View.VISIBLE
         getView().snackBarButn.setOnClickListener {
