@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.venues_list_fragment.*
 class VenuesListFragment : BaseFragment(), VenuesListView {
 
 
-    override fun updateItemView(venues: Venues) {
+    override fun updateItemView(venues: Venue) {
 
         view?.let {
             CustomSnackBar.make(it, resources.getString(R.string.venues_updated))?.show()

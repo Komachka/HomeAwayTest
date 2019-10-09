@@ -15,9 +15,9 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     ImageLoader {
 
 
-    lateinit var detailsOnClickListener: (venues: Venues) -> Unit
-    lateinit var addToFavoriteClickListener: (venues: Venues) -> Unit
-    val venues = ArrayList<Venues>()
+    lateinit var detailsOnClickListener: (venues: Venue) -> Unit
+    lateinit var addToFavoriteClickListener: (venues: Venue) -> Unit
+    val venues = ArrayList<Venue>()
 
 
     fun updateData(venues: List<Venue>) {
