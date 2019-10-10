@@ -92,11 +92,12 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
     private fun updateFavorites(venue: Venue, pos: Int) {
         var removeItFromFavorite = true
         val message = "${venue.name}  ${resources.getString(R.string.venues_updated)}"
-        if (venue.isFavorite) {
+        if (!venue.isFavorite) {
             (list.adapter as VenuesListAdapter).removeFromList(venue, pos)
             view?.let {
                 val snackBar = CustomSnackBar.make(it, message)
                 snackBar?.addListener {
+                    venue.isFavorite = true
                     (list.adapter as VenuesListAdapter).addToList(venue, pos)
                     removeItFromFavorite = false
                     snackBar.dismiss()
@@ -104,8 +105,10 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
                 snackBar?.addCallback(object : BaseTransientBottomBar.BaseCallback<CustomSnackBar>() {
                     override fun onDismissed(transientBottomBar: CustomSnackBar?, event: Int) {
                         super.onDismissed(transientBottomBar, event)
-                        if (removeItFromFavorite)
+                        if (removeItFromFavorite){
                             (presenter as VenuesListPresenterImpl).addAndRemoveFromFavorites(venue)
+                        }
+
                     }
                 })
                 snackBar?.show()

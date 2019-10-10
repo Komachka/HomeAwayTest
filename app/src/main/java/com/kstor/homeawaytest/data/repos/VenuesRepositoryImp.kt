@@ -19,12 +19,12 @@ class VenuesRepositoryImp(
     override suspend fun getClosestVenusesCache(): RepoResult<List<Venue>> {
         val data = getLocalData()
         return if (data.isNotEmpty()) RepoResult.Success(data)
-        else RepoResult.Error<List<Venue>>(Throwable("EMPTY  VENUES LIST"))
+        else RepoResult.Error<List<Venue>>(Throwable("EMPTY VENUES LIST"))
     }
 
     override suspend fun getCityCenter(): RepoResult<Pair<Float, Float>> {
         val data = preferenceData.getCityCenterInfo()
-        return if (data.first != 0.0F && data.second != 0.0F) RepoResult.Success(data) // TODO move  if check to shared pref method
+        return if (preferenceData.isDataValid(data)) RepoResult.Success(data)
         else RepoResult.Error<List<Venue>>(Throwable("INVALID CITY CENTER"))
     }
 

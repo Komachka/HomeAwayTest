@@ -80,8 +80,8 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
         venuesDistanceFromCenterTextView.text = "${venues.distance} m"
         presenter.setFavorite(venues)
         fabFavorite.setOnClickListener {
-            presenter.addAndRemoveFromFavorites(venues)
             venues.isFavorite = !venues.isFavorite
+            presenter.addAndRemoveFromFavorites(venues)
         }
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBar, verticalOffset ->
             if (abs(verticalOffset) - appBarLayout.totalScrollRange == 0 && !wasCollapsed) {

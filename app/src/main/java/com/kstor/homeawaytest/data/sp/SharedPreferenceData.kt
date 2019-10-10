@@ -14,7 +14,7 @@ class SharedPreferenceData @Inject constructor (private val preference: SharedPr
         preference.edit()?.let { editor ->
             val storedData =
                 preference.getFloat(key, PERSISTENT_STORAGE_DEF_VAL)
-            if (storedData == PERSISTENT_STORAGE_DEF_VAL && storedData != data.toFloat()) {
+            if (storedData == PERSISTENT_STORAGE_DEF_VAL && storedData != data.toFloat()) { // TODO fix it to change place if it needed not only first time
                 editor.putFloat(key, data.toFloat())
                 editor.apply()
                 return true
@@ -29,5 +29,10 @@ class SharedPreferenceData @Inject constructor (private val preference: SharedPr
             PERSISTENT_STORAGE_KEY_LAT,
             PERSISTENT_STORAGE_DEF_VAL
         ) to preference.getFloat(PERSISTENT_STORAGE_KEY_LNG, PERSISTENT_STORAGE_DEF_VAL)
+    }
+
+    fun isDataValid(data:Pair<Float, Float>) : Boolean
+    {
+        return data.first != PERSISTENT_STORAGE_DEF_VAL && data.second != PERSISTENT_STORAGE_DEF_VAL
     }
 }
