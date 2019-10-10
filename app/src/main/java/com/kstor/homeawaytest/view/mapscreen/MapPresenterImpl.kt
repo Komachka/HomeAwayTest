@@ -26,15 +26,13 @@ class MapPresenterImpl @Inject constructor(
         launch {
             val resultCityCenter = venuesListUseCase.getCityCenter()
             withContext(Dispatchers.Main) {
-                when (resultCityCenter) {
-                    is RepoResult.Success -> {
-                        val (lat, lng) = resultCityCenter.data
+                handleRepoResult(resultCityCenter,
+                    success = {
+                        val (lat, lng) = (resultCityCenter as RepoResult.Success).data
                         view?.showCenterOnTheMap(LatLng(lat.toDouble(), lng.toDouble()))
-                    }
-                    is RepoResult.Error<*> -> {
-                        view?.showError(resultCityCenter.throwable)
-                    }
-                }
+                    }, fail = {
+                        view?.showError((resultCityCenter as RepoResult.Error<*>).throwable)
+                    })
             }
         }
     }
@@ -54,15 +52,13 @@ class MapPresenterImpl @Inject constructor(
         launch {
             val resultVenues = venuesListUseCase.loadVenuesCache()
             withContext(Dispatchers.Main) {
-                when (resultVenues) {
-                    is RepoResult.Success -> {
-                        resultVenues.data.createVenuesMap()
+                handleRepoResult(resultVenues,
+                    success = {
+                        (resultVenues as RepoResult.Success).data.createVenuesMap()
                         view?.showVenuesOnTheMap(venuesMap)
-                    }
-                    is RepoResult.Error<*> -> {
-                        view?.showError(resultVenues.throwable)
-                    }
-                }
+                    }, fail = {
+                        view?.showError((resultVenues as RepoResult.Error<*>).throwable)
+                    })
             }
 
         }
