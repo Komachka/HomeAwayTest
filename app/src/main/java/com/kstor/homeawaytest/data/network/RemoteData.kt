@@ -29,9 +29,9 @@ class RemoteData(private val venuesService: VenuesService) {
 
     private suspend fun <T : Any> apiCall(call: suspend () -> (Response<T>)): ApiResult<T> {
         try {
-            call.invoke().let { responce ->
-                return if (responce.isSuccessful) ApiResult.Succsses(responce.body()!!)
-                else ApiResult.Error<T>(IOException(responce.errorBody().toString()))
+            call.invoke().let { response ->
+                return if (response.isSuccessful) ApiResult.Succsses(response.body()!!)
+                else ApiResult.Error<T>(IOException(response.errorBody().toString()))
             }
         } catch (ex: Exception) {
             return ApiResult.Error<T>(ex)
