@@ -4,7 +4,6 @@ import com.kstor.homeawaytest.data.*
 import com.kstor.homeawaytest.data.sp.SharedPreferenceData
 import com.kstor.homeawaytest.domain.StaticMapRepository
 import com.kstor.homeawaytest.domain.model.Venue
-import io.reactivex.Observable
 
 class StaticMapRepositoryImpl(private val preferenceData: SharedPreferenceData) : StaticMapRepository {
 
@@ -19,6 +18,5 @@ class StaticMapRepositoryImpl(private val preferenceData: SharedPreferenceData) 
                 "&$MARKERS=size:mid%7Ccolor:$colour1%7Clabel:C%7C$latCenter,$lngCenter" +
                 "&$MARKERS=size:mid%7Ccolor:$colour2%7C$latPoint,$lngPoint" +
                 "&$KEY=$API_KEY"
-
     }
 }

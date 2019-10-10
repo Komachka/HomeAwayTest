@@ -105,7 +105,7 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
                 snackBar?.addCallback(object : BaseTransientBottomBar.BaseCallback<CustomSnackBar>() {
                     override fun onDismissed(transientBottomBar: CustomSnackBar?, event: Int) {
                         super.onDismissed(transientBottomBar, event)
-                        if (removeItFromFavorite){
+                        if (removeItFromFavorite) {
                             (presenter as VenuesListPresenterImpl).addAndRemoveFromFavorites(venue)
                         }
                     }

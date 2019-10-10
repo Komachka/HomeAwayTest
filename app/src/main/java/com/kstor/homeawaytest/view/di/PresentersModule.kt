@@ -14,7 +14,6 @@ import com.kstor.homeawaytest.view.utils.DispatcherProvider
 import dagger.Module
 import dagger.Provides
 import io.reactivex.disposables.CompositeDisposable
-import javax.inject.Singleton
 
 @Module
 class PresentersModule {

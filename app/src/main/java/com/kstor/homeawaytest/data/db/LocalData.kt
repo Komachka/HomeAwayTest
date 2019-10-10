@@ -16,7 +16,7 @@ class LocalData(private val venuesDao: VenuesDao, private val favoritesDao: Favo
     }
 
     suspend fun addToFavorites(venues: DBVenuesModel) {
-        log("Add to favorite ${mapToDBFavoriteModel(venues).toString()}")
+        log("Add to favorite ${mapToDBFavoriteModel(venues)}")
         favoritesDao.addFavorite(mapToDBFavoriteModel(venues))
     }
 

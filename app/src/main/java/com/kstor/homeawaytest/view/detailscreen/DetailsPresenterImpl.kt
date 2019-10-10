@@ -12,9 +12,8 @@ import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.base.AddAndRemoveFavoritesManager
 import com.kstor.homeawaytest.view.base.BasePresenter
 import com.kstor.homeawaytest.view.utils.DispatcherProvider
-import kotlinx.coroutines.*
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.*
 
 class DetailsPresenterImpl @Inject constructor(
     private val dispatcherProvider: DispatcherProvider,
@@ -57,8 +56,7 @@ class DetailsPresenterImpl @Inject constructor(
     override fun createStaticMapUrl(venues: Venue) {
         launch {
             val url = useCase.createStaticMapUrl(venues)
-            withContext(dispatcherProvider.ui())
-            {
+            withContext(dispatcherProvider.ui()) {
                 (view as DetailsView).loadMap(url)
             }
         }
@@ -69,14 +67,12 @@ class DetailsPresenterImpl @Inject constructor(
             launch {
                 val result = detailsUseCase.getVenueDetails(it)
                 withContext(Dispatchers.Main) {
-                    when (result) {
-                        is RepoResult.Success -> {
-                            (view as DetailsView).updateInfo(result.data)
-                        }
-                        is RepoResult.Error<*> -> {
-                            view?.showError(result.throwable)
-                        }
-                    }
+                    handleRepoResult(result,
+                        success = {
+                            (view as DetailsView).updateInfo((result as RepoResult.Success).data)
+                        }, fail = {
+                            view?.showError((result as RepoResult.Error<*>).throwable)
+                        })
                 }
             }
         }

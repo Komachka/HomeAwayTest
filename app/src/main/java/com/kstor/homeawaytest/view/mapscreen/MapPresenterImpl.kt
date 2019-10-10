@@ -3,7 +3,6 @@ package com.kstor.homeawaytest.view.mapscreen
 import android.view.View
 import androidx.navigation.Navigation
 import com.google.android.gms.maps.model.LatLng
-import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.RepoResult
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venue
@@ -12,7 +11,6 @@ import com.kstor.homeawaytest.view.utils.DispatcherProvider
 import com.kstor.homeawaytest.view.utils.VenuesMapper
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -21,6 +19,8 @@ class MapPresenterImpl @Inject constructor(
     dispatcherProvider: DispatcherProvider
 ) : MapPresenter, BasePresenter<MapView>(dispatcherProvider),
     VenuesMapper {
+
+    private val venuesMap = mutableMapOf<LatLng, Venue>()
 
     override fun setUpMapToCityCenter() {
         launch {
@@ -36,8 +36,6 @@ class MapPresenterImpl @Inject constructor(
             }
         }
     }
-
-    private val venuesMap = mutableMapOf<LatLng, Venue>()
 
     override fun navigateToDetailsScreen(view: View, position: LatLng) {
         venuesMap[position]?.let { venues ->
@@ -60,10 +58,8 @@ class MapPresenterImpl @Inject constructor(
                         view?.showError((resultVenues as RepoResult.Error<*>).throwable)
                     })
             }
-
         }
     }
-
 
     private fun List<Venue>.createVenuesMap(): Map<LatLng, Venue> {
         this.forEach {

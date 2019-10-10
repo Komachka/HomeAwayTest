@@ -1,6 +1,5 @@
 package com.kstor.homeawaytest.view.base
 
-import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.RepoResult
 import com.kstor.homeawaytest.domain.model.Venue
@@ -17,14 +16,12 @@ interface AddAndRemoveFavoritesManager {
             favoritesUseCase.removeFromFavorite(venues)
         }
         withContext(Dispatchers.Main) {
-            when (result) {
-                is RepoResult.Success -> {
+            handleRepoResult(result,
+                success = {
                     view?.updateItemView(venues = venues)
-                }
-                is RepoResult.Error<*> -> {
-                    view?.showError(result.throwable)
-                }
-            }
+                }, fail = {
+                    view?.showError((result as RepoResult.Error<*>).throwable)
+                })
         }
     }
 }

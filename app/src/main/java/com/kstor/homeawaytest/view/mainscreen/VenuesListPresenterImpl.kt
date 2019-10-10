@@ -1,7 +1,6 @@
 package com.kstor.homeawaytest.view.mainscreen
 
 import androidx.navigation.NavController
-import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.RepoResult
 import com.kstor.homeawaytest.domain.VenuesUseCase
@@ -10,10 +9,8 @@ import com.kstor.homeawaytest.view.base.AddAndRemoveFavoritesManager
 import com.kstor.homeawaytest.view.base.BasePresenter
 import com.kstor.homeawaytest.view.utils.DispatcherProvider
 import com.kstor.homeawaytest.view.utils.VenuesMapper
-import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -36,20 +33,17 @@ class VenuesListPresenterImpl @Inject constructor(
         launch(Dispatchers.Default) {
             val result = favoritesUseCase.getFavorites()
             withContext(Dispatchers.Main) {
-                when (result) {
-                    is RepoResult.Success -> {
-                        log("resutl ${result.data}")
+                handleRepoResult(result,
+                    success = {
                         view?.hideProgress()
                         view?.hideNoResult()
-                        view?.displayVenues(result.data)
-                    }
-                    is RepoResult.Error<*> -> {
+                        view?.displayVenues((result as RepoResult.Success).data)
+                    }, fail = {
                         view?.displayVenues(emptyList())
                         view?.hideProgress()
-                        view?.showError(result.throwable)
+                        view?.showError((result as RepoResult.Error<*>).throwable)
                         view?.showNoResult()
-                    }
-                }
+                    })
             }
         }
     }
@@ -75,20 +69,18 @@ class VenuesListPresenterImpl @Inject constructor(
         launch(Dispatchers.Default) {
             val repoResult = getVenuesUseCase.loadVenuesDataFromApi(query)
             withContext(Dispatchers.Main) {
-                when (repoResult) {
-                    is RepoResult.Success -> {
+                handleRepoResult(repoResult,
+                    success = {
                         view?.hideProgress()
                         view?.hideNoResult()
-                        view?.displayVenues(repoResult.data)
+                        view?.displayVenues((repoResult as RepoResult.Success).data)
                         view?.showMupButn()
-                    }
-                    is RepoResult.Error<*> -> {
+                    }, fail = {
                         view?.hideProgress()
-                        view?.showError(repoResult.throwable)
+                        view?.showError((repoResult as RepoResult.Error<*>).throwable)
                         view?.displayVenues(emptyList())
                         view?.showNoResult()
-                    }
-                }
+                    })
             }
         }
     }

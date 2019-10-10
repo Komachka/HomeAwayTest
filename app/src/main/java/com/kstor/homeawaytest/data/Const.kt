@@ -62,6 +62,4 @@ const val NO_FAVORITE_MESSAGE = "There are no favorites yet"
 
 const val EMPTY_VENUES_LIST_MESSAGE = "The venues list is empty"
 const val INVALID_CITY_CENTER = "The city center info is incorrect"
-const val LOCAL_DATA_EMPTY = "The local data is empty"
-
-
+const val LOCAL_DATA_EMPTY = "The search is empty"

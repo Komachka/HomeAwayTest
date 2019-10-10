@@ -5,5 +5,5 @@ import kotlinx.coroutines.Dispatchers
 
 class TestSchedulerProvider(private val testScheduler: Scheduler) : DispatcherProvider {
     override fun ui() = Dispatchers.Main
-    override fun io() =  Dispatchers.Unconfined
+    override fun io() = Dispatchers.Unconfined
 }

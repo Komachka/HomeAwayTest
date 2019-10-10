@@ -7,11 +7,9 @@ import javax.inject.Inject
 class VenuesUseCase @Inject constructor(private val repository: VenuesRepository) {
 
     suspend fun loadVenuesDataFromApi(query: String): RepoResult<List<Venue>> {
-        return when(val result = repository.getClosestVenuses(LOAD_LIMIT, query))
-        {
+        return when (val result = repository.getClosestVenuses(LOAD_LIMIT, query)) {
             is RepoResult.Success -> RepoResult.Success(result.data.sortedBy { it.distance })
             is RepoResult.Error<*> -> result
-
         }
     }
 

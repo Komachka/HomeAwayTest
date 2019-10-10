@@ -31,8 +31,7 @@ class SharedPreferenceData @Inject constructor (private val preference: SharedPr
         ) to preference.getFloat(PERSISTENT_STORAGE_KEY_LNG, PERSISTENT_STORAGE_DEF_VAL)
     }
 
-    fun isDataValid(data:Pair<Float, Float>) : Boolean
-    {
+    fun isDataValid(data: Pair<Float, Float>): Boolean {
         return data.first != PERSISTENT_STORAGE_DEF_VAL && data.second != PERSISTENT_STORAGE_DEF_VAL
     }
 }

@@ -16,7 +16,6 @@ class VenuesRepositoryImp(
     private val localData: LocalData
 ) : VenuesRepository {
 
-
     override suspend fun getClosestVenusesCache(): RepoResult<List<Venue>> {
         val data = getLocalData()
         return if (data.isNotEmpty()) RepoResult.Success(data)
@@ -91,6 +90,4 @@ class VenuesRepositoryImp(
             is ApiResult.Error<*> -> RepoResult.Error<List<Venue>>(result.throwable)
         }
     }
-
-
 }
