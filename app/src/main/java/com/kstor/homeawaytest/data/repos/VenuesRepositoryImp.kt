@@ -42,7 +42,7 @@ class VenuesRepositoryImp(
     override suspend fun getFavorites(): RepoResult<List<Venue>> {
         val data = mapToListOfVenues(localData.getFavorites())
         return if (data.isNotEmpty()) RepoResult.Success(data)
-        else RepoResult.Error<List<Venue>>(Throwable("EMPTY  VENUES LIST"))
+        else RepoResult.Error<List<Venue>>(Throwable("EMPTY VENUES LIST"))
     }
 
     override suspend fun saveToFavorite(venues: Venue): RepoResult<Boolean> {
