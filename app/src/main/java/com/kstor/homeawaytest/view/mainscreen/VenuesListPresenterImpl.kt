@@ -17,7 +17,7 @@ import kotlinx.coroutines.withContext
 
 class VenuesListPresenterImpl @Inject constructor(
     private val getVenuesUseCase: VenuesUseCase,
-    dispatcherProvider: DispatcherProvider,
+    val dispatcherProvider: DispatcherProvider,
     private val favoritesUseCase: FavoriteUseCase
 ) :
     VenuesListPresenter, AddAndRemoveFavoritesManager,
@@ -26,7 +26,7 @@ class VenuesListPresenterImpl @Inject constructor(
 
     override fun addAndRemoveFromFavorites(venue: Venue) {
         launch(Dispatchers.Default) {
-            addAndRemoveFromFavorites(venue, favoritesUseCase)
+            addAndRemoveFromFavorites(venue, favoritesUseCase, dispatcherProvider)
         }
     }
 

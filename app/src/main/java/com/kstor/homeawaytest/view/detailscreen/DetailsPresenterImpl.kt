@@ -43,8 +43,8 @@ class DetailsPresenterImpl @Inject constructor(
     }
 
     override fun addAndRemoveFromFavorites(venues: Venue) {
-        launch(Dispatchers.Default) {
-            addAndRemoveFromFavorites(venues, favoritesUseCase)
+        launch {
+            addAndRemoveFromFavorites(venues, favoritesUseCase, dispatcherProvider)
         }
     }
 
@@ -67,7 +67,7 @@ class DetailsPresenterImpl @Inject constructor(
         venue.id?.let {
             launch {
                 val result = detailsUseCase.getVenueDetails(it)
-                withContext(Dispatchers.Main) {
+                withContext(dispatcherProvider.ui()) {
                     handleRepoResult(result,
                         success = {
                             (view as DetailsView).updateInfo((result as RepoResult.Success).data)

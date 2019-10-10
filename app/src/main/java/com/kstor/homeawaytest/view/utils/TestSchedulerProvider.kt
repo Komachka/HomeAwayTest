@@ -1,9 +1,9 @@
 package com.kstor.homeawaytest.view.utils
 
-import io.reactivex.Scheduler
+
 import kotlinx.coroutines.Dispatchers
 
-class TestSchedulerProvider(private val testScheduler: Scheduler) : DispatcherProvider {
-    override fun ui() = Dispatchers.Main
+class TestSchedulerProvider : DispatcherProvider {
+    override fun ui() = Dispatchers.Unconfined
     override fun io() = Dispatchers.Unconfined
 }
