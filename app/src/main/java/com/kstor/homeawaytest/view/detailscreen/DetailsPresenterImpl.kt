@@ -12,6 +12,7 @@ import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.base.AddAndRemoveFavoritesManager
 import com.kstor.homeawaytest.view.base.BasePresenter
 import com.kstor.homeawaytest.view.utils.DispatcherProvider
+import com.kstor.homeawaytest.view.utils.FavoriteImageLevel
 import javax.inject.Inject
 import kotlinx.coroutines.*
 
@@ -49,7 +50,7 @@ class DetailsPresenterImpl @Inject constructor(
 
     override fun setFavorite(venues: Venue) {
         val favoriteLevel =
-            if (venues.isFavorite) 1 else 0
+            if (venues.isFavorite) FavoriteImageLevel.IS_FAVORITE.level else FavoriteImageLevel.IS_NOT_FAVORITE.level
         (view as DetailsView).setFavoriteDrawableLevel(favoriteLevel)
     }
 
