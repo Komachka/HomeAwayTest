@@ -11,11 +11,9 @@ interface AddAndRemoveFavoritesManager {
 
     suspend fun <T : ViewWithFavorites> BasePresenter<T>.addAndRemoveFromFavorites(venues: Venue, favoritesUseCase: FavoriteUseCase) {
         var result =
-        if (!venues.isFavorite) {
-            log("Add to favorite")
+        if (venues.isFavorite) {
             favoritesUseCase.addToFavorite(venues)
         } else {
-            log("remove from favorite")
             favoritesUseCase.removeFromFavorite(venues)
         }
         withContext(Dispatchers.Main) {
