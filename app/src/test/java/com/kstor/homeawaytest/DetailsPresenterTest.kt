@@ -9,7 +9,7 @@ import com.kstor.homeawaytest.domain.model.VenueDetails
 import com.kstor.homeawaytest.view.detailscreen.DetailsPresenter
 import com.kstor.homeawaytest.view.detailscreen.DetailsPresenterImpl
 import com.kstor.homeawaytest.view.detailscreen.DetailsView
-import com.kstor.homeawaytest.view.utils.SchedulerProvider
+import com.kstor.homeawaytest.view.utils.DispatcherProvider
 import com.kstor.homeawaytest.view.utils.TestSchedulerProvider
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
@@ -29,7 +29,7 @@ import org.mockito.junit.MockitoJUnitRunner
 class DetailsPresenterTest {
     @Mock
     lateinit var compositeDisposable: CompositeDisposable
-    lateinit var schedulerProvider: SchedulerProvider
+    lateinit var schedulerProvider: DispatcherProvider
     @Mock
     lateinit var staticMapUseCase: GenerateStaticMapUrlUseCase
 

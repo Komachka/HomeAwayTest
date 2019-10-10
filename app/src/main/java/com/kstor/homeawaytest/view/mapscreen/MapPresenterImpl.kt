@@ -3,13 +3,13 @@ package com.kstor.homeawaytest.view.mapscreen
 import android.view.View
 import androidx.navigation.Navigation
 import com.google.android.gms.maps.model.LatLng
+import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.RepoResult
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.base.BasePresenter
-import com.kstor.homeawaytest.view.utils.SchedulerProvider
+import com.kstor.homeawaytest.view.utils.DispatcherProvider
 import com.kstor.homeawaytest.view.utils.VenuesMapper
-import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -17,16 +17,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MapPresenterImpl @Inject constructor(
-    compositeDisposable: CompositeDisposable,
     private val venuesListUseCase: VenuesUseCase,
-    schedulerProvider: SchedulerProvider
-) : MapPresenter, BasePresenter<MapView>(compositeDisposable, schedulerProvider),
+    dispatcherProvider: DispatcherProvider
+) : MapPresenter, BasePresenter<MapView>(dispatcherProvider),
     VenuesMapper {
 
     override fun setUpMapToCityCenter() {
-        GlobalScope.launch(Dispatchers.Default) {
+        launch {
             val resultCityCenter = venuesListUseCase.getCityCenter()
-
             withContext(Dispatchers.Main) {
                 when (resultCityCenter) {
                     is RepoResult.Success -> {
@@ -53,7 +51,7 @@ class MapPresenterImpl @Inject constructor(
     }
 
     override fun getVenues(query: String) {
-        GlobalScope.launch(Dispatchers.Default) {
+        launch {
             val resultVenues = venuesListUseCase.loadVenuesCache()
             withContext(Dispatchers.Main) {
                 when (resultVenues) {

@@ -25,7 +25,7 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
     VenuesMapper {
 
     @Inject
-    lateinit var presenter: DetailsPresenterImpl
+    lateinit var presenter: DetailsPresenter
     private var wasCollapsed = false
 
     private lateinit var setVisibleAnimation: Animation
@@ -54,7 +54,7 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
                 presenter.navigateBack(Navigation.findNavController(it))
             }
         }
-        presenter.attachView(this)
+        (presenter as DetailsPresenterImpl).attachView(this)
         arguments?.let { bundle ->
             val venuesParselize = DetailFragmentArgs.fromBundle(bundle).venues
             mapToVenues(venuesParselize)?.let { venues ->
@@ -150,7 +150,10 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
     }
 
     override fun destroy() {
-        presenter.detachView()
+        (presenter as DetailsPresenterImpl).apply {
+            detachView()
+            cancel()
+        }
     }
 
     override fun loadMap(url: String?) {

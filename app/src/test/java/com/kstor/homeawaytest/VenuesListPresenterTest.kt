@@ -5,7 +5,7 @@ import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.mainscreen.VenuesListPresenterImpl
 import com.kstor.homeawaytest.view.mainscreen.VenuesListView
-import com.kstor.homeawaytest.view.utils.SchedulerProvider
+import com.kstor.homeawaytest.view.utils.DispatcherProvider
 import com.kstor.homeawaytest.view.utils.TestSchedulerProvider
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
@@ -42,7 +42,7 @@ class VenuesListPresenterTest {
     @Mock
     private lateinit var view: VenuesListView
 
-    private lateinit var schedulerProvider: SchedulerProvider
+    private lateinit var schedulerProvider: DispatcherProvider
 
     private lateinit var venuesList: List<Venue>
     private lateinit var error: Throwable

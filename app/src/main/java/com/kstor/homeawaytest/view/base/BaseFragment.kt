@@ -19,9 +19,11 @@ abstract class BaseFragment : Fragment(), BaseView {
         setUp()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+
+    override fun onDestroy() {
+        super.onDestroy()
         destroy()
+
     }
 
     abstract fun setUp()

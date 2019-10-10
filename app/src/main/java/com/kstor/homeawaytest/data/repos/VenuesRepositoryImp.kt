@@ -16,16 +16,17 @@ class VenuesRepositoryImp(
     private val localData: LocalData
 ) : VenuesRepository {
 
+
     override suspend fun getClosestVenusesCache(): RepoResult<List<Venue>> {
         val data = getLocalData()
         return if (data.isNotEmpty()) RepoResult.Success(data)
-        else RepoResult.Error<List<Venue>>(Throwable("EMPTY VENUES LIST"))
+        else RepoResult.Error<List<Venue>>(Throwable(EMPTY_VENUES_LIST_MESSAGE))
     }
 
     override suspend fun getCityCenter(): RepoResult<Pair<Float, Float>> {
         val data = preferenceData.getCityCenterInfo()
         return if (preferenceData.isDataValid(data)) RepoResult.Success(data)
-        else RepoResult.Error<List<Venue>>(Throwable("INVALID CITY CENTER"))
+        else RepoResult.Error<List<Venue>>(Throwable(INVALID_CITY_CENTER))
     }
 
     override suspend fun removeFromFavorite(venues: Venue): RepoResult<Boolean> {
@@ -42,7 +43,7 @@ class VenuesRepositoryImp(
     override suspend fun getFavorites(): RepoResult<List<Venue>> {
         val data = mapToListOfVenues(localData.getFavorites())
         return if (data.isNotEmpty()) RepoResult.Success(data)
-        else RepoResult.Error<List<Venue>>(Throwable("EMPTY VENUES LIST"))
+        else RepoResult.Error<List<Venue>>(Throwable(EMPTY_VENUES_LIST_MESSAGE))
     }
 
     override suspend fun saveToFavorite(venues: Venue): RepoResult<Boolean> {
@@ -65,7 +66,7 @@ class VenuesRepositoryImp(
         }
         val localData = getLocalData()
         return if (localData.isNotEmpty()) RepoResult.Success(localData)
-        else RepoResult.Error<List<Venue>>(Throwable("EMPTY LOCAL VENUES LIST"))
+        else RepoResult.Error<List<Venue>>(Throwable(LOCAL_DATA_EMPTY))
     }
 
     private suspend fun mapToDBVenuesModelList(list: List<Venue>): List<DBVenuesModel> {
@@ -90,4 +91,6 @@ class VenuesRepositoryImp(
             is ApiResult.Error<*> -> RepoResult.Error<List<Venue>>(result.throwable)
         }
     }
+
+
 }

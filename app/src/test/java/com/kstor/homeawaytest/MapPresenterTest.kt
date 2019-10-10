@@ -5,7 +5,7 @@ import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.mapscreen.MapPresenterImpl
 import com.kstor.homeawaytest.view.mapscreen.MapView
-import com.kstor.homeawaytest.view.utils.SchedulerProvider
+import com.kstor.homeawaytest.view.utils.DispatcherProvider
 import com.kstor.homeawaytest.view.utils.TestSchedulerProvider
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
@@ -37,7 +37,7 @@ class MapPresenterTest {
 
     private lateinit var compositeDisposable: CompositeDisposable
 
-    private lateinit var schedulerProvider: SchedulerProvider
+    private lateinit var schedulerProvider: DispatcherProvider
 
     private lateinit var venuesList: List<Venue>
     private lateinit var venuesMap: Map<LatLng, Venue>

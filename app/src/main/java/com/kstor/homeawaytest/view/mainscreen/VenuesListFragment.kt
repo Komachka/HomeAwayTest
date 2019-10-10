@@ -119,7 +119,10 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
 
     override fun destroy() {
         compositeDisposable.clear()
-        (presenter as VenuesListPresenterImpl).detachView()
+        (presenter as VenuesListPresenterImpl).apply {
+            detachView()
+            cancel()
+        }
     }
 
     override fun displayVenues(results: List<Venue>) {

@@ -8,7 +8,7 @@ import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.base.AddAndRemoveFavoritesManager
 import com.kstor.homeawaytest.view.base.BasePresenter
-import com.kstor.homeawaytest.view.utils.SchedulerProvider
+import com.kstor.homeawaytest.view.utils.DispatcherProvider
 import com.kstor.homeawaytest.view.utils.VenuesMapper
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -18,23 +18,22 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class VenuesListPresenterImpl @Inject constructor(
-    compositeDisposable: CompositeDisposable,
     private val getVenuesUseCase: VenuesUseCase,
-    schedulerProvider: SchedulerProvider,
+    dispatcherProvider: DispatcherProvider,
     private val favoritesUseCase: FavoriteUseCase
 ) :
     VenuesListPresenter, AddAndRemoveFavoritesManager,
-    BasePresenter<VenuesListView>(compositeDisposable, schedulerProvider),
+    BasePresenter<VenuesListView>(dispatcherProvider),
     VenuesMapper {
 
     override fun addAndRemoveFromFavorites(venue: Venue) {
-        GlobalScope.launch(Dispatchers.Default) {
+        launch(Dispatchers.Default) {
             addAndRemoveFromFavorites(venue, favoritesUseCase)
         }
     }
 
     override fun getFavorites() {
-        GlobalScope.launch(Dispatchers.Default) {
+        launch(Dispatchers.Default) {
             val result = favoritesUseCase.getFavorites()
             withContext(Dispatchers.Main) {
                 when (result) {
@@ -73,7 +72,7 @@ class VenuesListPresenterImpl @Inject constructor(
     }
 
     override fun getVenues(query: String) {
-        GlobalScope.launch(Dispatchers.Default) {
+        launch(Dispatchers.Default) {
             val repoResult = getVenuesUseCase.loadVenuesDataFromApi(query)
             withContext(Dispatchers.Main) {
                 when (repoResult) {

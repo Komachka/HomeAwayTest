@@ -11,24 +11,19 @@ import com.kstor.homeawaytest.domain.VenueDetailsUseCase
 import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.base.AddAndRemoveFavoritesManager
 import com.kstor.homeawaytest.view.base.BasePresenter
-import com.kstor.homeawaytest.view.utils.SchedulerProvider
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.subscribeBy
+import com.kstor.homeawaytest.view.utils.DispatcherProvider
+import kotlinx.coroutines.*
 import javax.inject.Inject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 
 class DetailsPresenterImpl @Inject constructor(
-    compositeDisposable: CompositeDisposable,
+    private val dispatcherProvider: DispatcherProvider,
     private val useCase: GenerateStaticMapUrlUseCase,
-    schedulerProvider: SchedulerProvider,
     private val favoritesUseCase: FavoriteUseCase,
     private val detailsUseCase: VenueDetailsUseCase
 
 ) : DetailsPresenter, AddAndRemoveFavoritesManager,
-    BasePresenter<DetailsView>(compositeDisposable, schedulerProvider) {
+    BasePresenter<DetailsView>(dispatcherProvider) {
 
     override fun fillDetailsScreen(venues: Venue) {
         view?.fillDetailsScreen(venues)
@@ -48,7 +43,7 @@ class DetailsPresenterImpl @Inject constructor(
     }
 
     override fun addAndRemoveFromFavorites(venues: Venue) {
-        GlobalScope.launch(Dispatchers.Default) {
+        launch(Dispatchers.Default) {
             addAndRemoveFromFavorites(venues, favoritesUseCase)
         }
     }
@@ -60,9 +55,9 @@ class DetailsPresenterImpl @Inject constructor(
     }
 
     override fun createStaticMapUrl(venues: Venue) {
-        GlobalScope.launch(Dispatchers.Default) {
+        launch {
             val url = useCase.createStaticMapUrl(venues)
-            withContext(Dispatchers.Main)
+            withContext(dispatcherProvider.ui())
             {
                 (view as DetailsView).loadMap(url)
             }
@@ -71,7 +66,7 @@ class DetailsPresenterImpl @Inject constructor(
 
     override fun getVenueDetails(venue: Venue) {
         venue.id?.let {
-            GlobalScope.launch(Dispatchers.Default) {
+            launch {
                 val result = detailsUseCase.getVenueDetails(it)
                 withContext(Dispatchers.Main) {
                     when (result) {

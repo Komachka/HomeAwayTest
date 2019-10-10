@@ -56,6 +56,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback, MapView {
     override fun destroy() {
         (mapPresenter as MapPresenterImpl).apply {
             detachView()
+            cancel()
         }
     }
 

@@ -59,3 +59,9 @@ const val FAVORITE_TABLE_NAME = "favorite"
 const val VENUES_TABLE_NAME = "venues"
 const val EMPTY_SEARCH_ERROR_MESSAGE = "Result is empty"
 const val NO_FAVORITE_MESSAGE = "There are no favorites yet"
+
+const val EMPTY_VENUES_LIST_MESSAGE = "The venues list is empty"
+const val INVALID_CITY_CENTER = "The city center info is incorrect"
+const val LOCAL_DATA_EMPTY = "The local data is empty"
+
+
