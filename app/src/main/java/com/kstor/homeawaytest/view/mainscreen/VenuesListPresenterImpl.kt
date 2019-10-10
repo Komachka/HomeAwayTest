@@ -1,6 +1,7 @@
 package com.kstor.homeawaytest.view.mainscreen
 
 import androidx.navigation.NavController
+import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.RepoResult
 import com.kstor.homeawaytest.domain.VenuesUseCase
@@ -33,12 +34,12 @@ class VenuesListPresenterImpl @Inject constructor(
     }
 
     override fun getFavorites() {
-
         GlobalScope.launch(Dispatchers.Default) {
             val result = favoritesUseCase.getFavorites()
             withContext(Dispatchers.Main) {
                 when (result) {
                     is RepoResult.Success -> {
+                        log("resutl ${result.data}")
                         view?.hideProgress()
                         view?.hideNoResult()
                         view?.displayVenues(result.data)

@@ -1,6 +1,7 @@
 package com.kstor.homeawaytest.data.db
 
 import com.kstor.homeawaytest.data.db.model.DBVenuesModel
+import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.data.mapToDBFavoriteModel
 
 class LocalData(private val venuesDao: VenuesDao, private val favoritesDao: FavoritesDao) {
@@ -15,6 +16,7 @@ class LocalData(private val venuesDao: VenuesDao, private val favoritesDao: Favo
     }
 
     suspend fun addToFavorites(venues: DBVenuesModel) {
+        log("Add to favorite ${mapToDBFavoriteModel(venues).toString()}")
         favoritesDao.addFavorite(mapToDBFavoriteModel(venues))
     }
 

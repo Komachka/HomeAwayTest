@@ -23,8 +23,22 @@ class MapPresenterImpl @Inject constructor(
 ) : MapPresenter, BasePresenter<MapView>(compositeDisposable, schedulerProvider),
     VenuesMapper {
 
-    override fun setUpMapToCityCenter(lat: Float, lng: Float) {
-        view?.showCenterOnTheMap(LatLng(lat.toDouble(), lng.toDouble()))
+    override fun setUpMapToCityCenter() {
+        GlobalScope.launch(Dispatchers.Default) {
+            val resultCityCenter = venuesListUseCase.getCityCenter()
+
+            withContext(Dispatchers.Main) {
+                when (resultCityCenter) {
+                    is RepoResult.Success -> {
+                        val (lat, lng) = resultCityCenter.data
+                        view?.showCenterOnTheMap(LatLng(lat.toDouble(), lng.toDouble()))
+                    }
+                    is RepoResult.Error<*> -> {
+                        view?.showError(resultCityCenter.throwable)
+                    }
+                }
+            }
+        }
     }
 
     private val venuesMap = mutableMapOf<LatLng, Venue>()
@@ -52,21 +66,10 @@ class MapPresenterImpl @Inject constructor(
                     }
                 }
             }
-            val resultCityCenter = venuesListUseCase.getCityCenter()
 
-            withContext(Dispatchers.Main) {
-                when (resultCityCenter) {
-                    is RepoResult.Success -> {
-                        val (lat, lng) = resultCityCenter.data
-                        setUpMapToCityCenter(lat, lng)
-                    }
-                    is RepoResult.Error<*> -> {
-                        view?.showError(resultCityCenter.throwable)
-                    }
-                }
-            }
         }
     }
+
 
     private fun List<Venue>.createVenuesMap(): Map<LatLng, Venue> {
         this.forEach {

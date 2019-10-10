@@ -35,12 +35,13 @@ class VenuesRepositoryImp(
             }
             RepoResult.Success(true)
         } catch (e: Exception) {
-            RepoResult.Error<Boolean>(Throwable("VENUE WAS NOT REMOVED FROM DB"))
+            RepoResult.Error<Boolean>(e)
         }
     }
 
     override suspend fun getFavorites(): RepoResult<List<Venue>> {
         val data = mapToListOfVenues(localData.getFavorites())
+        log("data.toString() ${data.toString()}")
         return if (data.isNotEmpty()) RepoResult.Success(data)
         else RepoResult.Error<List<Venue>>(Throwable("EMPTY  VENUES LIST"))
     }
@@ -52,7 +53,7 @@ class VenuesRepositoryImp(
             }
             RepoResult.Success(true)
         } catch (e: Exception) {
-            RepoResult.Error<Boolean>(Throwable("VENUE WAS NOT SAVED TO DB"))
+            RepoResult.Error<Boolean>(e)
         }
     }
 
