@@ -143,6 +143,7 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
 
     override fun setFavoriteDrawableLevel(level: Int) {
         fabFavorite.setImageLevel(level)
+        fabFavorite.tag = level
     }
 
     override fun updateItemView(venues: Venue) {
