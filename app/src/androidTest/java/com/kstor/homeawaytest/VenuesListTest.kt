@@ -156,7 +156,6 @@ class VenuesListTest : VenuesMapper {
                 )
             )
         )
-
     }
 
     @Test

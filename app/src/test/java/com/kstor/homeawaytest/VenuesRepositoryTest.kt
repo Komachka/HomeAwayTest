@@ -1,7 +1,5 @@
 package com.kstor.homeawaytest
 
-import com.kstor.homeawaytest.data.SIZE_32
-import com.kstor.homeawaytest.data.calcDistance
 import com.kstor.homeawaytest.data.db.LocalData
 import com.kstor.homeawaytest.data.db.model.DBVenuesModel
 import com.kstor.homeawaytest.data.network.RemoteData
@@ -12,6 +10,7 @@ import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.domain.model.VenuesCategory
 import io.reactivex.Observable
 import io.reactivex.Single
+import java.util.concurrent.TimeUnit
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,7 +19,6 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
-import java.util.concurrent.TimeUnit
 
 @RunWith(MockitoJUnitRunner::class)
 class VenuesRepositoryTest {
@@ -183,7 +181,7 @@ class VenuesRepositoryTest {
         val observable = repo.getClosestVenuses(LIMIT, QUERY).test()
             observable.awaitDone(5, TimeUnit.SECONDS)
             observable.assertNoErrors().assertComplete()
-                .assertResult( dataFromDb(), dataFromDb() )
+                .assertResult(dataFromDb(), dataFromDb())
     }
 
     private fun dataFromDb(): List<Venue> {

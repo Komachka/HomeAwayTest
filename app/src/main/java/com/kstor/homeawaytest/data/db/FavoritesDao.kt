@@ -8,11 +8,11 @@ import com.kstor.homeawaytest.data.db.model.DBFavoriteModel
 interface FavoritesDao {
 
     @Query("SELECT * FROM $FAVORITE_TABLE_NAME")
-    fun getAllFavorites(): List<DBFavoriteModel>
+    suspend fun getAllFavorites(): List<DBFavoriteModel>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun addFavorite(vararg favorite: DBFavoriteModel)
+    suspend fun addFavorite(vararg favorite: DBFavoriteModel)
 
     @Delete
-    fun deleteFromFavorite(favorite: DBFavoriteModel)
+    suspend fun deleteFromFavorite(favorite: DBFavoriteModel)
 }

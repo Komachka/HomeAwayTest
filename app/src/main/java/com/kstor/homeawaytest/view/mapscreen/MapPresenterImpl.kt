@@ -3,14 +3,18 @@ package com.kstor.homeawaytest.view.mapscreen
 import android.view.View
 import androidx.navigation.Navigation
 import com.google.android.gms.maps.model.LatLng
+import com.kstor.homeawaytest.domain.RepoResult
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.base.BasePresenter
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import com.kstor.homeawaytest.view.utils.VenuesMapper
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MapPresenterImpl @Inject constructor(
     compositeDisposable: CompositeDisposable,
@@ -35,22 +39,33 @@ class MapPresenterImpl @Inject constructor(
     }
 
     override fun getVenues(query: String) {
-        compositeDisposable.add(venuesListUseCase.loadVenuesCache()
-            .subscribeOn(schedulerProvider.io())
-            .observeOn(schedulerProvider.ui())
-            .doOnNext {
-                val (lat, lng) = venuesListUseCase.getCityCenter()
-                setUpMapToCityCenter(lat, lng)
-            }
-            .subscribeBy(
-                onError = {
-                    view?.showError(it)
-                },
-                onNext = {
-                    it.createVenuesMap()
-                    view?.showVenuesOnTheMap(venuesMap)
+        GlobalScope.launch(Dispatchers.Default) {
+            val resultVenues = venuesListUseCase.loadVenuesCache()
+            withContext(Dispatchers.Main) {
+                when (resultVenues) {
+                    is RepoResult.Success -> {
+                        resultVenues.data.createVenuesMap()
+                        view?.showVenuesOnTheMap(venuesMap)
+                    }
+                    is RepoResult.Error<*> -> {
+                        view?.showError(resultVenues.throwable)
+                    }
                 }
-            ))
+            }
+            val resultCityCenter = venuesListUseCase.getCityCenter()
+
+            withContext(Dispatchers.Main) {
+                when (resultCityCenter) {
+                    is RepoResult.Success -> {
+                        val (lat, lng) = resultCityCenter.data
+                        setUpMapToCityCenter(lat, lng)
+                    }
+                    is RepoResult.Error<*> -> {
+                        view?.showError(resultCityCenter.throwable)
+                    }
+                }
+            }
+        }
     }
 
     private fun List<Venue>.createVenuesMap(): Map<LatLng, Venue> {

@@ -1,9 +1,8 @@
 package com.kstor.homeawaytest.view.mainscreen
 
 import androidx.navigation.NavController
-import com.kstor.homeawaytest.data.NO_FAVORITE_MESSAGE
-import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.FavoriteUseCase
+import com.kstor.homeawaytest.domain.RepoResult
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.base.AddAndRemoveFavoritesManager
@@ -11,8 +10,11 @@ import com.kstor.homeawaytest.view.base.BasePresenter
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import com.kstor.homeawaytest.view.utils.VenuesMapper
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class VenuesListPresenterImpl @Inject constructor(
     compositeDisposable: CompositeDisposable,
@@ -25,29 +27,31 @@ class VenuesListPresenterImpl @Inject constructor(
     VenuesMapper {
 
     override fun addAndRemoveFromFavorites(venue: Venue) {
-        addAndRemoveFromFavorites(venue, favoritesUseCase)
+        GlobalScope.launch(Dispatchers.Default) {
+            addAndRemoveFromFavorites(venue, favoritesUseCase)
+        }
     }
 
     override fun getFavorites() {
-        compositeDisposable.add(favoritesUseCase.getFavorites().subscribeOn(schedulerProvider.io())
-            .observeOn(schedulerProvider.ui())
-            .doOnSuccess {
-                if (it.isEmpty()) {
-                    throw Throwable(NO_FAVORITE_MESSAGE)
+
+        GlobalScope.launch(Dispatchers.Default) {
+            val result = favoritesUseCase.getFavorites()
+            withContext(Dispatchers.Main) {
+                when (result) {
+                    is RepoResult.Success -> {
+                        view?.hideProgress()
+                        view?.hideNoResult()
+                        view?.displayVenues(result.data)
+                    }
+                    is RepoResult.Error<*> -> {
+                        view?.displayVenues(emptyList())
+                        view?.hideProgress()
+                        view?.showError(result.throwable)
+                        view?.showNoResult()
+                    }
                 }
             }
-            .subscribeBy(
-                onSuccess = {
-                    view?.hideProgress()
-                    view?.hideNoResult()
-                    view?.displayVenues(it)
-                }, onError = {
-                    view?.displayVenues(emptyList())
-                    view?.hideProgress()
-                    view?.showError(it)
-                    view?.showNoResult()
-                }
-            ))
+        }
     }
 
     override fun hideMupButton() {
@@ -68,28 +72,25 @@ class VenuesListPresenterImpl @Inject constructor(
     }
 
     override fun getVenues(query: String) {
-        compositeDisposable.add(getVenuesUseCase.loadVenuesDataFromApi(query).subscribeOn(
-            schedulerProvider.io()
-        )
-            .observeOn(schedulerProvider.ui())
-            .subscribeBy(
-                onNext = {
-                    view?.hideProgress()
-                    if (it.isEmpty()) {
-                        view?.displayVenues(emptyList())
-                        view?.showNoResult()
-                    } else {
+        GlobalScope.launch(Dispatchers.Default) {
+            val repoResult = getVenuesUseCase.loadVenuesDataFromApi(query)
+            withContext(Dispatchers.Main) {
+                when (repoResult) {
+                    is RepoResult.Success -> {
+                        view?.hideProgress()
                         view?.hideNoResult()
-                        view?.displayVenues(it)
+                        view?.displayVenues(repoResult.data)
                         view?.showMupButn()
                     }
-                }, onError = {
-                    view?.hideProgress()
-                    view?.showError(it)
-                    view?.displayVenues(emptyList())
-                    view?.showNoResult()
+                    is RepoResult.Error<*> -> {
+                        view?.hideProgress()
+                        view?.showError(repoResult.throwable)
+                        view?.displayVenues(emptyList())
+                        view?.showNoResult()
+                    }
                 }
-            ))
+            }
+        }
     }
 
     override fun navigateToDetailScreen(navController: NavController, venue: Venue) {
