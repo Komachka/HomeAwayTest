@@ -17,15 +17,17 @@ class VenuesRepositoryImp(
 ) : VenuesRepository {
 
     override suspend fun getClosestVenusesCache(): RepoResult<List<Venue>> {
-        val data = getLocalData()
-        return if (data.isNotEmpty()) RepoResult.Success(data)
-        else RepoResult.Error<List<Venue>>(Throwable(EMPTY_VENUES_LIST_MESSAGE))
+        getLocalData().let {data->
+            return if (data.isNotEmpty()) RepoResult.Success(data)
+            else RepoResult.Error<List<Venue>>(Throwable(EMPTY_VENUES_LIST_MESSAGE))
+        }
     }
 
     override suspend fun getCityCenter(): RepoResult<Pair<Float, Float>> {
-        val data = preferenceData.getCityCenterInfo()
-        return if (preferenceData.isDataValid(data)) RepoResult.Success(data)
-        else RepoResult.Error<List<Venue>>(Throwable(INVALID_CITY_CENTER))
+        preferenceData.getCityCenterInfo().let { result ->
+            return if (preferenceData.isDataValid(result)) RepoResult.Success(result)
+            else RepoResult.Error<List<Venue>>(Throwable(INVALID_CITY_CENTER))
+        }
     }
 
     override suspend fun removeFromFavorite(venues: Venue): RepoResult<Boolean> {
@@ -40,9 +42,10 @@ class VenuesRepositoryImp(
     }
 
     override suspend fun getFavorites(): RepoResult<List<Venue>> {
-        val data = mapToListOfVenues(localData.getFavorites())
-        return if (data.isNotEmpty()) RepoResult.Success(data)
-        else RepoResult.Error<List<Venue>>(Throwable(EMPTY_VENUES_LIST_MESSAGE))
+        mapToListOfVenues(localData.getFavorites()).let {data->
+            return if (data.isNotEmpty()) RepoResult.Success(data)
+            else RepoResult.Error<List<Venue>>(Throwable(EMPTY_VENUES_LIST_MESSAGE))
+        }
     }
 
     override suspend fun saveToFavorite(venues: Venue): RepoResult<Boolean> {
@@ -57,15 +60,17 @@ class VenuesRepositoryImp(
     }
 
     override suspend fun getClosestVenuses(limit: Int, query: String): RepoResult<List<Venue>> {
-        val remoteData = getRemoteData(limit, query)
-        if (remoteData is RepoResult.Success) {
-            localData.removeANdSaveVenues(mapToDBVenuesModelList(remoteData.data))
-        } else {
-            return remoteData
+        getRemoteData(limit, query).let { remoteData ->
+            if (remoteData is RepoResult.Success) {
+                localData.removeANdSaveVenues(mapToDBVenuesModelList(remoteData.data))
+            } else {
+                return remoteData
+            }
         }
-        val localData = getLocalData()
-        return if (localData.isNotEmpty()) RepoResult.Success(localData)
-        else RepoResult.Error<List<Venue>>(Throwable(LOCAL_DATA_EMPTY))
+        getLocalData().let { localData->
+            return if (localData.isNotEmpty()) RepoResult.Success(localData)
+            else RepoResult.Error<List<Venue>>(Throwable(LOCAL_DATA_EMPTY))
+        }
     }
 
     private suspend fun mapToDBVenuesModelList(list: List<Venue>): List<DBVenuesModel> {
@@ -81,13 +86,18 @@ class VenuesRepositoryImp(
     }
 
     private suspend fun getRemoteData(limit: Int, query: String): RepoResult<List<Venue>> {
-        return when (val result = remoteData.closedVenues(limit, query)) {
-            is ApiResult.Succsses -> {
-                val venuesData = result.data.mapToVenuesData()
-                preferenceData.setCityCenterInfo(venuesData.citCenterlat, venuesData.citCenterlng)
-                RepoResult.Success(venuesData.venues)
+        remoteData.closedVenues(limit, query).let {result ->
+            return when(result) {
+                is ApiResult.Succsses -> {
+                    val venuesData = result.data.mapToVenuesData()
+                    preferenceData.setCityCenterInfo(
+                        venuesData.citCenterlat,
+                        venuesData.citCenterlng
+                    )
+                    RepoResult.Success(venuesData.venues)
+                }
+                is ApiResult.Error<*> -> RepoResult.Error<List<Venue>>(result.throwable)
             }
-            is ApiResult.Error<*> -> RepoResult.Error<List<Venue>>(result.throwable)
         }
     }
 }
