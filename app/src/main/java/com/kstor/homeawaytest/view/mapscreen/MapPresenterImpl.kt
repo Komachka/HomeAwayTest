@@ -16,7 +16,7 @@ import kotlinx.coroutines.withContext
 
 class MapPresenterImpl @Inject constructor(
     private val venuesListUseCase: VenuesUseCase,
-    dispatcherProvider: DispatcherProvider
+    val dispatcherProvider: DispatcherProvider
 ) : MapPresenter, BasePresenter<MapView>(dispatcherProvider),
     VenuesMapper {
 
@@ -25,7 +25,7 @@ class MapPresenterImpl @Inject constructor(
     override fun setUpMapToCityCenter() {
         launch {
             val resultCityCenter = venuesListUseCase.getCityCenter()
-            withContext(Dispatchers.Main) {
+            withContext(dispatcherProvider.ui()) {
                 handleRepoResult(resultCityCenter,
                     success = {
                         val (lat, lng) = (resultCityCenter as RepoResult.Success).data
@@ -49,7 +49,7 @@ class MapPresenterImpl @Inject constructor(
     override fun getVenues(query: String) {
         launch {
             val resultVenues = venuesListUseCase.loadVenuesCache()
-            withContext(Dispatchers.Main) {
+            withContext(dispatcherProvider.ui()) {
                 handleRepoResult(resultVenues,
                     success = {
                         (resultVenues as RepoResult.Success).data.createVenuesMap()
