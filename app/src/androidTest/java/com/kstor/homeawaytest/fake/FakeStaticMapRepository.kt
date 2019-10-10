@@ -19,17 +19,16 @@ import io.reactivex.Observable
 
 class FakeStaticMapRepository : StaticMapRepository {
 
-    override fun createStaticMapUrl(venues: Venue): Observable<String> {
+    override suspend fun createStaticMapUrl(venues: Venue): String {
         val (latCenter, lngCenter) = CENTER_LAT to CENTER_LNG
         val latPoint = venues.lat
         val lngPoint = venues.lng
-        val url = STATIC_MAP_BASE_URL +
+        return STATIC_MAP_BASE_URL +
                 "$CENTER=$latCenter,$lngCenter" +
                 "&$SIZE=$IMAGE_SIZE" +
                 "&$MAPTYPE=$MAP_TYPE_TERRIAN" +
                 "&$MARKERS=color:$colour1%7Clabel:C%7C$latCenter,$lngCenter" +
                 "&$MARKERS=color:$colour2%7Clabel:P%7C$latPoint,$lngPoint" +
                 "&$KEY=$API_KEY"
-        return Observable.just(url)
     }
 }

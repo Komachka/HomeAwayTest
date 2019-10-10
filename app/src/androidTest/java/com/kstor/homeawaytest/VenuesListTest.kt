@@ -23,6 +23,7 @@ import com.kstor.homeawaytest.di.DaggerTestComponent
 import com.kstor.homeawaytest.di.TestDetailsRepositoryModule
 import com.kstor.homeawaytest.di.TestStaticMapRepositoryModule
 import com.kstor.homeawaytest.di.TestVenuesRepositoryModule
+import com.kstor.homeawaytest.domain.RepoResult
 import com.kstor.homeawaytest.domain.StaticMapRepository
 import com.kstor.homeawaytest.domain.VenueDetailsRepository
 import com.kstor.homeawaytest.domain.VenuesRepository
@@ -34,6 +35,7 @@ import com.kstor.homeawaytest.view.di.mock.FakeVenuesRepository
 import com.kstor.homeawaytest.view.mainscreen.*
 import com.kstor.homeawaytest.view.utils.FavoriteImageRes
 import com.kstor.homeawaytest.view.utils.VenuesMapper
+import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -88,13 +90,13 @@ class VenuesListTest : VenuesMapper {
     }
 
     @Test
-    fun navigate_to_details_fragment_by_clicking_on_item_from_favorite_list() {
+    fun navigate_to_details_fragment_by_clicking_on_item_from_favorite_list() = runBlocking<Unit> {
         val scenario = launchFragmentInContainer<VenuesListFragment>(Bundle(), R.style.AppTheme)
         // We can associate our new mock with the view's NavController
         scenario.onFragment {
             Navigation.setViewNavController(it.view!!, navController)
         }
-        val testVenues = venuesRepository.getFavorites().blockingGet().first()
+        val testVenues = (venuesRepository.getFavorites() as RepoResult.Success).data.first()
         val venuesParselize = mapToParcelize(testVenues)!!
 
         onView(withId(R.id.list)).perform(
@@ -111,7 +113,6 @@ class VenuesListTest : VenuesMapper {
         onView(withText(testVenues.address)).check(ViewAssertions.matches(isDisplayed()))
         onView(withText("${testVenues.distance} m")).check(ViewAssertions.matches(isDisplayed()))
     }
-
     @Test
     fun click_on_favorite_icon_to_remove_item_from_favorites() {
         launchFragmentInContainer<VenuesListFragment>(Bundle(), R.style.AppTheme)
@@ -157,7 +158,6 @@ class VenuesListTest : VenuesMapper {
             )
         )
     }
-
     @Test
     fun type_query_in_search_return_valid_data() {
         launchFragmentInContainer<VenuesListFragment>(Bundle(), R.style.AppTheme)

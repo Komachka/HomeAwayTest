@@ -1,6 +1,7 @@
 package com.kstor.homeawaytest.view.mainscreen
 
 import androidx.navigation.NavController
+import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.RepoResult
 import com.kstor.homeawaytest.domain.VenuesUseCase
@@ -80,6 +81,7 @@ class VenuesListPresenterImpl @Inject constructor(
                         view?.showError((repoResult as RepoResult.Error<*>).throwable)
                         view?.displayVenues(emptyList())
                         view?.showNoResult()
+                        view?.hideMupButn()
                     })
             }
         }
