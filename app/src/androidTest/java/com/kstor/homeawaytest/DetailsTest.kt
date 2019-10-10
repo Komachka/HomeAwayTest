@@ -82,7 +82,7 @@ class DetailsTest : VenuesMapper {
             matches(ViewMatchers.withTagValue(CoreMatchers.equalTo(FavoriteImageLevel.IS_FAVORITE.level))))
     }
 
-    /*@Test
+    @Test
     fun change_favorite_icon_to_not_favorite_onClick() = runBlocking<Unit> {
         val venues = venuesRepository.getFavorites() as RepoResult.Success
         val venue = venues.data.first()
@@ -93,6 +93,6 @@ class DetailsTest : VenuesMapper {
         launchFragmentInContainer<DetailFragment>(bundle, R.style.AppTheme)
         onView(ViewMatchers.withId(R.id.fabFavorite)).perform(click())
         onView(ViewMatchers.withId(R.id.fabFavorite)).check(
-            matches(ViewMatchers.withTagValue(CoreMatchers.equalTo(FavoriteImageRes.IS_NOT_FAVORITE.resId))))
-    }*/
+            matches(ViewMatchers.withTagValue(CoreMatchers.equalTo(FavoriteImageLevel.IS_NOT_FAVORITE.level))))
+    }
 }
