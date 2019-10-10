@@ -60,16 +60,13 @@ class DetailsPresenterImpl @Inject constructor(
     }
 
     override fun createStaticMapUrl(venues: Venue) {
-        compositeDisposable.add(useCase.createStaticMapUrl(venues)
-            .subscribeOn(schedulerProvider.io())
-            .observeOn(schedulerProvider.ui())
-            .subscribeBy(
-                onError = { view?.showError(it) },
-                onComplete = {},
-                onNext = {
-                    (view as DetailsView).loadMap(it)
-                }
-            ))
+        GlobalScope.launch(Dispatchers.Default) {
+            val url = useCase.createStaticMapUrl(venues)
+            withContext(Dispatchers.Main)
+            {
+                (view as DetailsView).loadMap(url)
+            }
+        }
     }
 
     override fun getVenueDetails(venue: Venue) {

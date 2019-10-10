@@ -108,7 +108,6 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
                         if (removeItFromFavorite){
                             (presenter as VenuesListPresenterImpl).addAndRemoveFromFavorites(venue)
                         }
-
                     }
                 })
                 snackBar?.show()
