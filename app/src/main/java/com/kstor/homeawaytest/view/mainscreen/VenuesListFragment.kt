@@ -37,6 +37,7 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
         no_res_text.visibility = GONE
     }
 
+
     override fun updateItemView(venues: Venue) {
         if (queryEditText.text.isEmpty()) {
             presenter.getFavorites()
