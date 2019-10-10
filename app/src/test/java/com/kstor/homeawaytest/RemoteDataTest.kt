@@ -1,14 +1,13 @@
 package com.kstor.homeawaytest
 
-import com.kstor.homeawaytest.data.CLIENT_ID
-import com.kstor.homeawaytest.data.CLIENT_SECRET
-import com.kstor.homeawaytest.data.NEAR
-import com.kstor.homeawaytest.data.V
+import com.kstor.homeawaytest.data.*
 import com.kstor.homeawaytest.data.network.RemoteData
 import com.kstor.homeawaytest.data.network.VenuesService
 import com.kstor.homeawaytest.data.network.model.*
 import io.reactivex.Observable
-import io.reactivex.Single
+import kotlinx.coroutines.runBlocking
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.ResponseBody
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -16,13 +15,20 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
+import java.io.IOException
 
 @RunWith(MockitoJUnitRunner::class)
 class RemoteDataTest {
 
     @Mock
     lateinit var venuesService: VenuesService
-    private val search = {
+
+
+    private suspend fun failedSearch() =
+        venuesService.getVenusesNetworkData(CLIENT_ID, CLIENT_SECRET, NEAR, ERROR_QUERY, V, LIMIT)
+
+
+    private suspend fun makeSearch() =
         venuesService.getVenusesNetworkData(
             CLIENT_ID,
             CLIENT_SECRET,
@@ -31,13 +37,7 @@ class RemoteDataTest {
             V,
             LIMIT
         )
-    }
 
-    private val failedSearch = {
-        venuesService.getVenusesNetworkData(CLIENT_ID, CLIENT_SECRET, NEAR,
-            ERROR_QUERY, V, LIMIT
-        )
-    }
     private lateinit var error: Throwable
 
     @InjectMocks
@@ -50,21 +50,23 @@ class RemoteDataTest {
         mockGetVenuesErrorData()
     }
 
-    private fun mockGetVenuesErrorData() {
-        `when`(failedSearch.invoke()).thenReturn(
-            Observable.error<NetworkVenuesModel>(error).firstOrError()
+    private fun mockGetVenuesErrorData() = runBlocking<Unit> {
+        `when`(failedSearch()).thenReturn(
+            retrofit2.Response.error(403, ResponseBody.create(
+                "application/json".toMediaTypeOrNull(),
+                "{\"error\":[\"error message\"]}"
+            ))
         )
     }
 
-    private fun mockGetVenuesNetworkData() {
-        `when`(search.invoke()).thenReturn(
-            createMockSingle()
+    private fun mockGetVenuesNetworkData() = runBlocking {
+        `when`(makeSearch()).thenReturn(
+            retrofit2.Response.success(createMockNetworkVenuesModel())
         )
     }
 
-    private fun createMockSingle(): Single<NetworkVenuesModel> {
-        return Observable.just(
-            NetworkVenuesModel(
+    private fun createMockNetworkVenuesModel() =
+        NetworkVenuesModel(
                 null,
                 Response(
                     listOf<NetworkVenue>(
@@ -171,55 +173,56 @@ class RemoteDataTest {
                     )
                 )
             )
+
+    @Test
+    fun remote_data_return_error() = runBlocking<Unit> {
+        val apiResult = remoteData.closedVenues(LIMIT, ERROR_QUERY)
+        assert(apiResult is ApiResult.Error<*>)
+        assert(
+
+            (apiResult as ApiResult.Error<*>).throwable is IOException
         )
-            .firstOrError()
     }
 
     @Test
-    fun remote_data_return_error() {
-        val testObserver = remoteData.closedVenues(LIMIT, ERROR_QUERY).test()
-        testObserver.awaitTerminalEvent()
-        testObserver.assertError {
-            it == error
+    fun remote_data_is_not_null_and_without_errors() = runBlocking {
+        val apiResult = remoteData.closedVenues(LIMIT, QUERY)
+        assert(apiResult is ApiResult.Succsses)
+        assert(
+            (apiResult as ApiResult.Succsses).data.let {model ->
+                model.response != null
+            }
+        )
+    }
+
+    @Test
+    fun remote_data_response_has_venues_list() = runBlocking<Unit> {
+        remoteData.closedVenues(Companion.LIMIT, Companion.QUERY).let {apiResult ->
+        assert(apiResult is ApiResult.Succsses)
+            val response =(apiResult as ApiResult.Succsses).data.response
+            assert(
+                response != null
+            )
+            assert(response?.venues != null)
+            assert(response?.venues?.isNotEmpty() ?: false)
         }
     }
 
     @Test
-    fun remote_data_is_not_null_and_without_errors() {
-        val testObserver = remoteData.closedVenues(LIMIT, QUERY).test()
-        testObserver.awaitTerminalEvent()
-        testObserver.assertNoErrors()
-            .assertValue {
-                model ->
-                model.response != null
-            }
-    }
-
-    @Test
-    fun remote_data_responce_has_venues_list() {
-        val testObserver = remoteData.closedVenues(Companion.LIMIT, Companion.QUERY).test()
-        testObserver.awaitTerminalEvent()
-        testObserver
-            .assertValue {
-                    model ->
-                val list = model.response?.venues
-                list != null && list.isNotEmpty()
-            }
-    }
-
-    @Test
-    fun remote_data_responce_has_venues_list_with_correct_data() {
-        remoteData.closedVenues(Companion.LIMIT, Companion.QUERY)
-            .test()
-            .assertNoErrors()
-            .assertValue { l ->
-                Observable.fromIterable(l.response?.venues)
-                    .map {
-                        it.name
-                    }
-                    .toList()
-                    .blockingGet() == listOf("Storyville Coffee Company", "Anchorhead Coffee Co")
-            }
+    fun remote_data_response_has_venues_list_with_correct_data() = runBlocking {
+        remoteData.closedVenues(LIMIT, QUERY).let {apiResult ->
+            assert(apiResult is ApiResult.Succsses)
+            val response =(apiResult as ApiResult.Succsses).data.response
+            assert(
+                response != null
+            )
+            assert(Observable.fromIterable(response?.venues)
+                .map {
+                    it.name
+                }
+                .toList()
+                .blockingGet() == listOf("Storyville Coffee Company", "Anchorhead Coffee Co"))
+        }
     }
 
     companion object {
@@ -228,3 +231,5 @@ class RemoteDataTest {
         private const val LIMIT = 2
     }
 }
+
+
