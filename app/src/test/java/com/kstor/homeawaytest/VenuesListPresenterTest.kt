@@ -12,7 +12,6 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
@@ -100,7 +99,6 @@ class VenuesListPresenterTest {
                 errorFavoritesUseCase
             )
         presenterWithError.attachView(view)
-
     }
 
     @Test

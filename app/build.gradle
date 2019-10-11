@@ -111,17 +111,11 @@ dependencies {
 
     testImplementation "com.nhaarman:mockito-kotlin-kt1.1:$mokitoKotlin"
     androidTestImplementation "com.nhaarman:mockito-kotlin-kt1.1:$mokitoKotlin"
-
     testImplementation "org.mockito:mockito-inline:$mokitoInline"
-
-    //testImplementation "org.mockito:mockito-core:$mockitoVersion"
-    //androidTestImplementation "org.mockito:mockito-core:$mockitoVersion"
-
-
     //androidTestImplementation "com.linkedin.dexmaker:dexmaker-mockito:$dexMakerVersion"
-
     implementation("com.squareup.okhttp3:logging-interceptor:4.2.1")
     implementation 'com.android.support:multidex:2.0.1'
+
     /* Dagger */
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
