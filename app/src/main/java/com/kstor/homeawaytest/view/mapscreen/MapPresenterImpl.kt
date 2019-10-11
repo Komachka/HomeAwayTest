@@ -10,7 +10,6 @@ import com.kstor.homeawaytest.view.base.BasePresenter
 import com.kstor.homeawaytest.view.utils.DispatcherProvider
 import com.kstor.homeawaytest.view.utils.VenuesMapper
 import javax.inject.Inject
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 

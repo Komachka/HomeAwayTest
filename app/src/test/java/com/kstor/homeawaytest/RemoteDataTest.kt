@@ -5,6 +5,7 @@ import com.kstor.homeawaytest.data.network.RemoteData
 import com.kstor.homeawaytest.data.network.VenuesService
 import com.kstor.homeawaytest.data.network.model.*
 import io.reactivex.Observable
+import java.io.IOException
 import kotlinx.coroutines.runBlocking
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody
@@ -15,7 +16,6 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
-import java.io.IOException
 
 @RunWith(MockitoJUnitRunner::class)
 class RemoteDataTest {
@@ -23,10 +23,8 @@ class RemoteDataTest {
     @Mock
     lateinit var venuesService: VenuesService
 
-
     private suspend fun failedSearch() =
         venuesService.getVenusesNetworkData(CLIENT_ID, CLIENT_SECRET, NEAR, ERROR_QUERY, V, LIMIT)
-
 
     private suspend fun makeSearch() =
         venuesService.getVenusesNetworkData(
@@ -189,7 +187,7 @@ class RemoteDataTest {
         val apiResult = remoteData.closedVenues(LIMIT, QUERY)
         assert(apiResult is ApiResult.Succsses)
         assert(
-            (apiResult as ApiResult.Succsses).data.let {model ->
+            (apiResult as ApiResult.Succsses).data.let { model ->
                 model.response != null
             }
         )
@@ -197,9 +195,9 @@ class RemoteDataTest {
 
     @Test
     fun remote_data_response_has_venues_list() = runBlocking<Unit> {
-        remoteData.closedVenues(Companion.LIMIT, Companion.QUERY).let {apiResult ->
+        remoteData.closedVenues(Companion.LIMIT, Companion.QUERY).let { apiResult ->
         assert(apiResult is ApiResult.Succsses)
-            val response =(apiResult as ApiResult.Succsses).data.response
+            val response = (apiResult as ApiResult.Succsses).data.response
             assert(
                 response != null
             )
@@ -210,9 +208,9 @@ class RemoteDataTest {
 
     @Test
     fun remote_data_response_has_venues_list_with_correct_data() = runBlocking {
-        remoteData.closedVenues(LIMIT, QUERY).let {apiResult ->
+        remoteData.closedVenues(LIMIT, QUERY).let { apiResult ->
             assert(apiResult is ApiResult.Succsses)
-            val response =(apiResult as ApiResult.Succsses).data.response
+            val response = (apiResult as ApiResult.Succsses).data.response
             assert(
                 response != null
             )
@@ -231,5 +229,3 @@ class RemoteDataTest {
         private const val LIMIT = 2
     }
 }
-
-

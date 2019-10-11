@@ -15,7 +15,6 @@ import com.kstor.homeawaytest.data.colour1
 import com.kstor.homeawaytest.data.colour2
 import com.kstor.homeawaytest.domain.StaticMapRepository
 import com.kstor.homeawaytest.domain.model.Venue
-import io.reactivex.Observable
 
 class FakeStaticMapRepository : StaticMapRepository {
 

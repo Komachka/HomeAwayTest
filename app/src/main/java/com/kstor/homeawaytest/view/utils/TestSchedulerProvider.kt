@@ -1,6 +1,5 @@
 package com.kstor.homeawaytest.view.utils
 
-
 import kotlinx.coroutines.Dispatchers
 
 class TestSchedulerProvider : DispatcherProvider {

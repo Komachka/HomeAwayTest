@@ -3,9 +3,9 @@ package com.kstor.homeawaytest.data.network
 import com.kstor.homeawaytest.data.*
 import com.kstor.homeawaytest.data.network.model.NetworkDetailsModel
 import com.kstor.homeawaytest.data.network.model.NetworkVenuesModel
-import retrofit2.Response
 import java.io.IOException
 import java.lang.Exception
+import retrofit2.Response
 
 class RemoteData(private val venuesService: VenuesService) {
     suspend fun closedVenues(limit: Int, query: String): ApiResult<NetworkVenuesModel> {

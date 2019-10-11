@@ -1,7 +1,6 @@
 package com.kstor.homeawaytest.view.mainscreen
 
 import androidx.navigation.NavController
-import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.RepoResult
 import com.kstor.homeawaytest.domain.VenuesUseCase
@@ -25,15 +24,15 @@ class VenuesListPresenterImpl @Inject constructor(
     VenuesMapper {
 
     override fun addAndRemoveFromFavorites(venue: Venue) {
-        launch(Dispatchers.Default) {
+        launch(dispatcherProvider.io()) {
             addAndRemoveFromFavorites(venue, favoritesUseCase, dispatcherProvider)
         }
     }
 
     override fun getFavorites() {
-        launch(Dispatchers.Default) {
+        launch(dispatcherProvider.io()) {
             val result = favoritesUseCase.getFavorites()
-            withContext(Dispatchers.Main) {
+            withContext(dispatcherProvider.ui()) {
                 handleRepoResult(result,
                     success = {
                         view?.hideProgress()
@@ -67,9 +66,9 @@ class VenuesListPresenterImpl @Inject constructor(
     }
 
     override fun getVenues(query: String) {
-        launch(Dispatchers.Default) {
+        launch(dispatcherProvider.io()) {
             val repoResult = getVenuesUseCase.loadVenuesDataFromApi(query)
-            withContext(Dispatchers.Main) {
+            withContext(dispatcherProvider.ui()) {
                 handleRepoResult(repoResult,
                     success = {
                         view?.hideProgress()

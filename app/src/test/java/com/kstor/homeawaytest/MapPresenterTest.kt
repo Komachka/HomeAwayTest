@@ -10,9 +10,7 @@ import com.kstor.homeawaytest.view.utils.DispatcherProvider
 import com.kstor.homeawaytest.view.utils.TestSchedulerProvider
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
-import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
@@ -76,7 +74,6 @@ class MapPresenterTest {
         val goodResult = venuesList
         `when`(useCaseResultWithData.loadVenuesCache()).thenReturn(RepoResult.Success(goodResult))
         presenterNoView = MapPresenterImpl(useCaseResultWithData, dispatcherProvider)
-
     }
 
     private fun createBaseTestPresenter() = runBlocking<Unit> {
@@ -104,7 +101,7 @@ class MapPresenterTest {
     }
 
     @Test
-    fun does_not_show_venues_on_map_if_view_is_not_attached_to_presenter()= runBlocking<Unit> {
+    fun does_not_show_venues_on_map_if_view_is_not_attached_to_presenter() = runBlocking<Unit> {
         presenterNoView.detachView()
         presenterNoView.getVenues(TEST_QUERY)
         verify(view, never()).showVenuesOnTheMap(venuesMap)
@@ -112,7 +109,7 @@ class MapPresenterTest {
     }
 
     @Test
-    fun show_error_if_use_case_return_error()= runBlocking<Unit> {
+    fun show_error_if_use_case_return_error() = runBlocking<Unit> {
         presenterWithError.getVenues(TEST_QUERY)
         verify(view).showError(error)
         Mockito.verifyZeroInteractions(view)
@@ -124,7 +121,4 @@ class MapPresenterTest {
         verify(view).showCenterOnTheMap(centerLatLng)
         Mockito.verifyZeroInteractions(view)
     }
-
-
-
 }

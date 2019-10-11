@@ -15,18 +15,14 @@ import com.kstor.homeawaytest.domain.RepoResult
 import com.kstor.homeawaytest.domain.StaticMapRepository
 import com.kstor.homeawaytest.domain.VenueDetailsRepository
 import com.kstor.homeawaytest.domain.VenuesRepository
-import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.fake.FakeDetailsRepository
 import com.kstor.homeawaytest.fake.FakeStaticMapRepository
 import com.kstor.homeawaytest.view.detailscreen.DetailFragment
 import com.kstor.homeawaytest.view.di.AppModule
 import com.kstor.homeawaytest.view.di.mock.FakeVenuesRepository
 import com.kstor.homeawaytest.view.utils.FavoriteImageLevel
-import com.kstor.homeawaytest.view.utils.FavoriteImageRes
 import com.kstor.homeawaytest.view.utils.VenuesMapper
-import kotlinx.coroutines.MainCoroutineDispatcher
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.TestCoroutineContext
 import org.hamcrest.CoreMatchers
 import org.junit.Before
 import org.junit.Test
@@ -39,8 +35,6 @@ class DetailsTest : VenuesMapper {
     private lateinit var venuesRepository: VenuesRepository
     private lateinit var staticMapRepository: StaticMapRepository
     private lateinit var detailRepository: VenueDetailsRepository
-
-
 
     @Before
     fun setup() {

@@ -8,9 +8,11 @@ import kotlinx.coroutines.withContext
 
 interface AddAndRemoveFavoritesManager {
 
-    suspend fun <T : ViewWithFavorites> BasePresenter<T>.addAndRemoveFromFavorites(venues: Venue,
-                                                                                   favoritesUseCase: FavoriteUseCase,
-                                                                                   dispatchesProvider: DispatcherProvider) {
+    suspend fun <T : ViewWithFavorites> BasePresenter<T>.addAndRemoveFromFavorites(
+        venues: Venue,
+        favoritesUseCase: FavoriteUseCase,
+        dispatchesProvider: DispatcherProvider
+    ) {
         var result =
         if (venues.isFavorite) {
             favoritesUseCase.addToFavorite(venues)

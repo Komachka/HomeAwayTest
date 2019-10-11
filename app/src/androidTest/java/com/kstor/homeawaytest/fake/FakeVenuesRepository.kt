@@ -5,9 +5,6 @@ import com.kstor.homeawaytest.domain.RepoResult
 import com.kstor.homeawaytest.domain.VenuesRepository
 import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.domain.model.VenuesCategory
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.Single
 
 class FakeVenuesRepository : VenuesRepository {
 

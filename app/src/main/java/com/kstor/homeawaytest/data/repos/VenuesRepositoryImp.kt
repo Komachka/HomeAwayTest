@@ -17,7 +17,7 @@ class VenuesRepositoryImp(
 ) : VenuesRepository {
 
     override suspend fun getClosestVenusesCache(): RepoResult<List<Venue>> {
-        getLocalData().let {data->
+        getLocalData().let { data ->
             return if (data.isNotEmpty()) RepoResult.Success(data)
             else RepoResult.Error<List<Venue>>(Throwable(EMPTY_VENUES_LIST_MESSAGE))
         }
@@ -42,7 +42,7 @@ class VenuesRepositoryImp(
     }
 
     override suspend fun getFavorites(): RepoResult<List<Venue>> {
-        mapToListOfVenues(localData.getFavorites()).let {data->
+        mapToListOfVenues(localData.getFavorites()).let { data ->
             return if (data.isNotEmpty()) RepoResult.Success(data)
             else RepoResult.Error<List<Venue>>(Throwable(EMPTY_VENUES_LIST_MESSAGE))
         }
@@ -67,7 +67,7 @@ class VenuesRepositoryImp(
                 return remoteData
             }
         }
-        getLocalData().let { localData->
+        getLocalData().let { localData ->
             return if (localData.isNotEmpty()) RepoResult.Success(localData)
             else RepoResult.Error<List<Venue>>(Throwable(LOCAL_DATA_EMPTY))
         }
@@ -86,8 +86,8 @@ class VenuesRepositoryImp(
     }
 
     private suspend fun getRemoteData(limit: Int, query: String): RepoResult<List<Venue>> {
-        remoteData.closedVenues(limit, query).let {result ->
-            return when(result) {
+        remoteData.closedVenues(limit, query).let { result ->
+            return when (result) {
                 is ApiResult.Succsses -> {
                     val venuesData = result.data.mapToVenuesData()
                     preferenceData.setCityCenterInfo(

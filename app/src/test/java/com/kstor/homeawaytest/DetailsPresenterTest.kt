@@ -14,10 +14,7 @@ import com.kstor.homeawaytest.view.utils.DispatcherProvider
 import com.kstor.homeawaytest.view.utils.TestSchedulerProvider
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
-import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
@@ -73,7 +70,7 @@ class DetailsPresenterTest {
         testPresenter = DetailsPresenterImpl(dispatcherProvider, staticMapUseCase, favoriteUseCase, detailUseCase)
         (testPresenter as DetailsPresenterImpl).attachView(view)
 
-        errorPresenter = DetailsPresenterImpl(dispatcherProvider, errorStaticMapUseCase,  errorFavoriteUseCase, errorDetailUseCase)
+        errorPresenter = DetailsPresenterImpl(dispatcherProvider, errorStaticMapUseCase, errorFavoriteUseCase, errorDetailUseCase)
         (errorPresenter as DetailsPresenterImpl).attachView(view)
     }
 
