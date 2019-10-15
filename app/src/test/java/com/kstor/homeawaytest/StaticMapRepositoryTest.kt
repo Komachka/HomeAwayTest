@@ -4,6 +4,7 @@ import com.kstor.homeawaytest.data.repos.StaticMapRepositoryImpl
 import com.kstor.homeawaytest.data.sp.SharedPreferenceData
 import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.domain.model.VenuesCategory
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -45,12 +46,9 @@ class StaticMapRepositoryTest {
     }
 
     @Test
-    fun repository_return_not_empty_url() {
-        repo.createStaticMapUrl(venues).test()
-            .assertNoErrors()
-            .assertValue { url ->
-                print(url)
-                url.isNotEmpty()
-            }
+    fun repository_return_not_empty_url() = runBlocking<Unit> {
+        repo.createStaticMapUrl(venues).let { url ->
+            url.isNotEmpty()
+        }
     }
 }

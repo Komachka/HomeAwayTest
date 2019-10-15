@@ -6,24 +6,24 @@ import android.net.Uri
 import androidx.navigation.NavController
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
+import com.kstor.homeawaytest.domain.RepoResult
 import com.kstor.homeawaytest.domain.VenueDetailsUseCase
 import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.base.AddAndRemoveFavoritesManager
 import com.kstor.homeawaytest.view.base.BasePresenter
-import com.kstor.homeawaytest.view.utils.SchedulerProvider
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.subscribeBy
+import com.kstor.homeawaytest.view.utils.DispatcherProvider
+import com.kstor.homeawaytest.view.utils.FavoriteImageLevel
 import javax.inject.Inject
+import kotlinx.coroutines.*
 
 class DetailsPresenterImpl @Inject constructor(
-    compositeDisposable: CompositeDisposable,
+    private val dispatcherProvider: DispatcherProvider,
     private val useCase: GenerateStaticMapUrlUseCase,
-    schedulerProvider: SchedulerProvider,
     private val favoritesUseCase: FavoriteUseCase,
     private val detailsUseCase: VenueDetailsUseCase
 
 ) : DetailsPresenter, AddAndRemoveFavoritesManager,
-    BasePresenter<DetailsView>(compositeDisposable, schedulerProvider) {
+    BasePresenter<DetailsView>(dispatcherProvider) {
 
     override fun fillDetailsScreen(venues: Venue) {
         view?.fillDetailsScreen(venues)
@@ -43,39 +43,39 @@ class DetailsPresenterImpl @Inject constructor(
     }
 
     override fun addAndRemoveFromFavorites(venues: Venue) {
-        addAndRemoveFromFavorites(venues, favoritesUseCase)
+        launch {
+            addAndRemoveFromFavorites(venues, favoritesUseCase, dispatcherProvider)
+        }
     }
 
     override fun setFavorite(venues: Venue) {
         val favoriteLevel =
-            if (venues.isFavorite) 1 else 0
+            if (venues.isFavorite) FavoriteImageLevel.IS_FAVORITE.level else FavoriteImageLevel.IS_NOT_FAVORITE.level
         (view as DetailsView).setFavoriteDrawableLevel(favoriteLevel)
     }
 
     override fun createStaticMapUrl(venues: Venue) {
-        compositeDisposable.add(useCase.createStaticMapUrl(venues)
-            .subscribeOn(schedulerProvider.io())
-            .observeOn(schedulerProvider.ui())
-            .subscribeBy(
-                onError = { view?.showError(it) },
-                onComplete = {},
-                onNext = {
-                    (view as DetailsView).loadMap(it)
-                }
-            ))
+        launch {
+            val url = useCase.createStaticMapUrl(venues)
+            withContext(dispatcherProvider.ui()) {
+                (view as DetailsView).loadMap(url)
+            }
+        }
     }
 
     override fun getVenueDetails(venue: Venue) {
         venue.id?.let {
-            compositeDisposable.add(detailsUseCase.getVenueDetails(it)
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
-                .subscribeBy(
-                    onError = { view?.showError(it) },
-                    onSuccess = {
-                        it?.let { (view as DetailsView).updateInfo(it) }
-                    }
-                ))
+            launch {
+                val result = detailsUseCase.getVenueDetails(it)
+                withContext(dispatcherProvider.ui()) {
+                    handleRepoResult(result,
+                        success = {
+                            (view as DetailsView).updateInfo((result as RepoResult.Success).data)
+                        }, fail = {
+                            view?.showError((result as RepoResult.Error<*>).throwable)
+                        })
+                }
+            }
         }
     }
 }

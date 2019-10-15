@@ -50,11 +50,13 @@ class MapFragment : BaseFragment(), OnMapReadyCallback, MapView {
         arguments?.let {
             mapPresenter.getVenues(MapFragmentArgs.fromBundle(it).query)
         }
+        mapPresenter.setUpMapToCityCenter()
     }
 
     override fun destroy() {
         (mapPresenter as MapPresenterImpl).apply {
             detachView()
+            cancel()
         }
     }
 

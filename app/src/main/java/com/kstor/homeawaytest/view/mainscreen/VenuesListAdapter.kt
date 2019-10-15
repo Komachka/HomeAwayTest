@@ -20,7 +20,6 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     lateinit var addToFavoriteClickListener: (venues: Venue, pos: Int) -> Unit
     val venues = ArrayList<Venue>()
 
-
     fun updateData(venues: List<Venue>) {
         clearData()
         this.venues.addAll(venues)
@@ -42,11 +41,10 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
                     R.anim.zoomin
                 )
                 view.imageFavorite.startAnimation(animation)
-
                 if (adapterPosition != RecyclerView.NO_POSITION) {
-                    addToFavoriteClickListener.invoke(venues[adapterPosition], adapterPosition)
                     try {
                         venues[adapterPosition].isFavorite = !venues[adapterPosition].isFavorite
+                        addToFavoriteClickListener.invoke(venues[adapterPosition], adapterPosition)
                         notifyItemChanged(adapterPosition)
                     } catch (e: Exception) {
                         log(e.toString() + "adapter position $adapterPosition")

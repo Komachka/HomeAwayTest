@@ -2,6 +2,7 @@ package com.kstor.homeawaytest
 
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
+import com.kstor.homeawaytest.domain.RepoResult
 import com.kstor.homeawaytest.domain.VenueDetailsUseCase
 import com.kstor.homeawaytest.domain.model.HoursPerDay
 import com.kstor.homeawaytest.domain.model.Venue
@@ -9,15 +10,12 @@ import com.kstor.homeawaytest.domain.model.VenueDetails
 import com.kstor.homeawaytest.view.detailscreen.DetailsPresenter
 import com.kstor.homeawaytest.view.detailscreen.DetailsPresenterImpl
 import com.kstor.homeawaytest.view.detailscreen.DetailsView
-import com.kstor.homeawaytest.view.utils.FavoriteImageRes
-import com.kstor.homeawaytest.view.utils.SchedulerProvider
+import com.kstor.homeawaytest.view.utils.DispatcherProvider
 import com.kstor.homeawaytest.view.utils.TestSchedulerProvider
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
-import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,7 +28,7 @@ import org.mockito.junit.MockitoJUnitRunner
 class DetailsPresenterTest {
     @Mock
     lateinit var compositeDisposable: CompositeDisposable
-    lateinit var schedulerProvider: SchedulerProvider
+    lateinit var dispatcherProvider: DispatcherProvider
     @Mock
     lateinit var staticMapUseCase: GenerateStaticMapUrlUseCase
 
@@ -67,17 +65,17 @@ class DetailsPresenterTest {
         createDetailsUseCase()
         createErrorDetailsUseCase()
 
-        schedulerProvider = TestSchedulerProvider(Schedulers.trampoline())
+        dispatcherProvider = TestSchedulerProvider()
 
-        testPresenter = DetailsPresenterImpl(compositeDisposable, staticMapUseCase, schedulerProvider, favoriteUseCase, detailUseCase)
+        testPresenter = DetailsPresenterImpl(dispatcherProvider, staticMapUseCase, favoriteUseCase, detailUseCase)
         (testPresenter as DetailsPresenterImpl).attachView(view)
 
-        errorPresenter = DetailsPresenterImpl(compositeDisposable, errorStaticMapUseCase, schedulerProvider, errorFavoriteUseCase, errorDetailUseCase)
+        errorPresenter = DetailsPresenterImpl(dispatcherProvider, errorStaticMapUseCase, errorFavoriteUseCase, errorDetailUseCase)
         (errorPresenter as DetailsPresenterImpl).attachView(view)
     }
 
-    private fun createErrorDetailsUseCase() {
-        `when`(errorDetailUseCase.getVenueDetails(TEST_ID)).thenReturn(Observable.error<VenueDetails>(testError).firstOrError())
+    private fun createErrorDetailsUseCase() = runBlocking<Unit> {
+        `when`(errorDetailUseCase.getVenueDetails(TEST_ID)).thenReturn(RepoResult.Error<VenueDetails>(testError))
     }
 
     private fun createVenueDetails(): VenueDetails {
@@ -101,50 +99,48 @@ class DetailsPresenterTest {
         )
     }
 
-    private fun createDetailsUseCase() {
-        val details = Observable.just(createVenueDetails()).firstOrError()
-        `when`(detailUseCase.getVenueDetails(TEST_ID)).thenReturn(details)
+    private fun createDetailsUseCase() = runBlocking<Unit> {
+        val details = createVenueDetails()
+        `when`(detailUseCase.getVenueDetails(TEST_ID)).thenReturn(RepoResult.Success(details))
     }
 
-    private fun createErrorFavoriteUseCase() {
-        `when`(errorFavoriteUseCase.removeFromFavorite(testVenues)).thenReturn(Completable.error(testError))
-        `when`(errorFavoriteUseCase.addToFavorite(testVenues)).thenReturn(Completable.error(testError))
+    private fun createErrorFavoriteUseCase() = runBlocking<Unit> {
+        `when`(errorFavoriteUseCase.removeFromFavorite(testVenues)).thenReturn(RepoResult.Error<Boolean>(testError))
+        `when`(errorFavoriteUseCase.addToFavorite(testVenues)).thenReturn(RepoResult.Error<Boolean>(testError))
     }
 
-    private fun createFavoriteUseCase() {
-        `when`(favoriteUseCase.removeFromFavorite(testVenues)).thenReturn(Completable.fromRunnable { })
-        `when`(favoriteUseCase.addToFavorite(testVenues)).thenReturn(Completable.fromRunnable { })
+    private fun createFavoriteUseCase() = runBlocking<Unit> {
+        `when`(favoriteUseCase.removeFromFavorite(testVenues)).thenReturn(RepoResult.Success(true))
+        `when`(favoriteUseCase.addToFavorite(testVenues)).thenReturn(RepoResult.Success(true))
     }
 
     private fun createTestVenues(): Venue {
         return Venue(TEST_ID, "Name1", null, "Adress1", 10, 1.0, 2.0, true)
     }
 
-    private fun createStaticMapUseCase() {
-        val result = Observable.just(TEST_URL)
-        `when`(staticMapUseCase.createStaticMapUrl(testVenues)).thenReturn(result)
+    private fun createStaticMapUseCase() = runBlocking<Unit> {
+        `when`(staticMapUseCase.createStaticMapUrl(testVenues)).thenReturn(TEST_URL)
     }
-    private fun createErrorStaticMapUseCase() {
-        val result = Observable.error<String>(testError)
-        `when`(errorStaticMapUseCase.createStaticMapUrl(testVenues)).thenReturn(result)
+    private fun createErrorStaticMapUseCase() = runBlocking<Unit> {
+        `when`(errorStaticMapUseCase.createStaticMapUrl(testVenues)).thenReturn("")
     }
 
     @Test
-    fun show_map_image() {
+    fun show_map_image() = runBlocking<Unit> {
         testPresenter.createStaticMapUrl(testVenues)
         verify(view).loadMap(TEST_URL)
         verifyZeroInteractions(view)
     }
 
     @Test
-    fun show_error_on_map_loaded() {
+    fun show_error_on_map_loaded() = runBlocking<Unit> {
         errorPresenter.createStaticMapUrl(testVenues)
-        verify(view).showError(testError)
+        verify(view).loadMap("")
         verifyZeroInteractions(view)
     }
 
     @Test
-    fun change_favorite_venues_image() {
+    fun change_favorite_venues_image() = runBlocking<Unit> {
         testVenues.isFavorite = true
         testPresenter.setFavorite(testVenues)
         verify(view).setFavoriteDrawableLevel(1)
@@ -156,8 +152,8 @@ class DetailsPresenterTest {
     }
 
     @Test
-    fun remove_from_favorites_success() {
-        testVenues.isFavorite = true
+    fun remove_from_favorites_success() = runBlocking<Unit> {
+        testVenues.isFavorite = false
         (testPresenter as DetailsPresenterImpl).addAndRemoveFromFavorites(testVenues)
 
         verify(favoriteUseCase).removeFromFavorite(testVenues)
@@ -166,8 +162,8 @@ class DetailsPresenterTest {
     }
 
     @Test
-    fun add_to_favorites_success() {
-        testVenues.isFavorite = false
+    fun add_to_favorites_success() = runBlocking<Unit> {
+        testVenues.isFavorite = true
         (testPresenter as DetailsPresenterImpl).addAndRemoveFromFavorites(testVenues)
 
         verify(favoriteUseCase).addToFavorite(testVenues)
@@ -176,8 +172,8 @@ class DetailsPresenterTest {
     }
 
     @Test
-    fun remove_from_favorites_error() {
-        testVenues.isFavorite = true
+    fun remove_from_favorites_error() = runBlocking<Unit> {
+        testVenues.isFavorite = false
         (errorPresenter as DetailsPresenterImpl).addAndRemoveFromFavorites(testVenues)
 
         verify(errorFavoriteUseCase).removeFromFavorite(testVenues)
@@ -186,8 +182,8 @@ class DetailsPresenterTest {
     }
 
     @Test
-    fun add_to_favorites_error() {
-        testVenues.isFavorite = false
+    fun add_to_favorites_error() = runBlocking<Unit> {
+        testVenues.isFavorite = true
         (errorPresenter as DetailsPresenterImpl).addAndRemoveFromFavorites(testVenues)
 
         verify(errorFavoriteUseCase).addToFavorite(testVenues)
@@ -196,14 +192,14 @@ class DetailsPresenterTest {
     }
 
     @Test
-    fun load_details_success() {
+    fun load_details_success() = runBlocking<Unit> {
         (testPresenter as DetailsPresenterImpl).getVenueDetails(testVenues)
         verify(view).updateInfo(createVenueDetails())
         verifyZeroInteractions(view)
     }
 
     @Test
-    fun load_details_error() {
+    fun load_details_error() = runBlocking<Unit> {
         (errorPresenter as DetailsPresenterImpl).getVenueDetails(testVenues)
         verify(view).showError(testError)
         verifyZeroInteractions(view)

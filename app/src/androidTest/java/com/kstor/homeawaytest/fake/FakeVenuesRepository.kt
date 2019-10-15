@@ -1,11 +1,10 @@
 package com.kstor.homeawaytest.view.di.mock
 
+import com.kstor.homeawaytest.data.LOCAL_DATA_EMPTY
+import com.kstor.homeawaytest.domain.RepoResult
 import com.kstor.homeawaytest.domain.VenuesRepository
 import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.domain.model.VenuesCategory
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.Single
 
 class FakeVenuesRepository : VenuesRepository {
 
@@ -63,31 +62,33 @@ class FakeVenuesRepository : VenuesRepository {
         )
     )
 
-    override fun getClosestVenuses(limit: Int, query: String): Observable<List<Venue>> {
-        return Observable.just(venues.take(limit).filter { it.name?.toLowerCase()?.contains(query.toLowerCase()) ?: false })
-    }
-
-    override fun saveToFavorite(venues: Venue): Completable {
-        return Completable.fromRunnable {
-            favorives.add(venues)
+    override suspend fun getClosestVenuses(limit: Int, query: String): RepoResult<List<Venue>> {
+        venues.take(limit).filter { it.name?.toLowerCase()?.contains(query.toLowerCase()) ?: false }.let {
+            list ->
+            return if (list.isNotEmpty()) RepoResult.Success(list)
+            else RepoResult.Error<List<Venue>>(Throwable(LOCAL_DATA_EMPTY))
         }
     }
 
-    override fun removeFromFavorite(venues: Venue): Completable {
-        return Completable.fromRunnable {
-            favorives.remove(venues)
-        }
+    override suspend fun saveToFavorite(venue: Venue): RepoResult<Boolean> {
+        favorives.add(venue)
+        return RepoResult.Success(true)
     }
 
-    override fun getFavorites(): Single<List<Venue>> {
-        return Observable.just(favorives as List<Venue>).firstOrError()
+    override suspend fun removeFromFavorite(venue: Venue): RepoResult<Boolean> {
+        favorives.remove(venue)
+        return RepoResult.Success(true)
     }
 
-    override fun getCityCenter(): Pair<Float, Float> {
-        return 40.0F to 50.0F
+    override suspend fun getFavorites(): RepoResult<List<Venue>> {
+        return RepoResult.Success(favorives)
     }
 
-    override fun getClosestVenusesCache(): Observable<List<Venue>> {
-        return Observable.just(venues)
+    override suspend fun getCityCenter(): RepoResult<Pair<Float, Float>> {
+        return RepoResult.Success(40.0F to 50.0F)
+    }
+
+    override suspend fun getClosestVenusesCache(): RepoResult<List<Venue>> {
+        return RepoResult.Success(venues)
     }
 }

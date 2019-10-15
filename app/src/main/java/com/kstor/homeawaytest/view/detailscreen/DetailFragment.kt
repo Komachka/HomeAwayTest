@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.navigation.Navigation
 import com.google.android.material.appbar.AppBarLayout
@@ -19,15 +20,12 @@ import javax.inject.Inject
 import kotlin.math.abs
 import kotlinx.android.synthetic.main.detail_fragment.*
 import kotlinx.android.synthetic.main.details.*
-import android.view.animation.Animation
-
 
 class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
     VenuesMapper {
 
-
     @Inject
-    lateinit var presenter: DetailsPresenterImpl
+    lateinit var presenter: DetailsPresenter
     private var wasCollapsed = false
 
     private lateinit var setVisibleAnimation: Animation
@@ -56,12 +54,11 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
                 presenter.navigateBack(Navigation.findNavController(it))
             }
         }
-        presenter.attachView(this)
+        (presenter as DetailsPresenterImpl).attachView(this)
         arguments?.let { bundle ->
             val venuesParselize = DetailFragmentArgs.fromBundle(bundle).venues
             mapToVenues(venuesParselize)?.let { venues ->
                 presenter.fillDetailsScreen(venues)
-
             }
         }
     }
@@ -83,8 +80,8 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
         venuesDistanceFromCenterTextView.text = "${venues.distance} m"
         presenter.setFavorite(venues)
         fabFavorite.setOnClickListener {
-            presenter.addAndRemoveFromFavorites(venues)
             venues.isFavorite = !venues.isFavorite
+            presenter.addAndRemoveFromFavorites(venues)
         }
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBar, verticalOffset ->
             if (abs(verticalOffset) - appBarLayout.totalScrollRange == 0 && !wasCollapsed) {
@@ -93,7 +90,7 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
                 presenter.getVenueDetails(venues)
                 setAdditionalFieldsVisible()
                 turnOffMoreAnimation()
-            } else if (abs(verticalOffset) ==  0) {
+            } else if (abs(verticalOffset) == 0) {
                 // Expanded
                 setAdditionalFieldsInvisible()
             } else if (abs(verticalOffset) - appBarLayout.totalScrollRange == 0 && wasCollapsed) {
@@ -146,6 +143,7 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
 
     override fun setFavoriteDrawableLevel(level: Int) {
         fabFavorite.setImageLevel(level)
+        fabFavorite.tag = level
     }
 
     override fun updateItemView(venues: Venue) {
@@ -153,7 +151,10 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
     }
 
     override fun destroy() {
-        presenter.detachView()
+        (presenter as DetailsPresenterImpl).apply {
+            detachView()
+            cancel()
+        }
     }
 
     override fun loadMap(url: String?) {
@@ -187,22 +188,16 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
     }
 
     private fun View.setVisible() {
-        if (visibility == View.INVISIBLE)
-        {
+        if (visibility == View.INVISIBLE) {
             startAnimation(setVisibleAnimation)
             visibility = View.VISIBLE
         }
-
     }
 
     private fun View.setInvisible() {
-        if (visibility == View.VISIBLE)
-        {
+        if (visibility == View.VISIBLE) {
             startAnimation(setInvisibleAnimation)
             visibility = View.INVISIBLE
         }
-
     }
 }
-
-

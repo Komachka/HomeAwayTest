@@ -1,12 +1,15 @@
 package com.kstor.homeawaytest.view.base
 
-import com.kstor.homeawaytest.view.utils.SchedulerProvider
-import io.reactivex.disposables.CompositeDisposable
+import com.kstor.homeawaytest.domain.RepoResult
+import com.kstor.homeawaytest.view.utils.DispatcherProvider
+import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 
-abstract class BasePresenter<V> constructor(
-    val compositeDisposable: CompositeDisposable,
-    val schedulerProvider: SchedulerProvider
-) {
+abstract class BasePresenter<V>(private val dispatcherProvider: DispatcherProvider) :
+    CoroutineScope {
+    private var job = Job()
+    override val coroutineContext: CoroutineContext = job + dispatcherProvider.io()
     var view: V? = null
 
     fun attachView(v: V) {
@@ -14,7 +17,17 @@ abstract class BasePresenter<V> constructor(
     }
 
     fun detachView() {
-        compositeDisposable.clear()
         view = null
+    }
+
+    fun cancel() {
+        job.cancel()
+    }
+
+    fun handleRepoResult(result: RepoResult<*>, success: () -> Unit, fail: () -> Unit) {
+        when (result) {
+            is RepoResult.Success -> success.invoke()
+            is RepoResult.Error<*> -> fail.invoke()
+        }
     }
 }

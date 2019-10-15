@@ -106,14 +106,16 @@ dependencies {
     implementation "androidx.room:room-rxjava2:$roomVersion"
     kapt "android.arch.persistence.room:compiler:$roomKaptCompiler"
     kaptAndroidTest "android.arch.persistence.room:compiler:$roomKaptCompiler"
+    implementation "androidx.room:room-ktx:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
 
     testImplementation "com.nhaarman:mockito-kotlin-kt1.1:$mokitoKotlin"
+    androidTestImplementation "com.nhaarman:mockito-kotlin-kt1.1:$mokitoKotlin"
     testImplementation "org.mockito:mockito-inline:$mokitoInline"
-    androidTestImplementation "org.mockito:mockito-core:$mockitoVersion"
-    androidTestImplementation "com.linkedin.dexmaker:dexmaker-mockito:$dexMakerVersion"
-
+    //androidTestImplementation "com.linkedin.dexmaker:dexmaker-mockito:$dexMakerVersion"
     implementation("com.squareup.okhttp3:logging-interceptor:4.2.1")
     implementation 'com.android.support:multidex:2.0.1'
+
     /* Dagger */
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"

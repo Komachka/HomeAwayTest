@@ -11,6 +11,7 @@ import com.kstor.homeawaytest.di.DaggerTestComponent
 import com.kstor.homeawaytest.di.TestDetailsRepositoryModule
 import com.kstor.homeawaytest.di.TestStaticMapRepositoryModule
 import com.kstor.homeawaytest.di.TestVenuesRepositoryModule
+import com.kstor.homeawaytest.domain.RepoResult
 import com.kstor.homeawaytest.domain.StaticMapRepository
 import com.kstor.homeawaytest.domain.VenueDetailsRepository
 import com.kstor.homeawaytest.domain.VenuesRepository
@@ -19,8 +20,9 @@ import com.kstor.homeawaytest.fake.FakeStaticMapRepository
 import com.kstor.homeawaytest.view.detailscreen.DetailFragment
 import com.kstor.homeawaytest.view.di.AppModule
 import com.kstor.homeawaytest.view.di.mock.FakeVenuesRepository
-import com.kstor.homeawaytest.view.utils.FavoriteImageRes
+import com.kstor.homeawaytest.view.utils.FavoriteImageLevel
 import com.kstor.homeawaytest.view.utils.VenuesMapper
+import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers
 import org.junit.Before
 import org.junit.Test
@@ -56,33 +58,35 @@ class DetailsTest : VenuesMapper {
     }
 
     @Test
-    fun show_detail_screen_for_venues() {
-        val venues = venuesRepository.getFavorites().blockingGet().first()
-        val parselize = mapToParcelize(venues)
+    fun show_detail_screen_for_venues() = runBlocking<Unit> {
+        val venues = venuesRepository.getFavorites() as RepoResult.Success
+        val venue = venues.data.first()
+        val parselize = mapToParcelize(venue)
         val bundle = Bundle().apply {
             putParcelable("venues", parselize)
         }
         launchFragmentInContainer<DetailFragment>(bundle, R.style.AppTheme)
-        onView(ViewMatchers.withId(R.id.venuesNameNameTextView)).check(matches(ViewMatchers.withText(venues.name)))
-        onView(ViewMatchers.withId(R.id.venuesNameAdressTextView)).check(matches(ViewMatchers.withText(venues.address)))
-        onView(ViewMatchers.withId(R.id.venuesDistanceFromCenterTextView)).check(matches(ViewMatchers.withText("${venues.distance} m")))
-        onView(ViewMatchers.withId(R.id.venuesCategory)).check(matches(ViewMatchers.withText(venues.categories?.name)))
+        onView(ViewMatchers.withId(R.id.venuesNameNameTextView)).check(matches(ViewMatchers.withText(venue.name)))
+        onView(ViewMatchers.withId(R.id.venuesNameAdressTextView)).check(matches(ViewMatchers.withText(venue.address)))
+        onView(ViewMatchers.withId(R.id.venuesDistanceFromCenterTextView)).check(matches(ViewMatchers.withText("${venue.distance} m")))
+        onView(ViewMatchers.withId(R.id.venuesCategory)).check(matches(ViewMatchers.withText(venue.categories?.name)))
         onView(ViewMatchers.withId(R.id.venuesPlaceImgView)).check(matches(ViewMatchers.isDisplayed()))
         onView(ViewMatchers.withId(R.id.mapIv)).check(matches(ViewMatchers.isDisplayed()))
         onView(ViewMatchers.withId(R.id.fabFavorite)).check(
-            matches(ViewMatchers.withTagValue(CoreMatchers.equalTo(FavoriteImageRes.IS_FAVORITE.resId))))
+            matches(ViewMatchers.withTagValue(CoreMatchers.equalTo(FavoriteImageLevel.IS_FAVORITE.level))))
     }
 
     @Test
-    fun change_favorite_icon_to_not_favorite_onClick() {
-        val venues = venuesRepository.getFavorites().blockingGet().first()
-        val parselize = mapToParcelize(venues)
+    fun change_favorite_icon_to_not_favorite_onClick() = runBlocking<Unit> {
+        val venues = venuesRepository.getFavorites() as RepoResult.Success
+        val venue = venues.data.first()
+        val parselize = mapToParcelize(venue)
         val bundle = Bundle().apply {
             putParcelable("venues", parselize)
         }
         launchFragmentInContainer<DetailFragment>(bundle, R.style.AppTheme)
         onView(ViewMatchers.withId(R.id.fabFavorite)).perform(click())
         onView(ViewMatchers.withId(R.id.fabFavorite)).check(
-            matches(ViewMatchers.withTagValue(CoreMatchers.equalTo(FavoriteImageRes.IS_NOT_FAVORITE.resId))))
+            matches(ViewMatchers.withTagValue(CoreMatchers.equalTo(FavoriteImageLevel.IS_NOT_FAVORITE.level))))
     }
 }
