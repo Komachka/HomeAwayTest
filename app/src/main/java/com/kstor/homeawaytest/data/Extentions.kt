@@ -38,10 +38,10 @@ fun mapToDBVenuesModel(venues: Venue): DBVenuesModel? {
             DBVenuesModel(
                 requireNotNull(venues.id),
                 requireNotNull(venues.name),
-                requireNotNull(venues.categories?.id),
-                requireNotNull(venues.categories?.name),
-                requireNotNull(venues.categories?.iconPath),
-                requireNotNull(venues.address),
+                venues.categories?.id ?: "",
+                venues.categories?.name ?: "",
+                venues.categories?.iconPath ?: "",
+                venues.address ?: "",
                 requireNotNull(venues.distance),
                 requireNotNull(venues.lat),
                 requireNotNull(venues.lng),
@@ -90,7 +90,7 @@ private fun Double.toRadians(): Double {
 
 private fun mapToCategory(categories: List<NetworkCategory>?): VenuesCategory? {
     return categories?.let {
-        it.first()?.let { category ->
+        it.first().let { category ->
             VenuesCategory(
                 category.id,
                 category.name,
@@ -109,16 +109,6 @@ fun log(message: String) {
 
 fun logError(message: String) {
     Log.e("MainActivity", message)
-}
-
-fun countZoom(distance: Int?): Int {
-    return when (distance) {
-        in 0..100 -> 17
-        in 100..500 -> 15
-        in 500..2000 -> 13
-        in 2000..4000 -> 12
-        else -> 10
-    }
 }
 
 fun mapToVenueDetails(networkDetailsModel: NetworkDetailsModel): VenueDetails {

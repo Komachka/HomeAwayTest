@@ -6,17 +6,18 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.kstor.homeawaytest.R
+import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.utils.FavoriteImageRes
 import com.kstor.homeawaytest.view.utils.ImageLoader
+import java.lang.Exception
 import kotlinx.android.synthetic.main.list_item.view.*
 
 class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     ImageLoader {
 
-
     lateinit var detailsOnClickListener: (venues: Venue) -> Unit
-    lateinit var addToFavoriteClickListener: (venues: Venue) -> Unit
+    lateinit var addToFavoriteClickListener: (venues: Venue, pos: Int) -> Unit
     val venues = ArrayList<Venue>()
 
 
@@ -35,18 +36,27 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
         }
 
         override fun onClick(item: View) {
-
             if (item.id == R.id.imageFavorite) {
                 val animation = AnimationUtils.loadAnimation(
                     view.context.applicationContext,
                     R.anim.zoomin
                 )
                 view.imageFavorite.startAnimation(animation)
-                addToFavoriteClickListener.invoke(venues[adapterPosition])
-                venues[adapterPosition].isFavorite = !venues[adapterPosition].isFavorite
-                notifyItemChanged(adapterPosition)
-            } else
-                detailsOnClickListener.invoke(venues[adapterPosition])
+
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    addToFavoriteClickListener.invoke(venues[adapterPosition], adapterPosition)
+                    try {
+                        venues[adapterPosition].isFavorite = !venues[adapterPosition].isFavorite
+                        notifyItemChanged(adapterPosition)
+                    } catch (e: Exception) {
+                        log(e.toString() + "adapter position $adapterPosition")
+                    }
+                }
+            } else {
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    detailsOnClickListener.invoke(venues[adapterPosition])
+                }
+            }
         }
 
         fun bind(venue: Venue) {
@@ -57,7 +67,7 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
             view.venuesDistanceFromCenterTextView.text = "${venue.distance} m"
             venue.categories?.let {
                 it.iconPath.let {
-                        view.venuesPlaceImgView.loadImage(it)
+                    view.venuesPlaceImgView.loadImage(it)
                 }
             }
             setFavoriteDrawable(venue.isFavorite)
@@ -65,7 +75,8 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
 
         private fun setFavoriteDrawable(isFavorite: Boolean) {
             val imageRes = if (isFavorite) {
-                FavoriteImageRes.IS_FAVORITE.resId } else {
+                FavoriteImageRes.IS_FAVORITE.resId
+            } else {
                 FavoriteImageRes.IS_NOT_FAVORITE.resId
             }
             view.imageFavorite.tag = imageRes
@@ -91,5 +102,17 @@ class VenuesListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
 
     private fun clearData() {
         this.venues.clear()
+    }
+
+    fun removeFromList(venue: Venue, pos: Int) {
+        venues.remove(venue)
+        notifyItemRemoved(pos)
+        notifyItemRangeChanged(pos, venues.size)
+    }
+
+    fun addToList(venue: Venue, pos: Int) {
+        venues.add(pos, venue)
+        notifyItemInserted(pos)
+        notifyItemRangeChanged(pos, venues.size)
     }
 }

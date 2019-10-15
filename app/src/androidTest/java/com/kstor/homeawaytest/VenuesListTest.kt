@@ -64,7 +64,7 @@ class VenuesListTest : VenuesMapper {
     private lateinit var navController: NavController
     private lateinit var venuesRepository: VenuesRepository
     private lateinit var staticMapRepository: StaticMapRepository
-    private lateinit var detailRepository:VenueDetailsRepository
+    private lateinit var detailRepository: VenueDetailsRepository
 
     @Before
     fun setup() {
@@ -146,15 +146,17 @@ class VenuesListTest : VenuesMapper {
                 action
             )
         )
-        // icon  drawable was changed
+        // remove from recycler
+        Thread.sleep(3000)
         onView(withId(R.id.list)).check(
             ViewAssertions.matches(
                 atPositionItem(
                     0,
-                    hasDescendant(withTagValue(equalTo(FavoriteImageRes.IS_NOT_FAVORITE.resId)))
+                    not(isDisplayed())
                 )
             )
         )
+
     }
 
     @Test
@@ -329,7 +331,7 @@ class VenuesListTest : VenuesMapper {
         const val TEST_QUERY_FOR_NOT_FAVORITE_ITEM = "zoo"
 
         const val TEST_QUERY2 = "000"
-        const val TEST_ITEM_FAVORITE =  0
+        const val TEST_ITEM_FAVORITE = 0
 
         fun atPositionItem(position: Int, itemMatcher: Matcher<View>): Matcher<View> {
             return object : BoundedMatcher<View, RecyclerView>(RecyclerView::class.java) {
@@ -347,7 +349,7 @@ class VenuesListTest : VenuesMapper {
             }
         }
 
-        fun atPatternItem(pattern:String,itemMatcher: Matcher<View>): Matcher<View> {
+        fun atPatternItem(pattern: String, itemMatcher: Matcher<View>): Matcher<View> {
             return object : BoundedMatcher<View, RecyclerView>(RecyclerView::class.java) {
                 override fun describeTo(description: Description?) {
                     description?.appendText("has item with text $pattern: ")
@@ -358,8 +360,7 @@ class VenuesListTest : VenuesMapper {
                     val data = (item?.adapter as VenuesListAdapter).venues
                     if (data.isEmpty()) return false
                     var position = 0
-                    for (i in 0 until data.size)
-                    {
+                    for (i in 0 until data.size) {
                         if (data[i].name?.toLowerCase()?.contains(pattern.toLowerCase()) == true) {
                             position = i
                         }

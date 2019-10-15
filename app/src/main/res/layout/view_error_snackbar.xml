@@ -25,17 +25,33 @@
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
-        android:textStyle="bold"
         android:id="@+id/message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="7dp"
-        android:layout_marginTop="0dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/errorMessage"
         android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/snackBarButn"
         app:layout_constraintStart_toEndOf="@+id/info_image"
-        android:layout_marginStart="9dp"
-        android:layout_marginLeft="9dp"
-        app:layout_constraintTop_toTopOf="@+id/info_image"/>
+        app:layout_constraintTop_toTopOf="@+id/info_image" />
+
+    <Button
+        android:visibility="invisible"
+        android:textColor="@color/black"
+        android:id="@+id/snackBarButn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@drawable/butn"
+        android:text="@string/undo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </merge>

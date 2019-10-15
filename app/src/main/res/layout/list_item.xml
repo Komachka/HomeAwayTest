@@ -81,6 +81,7 @@
       tools:text="Distance" />
 
   <ImageButton
+      android:padding="@dimen/favorites_padding"
       android:id="@+id/imageFavorite"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"

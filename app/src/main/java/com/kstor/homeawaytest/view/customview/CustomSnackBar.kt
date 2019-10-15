@@ -6,20 +6,31 @@ import android.widget.FrameLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.kstor.homeawaytest.R
+import com.kstor.homeawaytest.data.log
 import kotlinx.android.synthetic.main.view_error_snackbar.view.*
 
-class CustomSnackBar(parent: ViewGroup, errorView: CustomSnackBarView) :
-    BaseTransientBottomBar<CustomSnackBar>(parent, errorView, errorView) {
+class CustomSnackBar(parent: ViewGroup, customView: CustomSnackBarView) :
+    BaseTransientBottomBar<CustomSnackBar>(parent, customView, customView) {
 
     init {
-
         getView().setBackgroundResource(R.drawable.snack_bar)
         getView().setPadding(0, 0, 0, 0)
         duration = LENGTH_LONG
     }
 
+    fun addListener(onclick: (() -> Unit)) {
+        log(onclick.toString())
+        getView().snackBarButn.visibility = View.VISIBLE
+        getView().snackBarButn.setOnClickListener {
+            onclick.invoke()
+        }
+    }
+
     companion object {
-        fun make(view: View, mesage: String? = null): CustomSnackBar? {
+        fun make(
+            view: View,
+            mesage: String? = null
+        ): CustomSnackBar? {
             view.findSuitableParent()?.let { parent ->
                 val customViewSnackbar = CustomSnackBarView(view.context)
                 if (mesage != null) {
@@ -34,6 +45,7 @@ class CustomSnackBar(parent: ViewGroup, errorView: CustomSnackBarView) :
         }
     }
 }
+
 fun View?.findSuitableParent(): ViewGroup? {
     var view = this
     var fallback: ViewGroup? = null

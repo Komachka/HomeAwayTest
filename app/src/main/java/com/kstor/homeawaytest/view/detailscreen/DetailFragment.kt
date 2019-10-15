@@ -1,17 +1,15 @@
 package com.kstor.homeawaytest.view.detailscreen
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.navigation.Navigation
 import com.google.android.material.appbar.AppBarLayout
 import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
-import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.domain.model.VenueDetails
 import com.kstor.homeawaytest.view.base.BaseFragment
@@ -21,13 +19,19 @@ import javax.inject.Inject
 import kotlin.math.abs
 import kotlinx.android.synthetic.main.detail_fragment.*
 import kotlinx.android.synthetic.main.details.*
+import android.view.animation.Animation
+
 
 class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
     VenuesMapper {
 
+
     @Inject
     lateinit var presenter: DetailsPresenterImpl
     private var wasCollapsed = false
+
+    private lateinit var setVisibleAnimation: Animation
+    private lateinit var setInvisibleAnimation: Animation
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,6 +49,7 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
     override fun setUp() {
         collapsingToolbarLayout.setCollapsedTitleTextColor(resources.getColor(R.color.white))
         collapsingToolbarLayout.setExpandedTitleColor(resources.getColor(R.color.transparent))
+        initAnimations()
         toolbar.apply {
             navigationIcon = resources.getDrawable(R.drawable.ic_keyboard_backspace_black_24dp)
             setNavigationOnClickListener {
@@ -55,67 +60,92 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
         arguments?.let { bundle ->
             val venuesParselize = DetailFragmentArgs.fromBundle(bundle).venues
             mapToVenues(venuesParselize)?.let { venues ->
-                presenter.createStaticMapUrl(venues)
-                toolbar.apply {
-                    title = venuesParselize.name
-                }
-                venuesNameNameTextView.text = venuesParselize.name
-                venuesCategory.text =
-                    venuesParselize.categories?.name
-                venuesNameAdressTextView.text = venuesParselize.address
-                venuesParselize.categories?.let {
-                    it.iconPath?.let { path ->
-                        venuesPlaceImgView.loadImage(path)
-                    }
-                }
-                venuesDistanceFromCenterTextView.text = "${venuesParselize.distance} m"
-                presenter.setFavorite(venues)
-                fabFavorite.setOnClickListener {
-                    presenter.addAndRemoveFromFavorites(venues)
-                    venues.isFavorite = !venues.isFavorite
-                }
-                appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBar, verticalOffset ->
-                    if (abs(verticalOffset) - appBarLayout.totalScrollRange == 0 && !wasCollapsed) {
-                        //  Collapsed first time
-                        wasCollapsed = true
-                        presenter.getVenueDetails(venues)
-                        setAdditionalFieldsVisible()
-                    } else if (abs(verticalOffset) - appBarLayout.totalScrollRange != 0) {
-                        // Expanded
-                        setAdditionalFieldsInvisible()
-                    } else {
-                        //  Collapsed next time
-                        setAdditionalFieldsVisible()
-                    }
-                })
+                presenter.fillDetailsScreen(venues)
+
             }
         }
     }
 
+    override fun fillDetailsScreen(venues: Venue) {
+        presenter.createStaticMapUrl(venues)
+        toolbar.apply {
+            title = venues.name
+        }
+        venuesNameNameTextView.text = venues.name
+        venuesCategory.text =
+            venues.categories?.name
+        venuesNameAdressTextView.text = venues.address
+        venues.categories?.let {
+            it.iconPath?.let { path ->
+                venuesPlaceImgView.loadImage(path)
+            }
+        }
+        venuesDistanceFromCenterTextView.text = "${venues.distance} m"
+        presenter.setFavorite(venues)
+        fabFavorite.setOnClickListener {
+            presenter.addAndRemoveFromFavorites(venues)
+            venues.isFavorite = !venues.isFavorite
+        }
+        appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBar, verticalOffset ->
+            if (abs(verticalOffset) - appBarLayout.totalScrollRange == 0 && !wasCollapsed) {
+                //  Collapsed first time
+                wasCollapsed = true
+                presenter.getVenueDetails(venues)
+                setAdditionalFieldsVisible()
+                turnOffMoreAnimation()
+            } else if (abs(verticalOffset) ==  0) {
+                // Expanded
+                setAdditionalFieldsInvisible()
+            } else if (abs(verticalOffset) - appBarLayout.totalScrollRange == 0 && wasCollapsed) {
+                //  Collapsed next time
+                setAdditionalFieldsVisible()
+            }
+        })
+    }
+
+    private fun initAnimations() {
+        setVisibleAnimation = AnimationUtils.loadAnimation(context?.applicationContext, R.anim.slide_up)
+        setInvisibleAnimation = AnimationUtils.loadAnimation(context?.applicationContext, R.anim.slide_down)
+        val loadindAnimation = AnimationUtils.loadAnimation(
+            context?.applicationContext,
+            R.anim.rotate
+        )
+        load_more.startAnimation(loadindAnimation)
+    }
+
+    private fun turnOffMoreAnimation() {
+        load_more.clearAnimation()
+        load_more.visibility = View.INVISIBLE
+    }
+
     private fun setAdditionalFieldsInvisible() {
-        ratingBar.visibility = View.INVISIBLE
-        raitingTv.visibility = View.INVISIBLE
-        IsOpenTv.visibility = View.INVISIBLE
-        bigPictureIV.visibility = View.INVISIBLE
-        descriptionTv.visibility = View.INVISIBLE
-        sceduleTV.visibility = View.INVISIBLE
-        urlTv.visibility = View.INVISIBLE
-        urlIv.visibility = View.INVISIBLE
-        telephoneIv.visibility = View.INVISIBLE
-        telephoneTv.visibility = View.INVISIBLE
+        ratingBar.setInvisible()
+        raitingTv.setInvisible()
+        IsOpenTv.setInvisible()
+        bigPictureIV.setInvisible()
+        descriptionTv.setInvisible()
+        sceduleTV.setInvisible()
+        urlTv.setInvisible()
+        urlIv.setInvisible()
+        telephoneIv.setInvisible()
+        telephoneTv.setInvisible()
     }
 
     private fun setAdditionalFieldsVisible() {
-        ratingBar.visibility = View.VISIBLE
-        raitingTv.visibility = View.VISIBLE
-        IsOpenTv.visibility = View.VISIBLE
-        bigPictureIV.visibility = View.VISIBLE
-        descriptionTv.visibility = View.VISIBLE
-        sceduleTV.visibility = View.VISIBLE
-        urlTv.visibility = View.VISIBLE
-        urlIv.visibility = View.VISIBLE
-        telephoneIv.visibility = View.VISIBLE
-        telephoneTv.visibility = View.VISIBLE
+        ratingBar.setVisible()
+        raitingTv.setVisible()
+        IsOpenTv.setVisible()
+        bigPictureIV.setVisible()
+        descriptionTv.setVisible()
+        sceduleTV.setVisible()
+        urlTv.setVisible()
+        urlIv.setVisible()
+        telephoneIv.setVisible()
+        telephoneTv.setVisible()
+    }
+
+    override fun setFavoriteDrawableLevel(level: Int) {
+        fabFavorite.setImageLevel(level)
     }
 
     override fun updateItemView(venues: Venue) {
@@ -132,19 +162,22 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
         }
     }
 
-    override fun setIfFavorite(resFavorites: Int) {
-        fabFavorite.setImageResource(resFavorites)
-        fabFavorite.tag = resFavorites
-    }
-
     override fun updateInfo(details: VenueDetails) {
         details.rating?.let {
             ratingBar.rating = (it * 0.5).toFloat()
             raitingTv.text = it.toString()
         }
-        details.isOpen?.let { IsOpenTv.text = if (it) { resources.getString(R.string.open) } else { resources.getString(R.string.close) } }
+        details.isOpen?.let {
+            IsOpenTv.text = if (it) {
+                resources.getString(R.string.open)
+            } else {
+                resources.getString(R.string.close)
+            }
+        }
         details.bestPhoto?.let { bigPictureIV.loadImage(it) }
-        details.hoursPerDay?.let { sceduleTV.text = it.joinToString(separator = "\n") { it.days + " " + it.renderedTime } }
+        details.hoursPerDay?.let {
+            sceduleTV.text = it.joinToString(separator = "\n") { it.days + " " + it.renderedTime }
+        }
         details.description?.let { descriptionTv.text = it }
         details.url?.let { url ->
             urlTv.text = url
@@ -152,4 +185,24 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
         }
         details.formattedPhone?.let { telephoneTv.text = it }
     }
+
+    private fun View.setVisible() {
+        if (visibility == View.INVISIBLE)
+        {
+            startAnimation(setVisibleAnimation)
+            visibility = View.VISIBLE
+        }
+
+    }
+
+    private fun View.setInvisible() {
+        if (visibility == View.VISIBLE)
+        {
+            startAnimation(setInvisibleAnimation)
+            visibility = View.INVISIBLE
+        }
+
+    }
 }
+
+

@@ -2,6 +2,7 @@ package com.kstor.homeawaytest.data.repos
 
 import com.kstor.homeawaytest.data.db.LocalData
 import com.kstor.homeawaytest.data.db.model.DBVenuesModel
+import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.data.mapToDBVenuesModel
 import com.kstor.homeawaytest.data.mapToListOfVenues
 import com.kstor.homeawaytest.data.mapToVenuesData
@@ -55,7 +56,11 @@ class VenuesRepositoryImp(
             .flatMap { list ->
                 localData.removeANdSaveVenues(mapToDBVenuesModelList(list))
                 getLocalData()
-            })
+            }
+            .doOnError {
+                log(it.toString())
+            }
+        )
     }
 
     private fun mapToDBVenuesModelList(list: List<Venue>): List<DBVenuesModel> {

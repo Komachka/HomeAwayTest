@@ -1,12 +1,7 @@
 package com.kstor.homeawaytest.view.utils
 
-
-import com.kstor.homeawaytest.data.log
-import com.kstor.homeawaytest.domain.model.Venue
-
 import com.kstor.homeawaytest.data.logError
-
-
+import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.domain.model.VenuesCategory
 import com.kstor.homeawaytest.domain.model.VenuesCategoryParcelize
 import com.kstor.homeawaytest.domain.model.VenuesParcelize

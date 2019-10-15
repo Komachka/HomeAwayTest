@@ -3,6 +3,7 @@ package com.kstor.homeawaytest
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
 import com.kstor.homeawaytest.domain.VenueDetailsUseCase
+import com.kstor.homeawaytest.domain.model.HoursPerDay
 import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.domain.model.VenueDetails
 import com.kstor.homeawaytest.view.detailscreen.DetailsPresenter
@@ -68,7 +69,7 @@ class DetailsPresenterTest {
 
         schedulerProvider = TestSchedulerProvider(Schedulers.trampoline())
 
-        testPresenter = DetailsPresenterImpl(compositeDisposable, staticMapUseCase, schedulerProvider, favoriteUseCase,detailUseCase)
+        testPresenter = DetailsPresenterImpl(compositeDisposable, staticMapUseCase, schedulerProvider, favoriteUseCase, detailUseCase)
         (testPresenter as DetailsPresenterImpl).attachView(view)
 
         errorPresenter = DetailsPresenterImpl(compositeDisposable, errorStaticMapUseCase, schedulerProvider, errorFavoriteUseCase, errorDetailUseCase)
@@ -79,20 +80,24 @@ class DetailsPresenterTest {
         `when`(errorDetailUseCase.getVenueDetails(TEST_ID)).thenReturn(Observable.error<VenueDetails>(testError).firstOrError())
     }
 
-    private fun createVenueDetails() : VenueDetails {
+    private fun createVenueDetails(): VenueDetails {
         return VenueDetails(
-            TEST_ID,
-            "TestName",
-            "007",
-            "http://test.com",
-            "http://test.com",
-            10.0,
-            "FFFFFF",
-            "Description",
-            "url",
+            "1",
+            "Name",
+            "0-55-55-5",
+            "no_url",
+            "https://image.shutterstock.com",
+            4.7,
+            "no",
+            "Spot of come to ever hand as lady meet on. Delicate contempt received two yet advanced. Gentleman as belonging he commanded believing dejection in by. On no am winding chicken so behaved. Its preserved sex enjoyment new way behaviour. Him yet devonshire celebrated especially. Unfeeling one provision are smallness resembled repulsive. ",
+            "https://image.shutterstock.com/image-photo/business-man-pushing-large-stone-600w-687578737.jpg",
             true,
-            null,
-            null
+            listOf(
+                HoursPerDay("Mon", "5-9"),
+                HoursPerDay("Th-Sat", "5-9"),
+                HoursPerDay("Sn", "5-9")
+            ),
+            "https://image.shutterstock.com/image-photo/business-man-pushing-large-stone-600w-687578737.jpg"
         )
     }
 
@@ -142,11 +147,11 @@ class DetailsPresenterTest {
     fun change_favorite_venues_image() {
         testVenues.isFavorite = true
         testPresenter.setFavorite(testVenues)
-        verify(view).setIfFavorite(FavoriteImageRes.IS_FAVORITE.resId)
+        verify(view).setFavoriteDrawableLevel(1)
 
         testVenues.isFavorite = false
         testPresenter.setFavorite(testVenues)
-        verify(view).setIfFavorite(FavoriteImageRes.IS_NOT_FAVORITE.resId)
+        verify(view).setFavoriteDrawableLevel(0)
         verifyZeroInteractions(view)
     }
 

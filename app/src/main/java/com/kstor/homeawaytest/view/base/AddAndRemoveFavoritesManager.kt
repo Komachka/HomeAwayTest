@@ -9,7 +9,8 @@ interface AddAndRemoveFavoritesManager {
         val act = if (!venues.isFavorite) {
             { favoritesUseCase.addToFavorite(venues) }
         } else {
-            { favoritesUseCase.removeFromFavorite(venues) }
+            {
+                favoritesUseCase.removeFromFavorite(venues) }
         }
         compositeDisposable.add(
             act.invoke()

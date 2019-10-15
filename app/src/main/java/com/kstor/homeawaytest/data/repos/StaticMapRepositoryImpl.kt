@@ -12,14 +12,12 @@ class StaticMapRepositoryImpl(private val preferenceData: SharedPreferenceData) 
         val (latCenter, lngCenter) = preferenceData.getCityCenterInfo()
         val latPoint = venues.lat
         val lngPoint = venues.lng
-        val zoom = countZoom(venues.distance)
         val url = STATIC_MAP_BASE_URL +
                 "$CENTER=$latCenter,$lngCenter" +
-                "&$ZOOM=$zoom" +
                 "&$SIZE=$IMAGE_SIZE" +
                 "&$MAPTYPE=$MAP_TYPE_TERRIAN" +
-                "&$MARKERS=color:$colour1%7Clabel:C%7C$latCenter,$lngCenter" +
-                "&$MARKERS=color:$colour2%7Clabel:P%7C$latPoint,$lngPoint" +
+                "&$MARKERS=size:mid%7Ccolor:$colour1%7Clabel:C%7C$latCenter,$lngCenter" +
+                "&$MARKERS=size:mid%7Ccolor:$colour2%7C$latPoint,$lngPoint" +
                 "&$KEY=$API_KEY"
         return Observable.just(url)
     }

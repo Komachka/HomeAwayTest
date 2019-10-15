@@ -42,9 +42,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        >
 
         <include layout="@layout/details"/>
+
+
 
     </androidx.core.widget.NestedScrollView>
 
@@ -53,7 +57,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_favorite_border_black_24dp"
+        android:src="@drawable/favorites"
         android:tint="@android:color/black"
         app:layout_anchor="@id/appBarLayout"
         app:layout_anchorGravity="bottom|end" />
