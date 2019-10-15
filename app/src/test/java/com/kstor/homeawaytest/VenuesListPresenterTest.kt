@@ -1,18 +1,18 @@
 package com.kstor.homeawaytest
 
 import com.kstor.homeawaytest.domain.FavoriteUseCase
+import com.kstor.homeawaytest.domain.RepoResult
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.mainscreen.VenuesListPresenterImpl
 import com.kstor.homeawaytest.view.mainscreen.VenuesListView
-import com.kstor.homeawaytest.view.utils.SchedulerProvider
+import com.kstor.homeawaytest.view.utils.DispatcherProvider
 import com.kstor.homeawaytest.view.utils.TestSchedulerProvider
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
-import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -42,7 +42,7 @@ class VenuesListPresenterTest {
     @Mock
     private lateinit var view: VenuesListView
 
-    private lateinit var schedulerProvider: SchedulerProvider
+    private lateinit var dispatcherProvider: DispatcherProvider
 
     private lateinit var venuesList: List<Venue>
     private lateinit var error: Throwable
@@ -60,55 +60,49 @@ class VenuesListPresenterTest {
             Venue("1", "Name", null, "Adress", 0, 0.0, 0.0)
         )
         error = Throwable("Something wrong")
-        schedulerProvider = TestSchedulerProvider(Schedulers.trampoline())
-        presenter = createBaseTestPresenter()
-        presenterNoView = createPresenterWithoutView()
-        presenterWithError = createPresenterWithError()
+        dispatcherProvider = TestSchedulerProvider()
+        createBaseTestPresenter()
+        createPresenterWithoutView()
+        createPresenterWithError()
     }
 
-    private fun createPresenterWithoutView(): VenuesListPresenterImpl {
-        val goodResult = Observable.just(venuesList)
+    private fun createPresenterWithoutView() = runBlocking<Unit> {
+        val goodResult = RepoResult.Success(venuesList)
         `when`(useCaseResultWithData.loadVenuesDataFromApi(TEST_QUERY)).thenReturn(goodResult)
         presenterNoView = VenuesListPresenterImpl(
-            compositeDisposable,
             useCaseResultWithData,
-            schedulerProvider,
+            dispatcherProvider,
             favoritesUseCase
         )
-        return presenterNoView
     }
 
-    private fun createBaseTestPresenter(): VenuesListPresenterImpl {
-        val goodResult = Observable.just(venuesList)
+    private fun createBaseTestPresenter() = runBlocking<Unit> {
+        val goodResult = RepoResult.Success(venuesList)
         `when`(useCaseResultWithData.loadVenuesDataFromApi(TEST_QUERY)).thenReturn(goodResult)
-        `when`(favoritesUseCase.getFavorites()).thenReturn(goodResult.firstOrError())
+        `when`(favoritesUseCase.getFavorites()).thenReturn(goodResult)
         presenter = VenuesListPresenterImpl(
-            compositeDisposable,
             useCaseResultWithData,
-            schedulerProvider,
+            dispatcherProvider,
             favoritesUseCase
         )
         presenter.attachView(view)
-        return presenter
     }
 
-    private fun createPresenterWithError(): VenuesListPresenterImpl {
-        val badResult = Observable.error<List<Venue>>(error)
+    private fun createPresenterWithError() = runBlocking<Unit> {
+        val badResult = RepoResult.Error<List<Venue>>(error)
         `when`(useCaseResultWithError.loadVenuesDataFromApi(TEST_QUERY)).thenReturn(badResult)
-        `when`(errorFavoritesUseCase.getFavorites()).thenReturn(badResult.firstOrError())
+        `when`(errorFavoritesUseCase.getFavorites()).thenReturn(badResult)
         presenterWithError =
             VenuesListPresenterImpl(
-                compositeDisposable,
                 useCaseResultWithError,
-                schedulerProvider,
+                dispatcherProvider,
                 errorFavoritesUseCase
             )
         presenterWithError.attachView(view)
-        return presenterWithError
     }
 
     @Test
-    fun show_venues_list_after_presenter_call_get_venues() {
+    fun show_venues_list_after_presenter_call_get_venues() = runBlocking<Unit> {
         presenter.getVenues(TEST_QUERY)
         verify(view).hideProgress()
         verify(view).hideNoResult()
@@ -118,7 +112,7 @@ class VenuesListPresenterTest {
     }
 
     @Test
-    fun does_not_show_venues_list_if_view_is_not_attached_to_presenter() {
+    fun does_not_show_venues_list_if_view_is_not_attached_to_presenter() = runBlocking<Unit> {
         presenterNoView.detachView()
         presenterNoView.getVenues(TEST_QUERY)
         verify(view, never()).displayVenues(venuesList)
@@ -126,17 +120,18 @@ class VenuesListPresenterTest {
     }
 
     @Test
-    fun show_error_and_hide_progress_if_use_case_return_error() {
+    fun show_error_and_hide_progress_if_use_case_return_error() = runBlocking {
         presenterWithError.getVenues(TEST_QUERY)
         verify(view).hideProgress()
-        verify(view).displayVenues(emptyList())
         verify(view).showError(error)
+        verify(view).displayVenues(emptyList())
         verify(view).showNoResult()
+        verify(view).hideMupButn()
         verifyZeroInteractions(view)
     }
 
     @Test
-    fun get_favorites_successes() {
+    fun get_favorites_successes() = runBlocking<Unit> {
         presenter.getFavorites()
         verify(favoritesUseCase).getFavorites()
         verifyZeroInteractions(favoritesUseCase)
@@ -144,11 +139,10 @@ class VenuesListPresenterTest {
         verify(view).hideNoResult()
         verify(view).displayVenues(venuesList)
         verifyZeroInteractions(view)
-
     }
 
     @Test
-    fun get_favorites_error() {
+    fun get_favorites_error() = runBlocking<Unit> {
         presenterWithError.getFavorites()
         verify(errorFavoritesUseCase).getFavorites()
         verifyZeroInteractions(errorFavoritesUseCase)

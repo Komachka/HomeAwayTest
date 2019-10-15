@@ -37,7 +37,6 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
         no_res_text.visibility = GONE
     }
 
-
     override fun updateItemView(venues: Venue) {
         if (queryEditText.text.isEmpty()) {
             presenter.getFavorites()
@@ -93,11 +92,12 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
     private fun updateFavorites(venue: Venue, pos: Int) {
         var removeItFromFavorite = true
         val message = "${venue.name}  ${resources.getString(R.string.venues_updated)}"
-        if (venue.isFavorite) {
+        if (!venue.isFavorite) {
             (list.adapter as VenuesListAdapter).removeFromList(venue, pos)
             view?.let {
                 val snackBar = CustomSnackBar.make(it, message)
                 snackBar?.addListener {
+                    venue.isFavorite = true
                     (list.adapter as VenuesListAdapter).addToList(venue, pos)
                     removeItFromFavorite = false
                     snackBar.dismiss()
@@ -105,8 +105,9 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
                 snackBar?.addCallback(object : BaseTransientBottomBar.BaseCallback<CustomSnackBar>() {
                     override fun onDismissed(transientBottomBar: CustomSnackBar?, event: Int) {
                         super.onDismissed(transientBottomBar, event)
-                        if (removeItFromFavorite)
+                        if (removeItFromFavorite) {
                             (presenter as VenuesListPresenterImpl).addAndRemoveFromFavorites(venue)
+                        }
                     }
                 })
                 snackBar?.show()
@@ -118,7 +119,10 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
 
     override fun destroy() {
         compositeDisposable.clear()
-        (presenter as VenuesListPresenterImpl).detachView()
+        (presenter as VenuesListPresenterImpl).apply {
+            detachView()
+            cancel()
+        }
     }
 
     override fun displayVenues(results: List<Venue>) {

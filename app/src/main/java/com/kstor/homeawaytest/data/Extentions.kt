@@ -90,12 +90,16 @@ private fun Double.toRadians(): Double {
 
 private fun mapToCategory(categories: List<NetworkCategory>?): VenuesCategory? {
     return categories?.let {
-        it.first().let { category ->
-            VenuesCategory(
-                category.id,
-                category.name,
-                category.icon?.prefix + SIZE_32 + category.icon?.suffix
-            )
+        if (it.isNotEmpty()) {
+            it.first().let { category ->
+                VenuesCategory(
+                    category.id,
+                    category.name,
+                    category.icon?.prefix + SIZE_32 + category.icon?.suffix
+                )
+            }
+        } else {
+            null
         }
     }
 }

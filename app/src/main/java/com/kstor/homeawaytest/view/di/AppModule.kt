@@ -2,8 +2,8 @@ package com.kstor.homeawaytest.view.di
 
 import android.app.Application
 import android.content.Context
-import com.kstor.homeawaytest.view.utils.AppSchedulerProvider
-import com.kstor.homeawaytest.view.utils.SchedulerProvider
+import com.kstor.homeawaytest.view.utils.AppDispatcherProvider
+import com.kstor.homeawaytest.view.utils.DispatcherProvider
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -15,5 +15,5 @@ class AppModule(private val app: Application) {
     fun provideContext(): Context = app
 
     @Provides
-    fun provideSchedulerProvider(): SchedulerProvider = AppSchedulerProvider()
+    fun provideSchedulerProvider(): DispatcherProvider = AppDispatcherProvider()
 }

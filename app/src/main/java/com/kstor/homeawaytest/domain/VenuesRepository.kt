@@ -1,15 +1,12 @@
 package com.kstor.homeawaytest.domain
 
 import com.kstor.homeawaytest.domain.model.Venue
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.Single
 
 interface VenuesRepository {
-    fun getClosestVenuses(limit: Int, query: String): Observable<List<Venue>>
-    fun saveToFavorite(venues: Venue): Completable
-    fun removeFromFavorite(venues: Venue): Completable
-    fun getFavorites(): Single<List<Venue>>
-    fun getCityCenter(): Pair<Float, Float>
-    fun getClosestVenusesCache(): Observable<List<Venue>>
+    suspend fun getClosestVenuses(limit: Int, query: String): RepoResult<List<Venue>>
+    suspend fun saveToFavorite(venues: Venue): RepoResult<Boolean>
+    suspend fun removeFromFavorite(venues: Venue): RepoResult<Boolean>
+    suspend fun getFavorites(): RepoResult<List<Venue>>
+    suspend fun getCityCenter(): RepoResult<Pair<Float, Float>>
+    suspend fun getClosestVenusesCache(): RepoResult<List<Venue>>
 }

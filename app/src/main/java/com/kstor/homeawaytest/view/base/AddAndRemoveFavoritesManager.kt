@@ -1,28 +1,31 @@
 package com.kstor.homeawaytest.view.base
 
 import com.kstor.homeawaytest.domain.FavoriteUseCase
+import com.kstor.homeawaytest.domain.RepoResult
 import com.kstor.homeawaytest.domain.model.Venue
-import io.reactivex.rxkotlin.subscribeBy
+import com.kstor.homeawaytest.view.utils.DispatcherProvider
+import kotlinx.coroutines.withContext
+
 interface AddAndRemoveFavoritesManager {
 
-    fun <T : ViewWithFavorites> BasePresenter<T>.addAndRemoveFromFavorites(venues: Venue, favoritesUseCase: FavoriteUseCase) {
-        val act = if (!venues.isFavorite) {
-            { favoritesUseCase.addToFavorite(venues) }
+    suspend fun <T : ViewWithFavorites> BasePresenter<T>.addAndRemoveFromFavorites(
+        venues: Venue,
+        favoritesUseCase: FavoriteUseCase,
+        dispatchesProvider: DispatcherProvider
+    ) {
+        var result =
+        if (venues.isFavorite) {
+            favoritesUseCase.addToFavorite(venues)
         } else {
-            {
-                favoritesUseCase.removeFromFavorite(venues) }
+            favoritesUseCase.removeFromFavorite(venues)
         }
-        compositeDisposable.add(
-            act.invoke()
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
-                .subscribeBy(
-                    onComplete = {
-                        view?.updateItemView(venues = venues)
-                    },
-                    onError = {
-                        view?.showError(it)
-                    })
-        )
+        withContext(dispatchesProvider.ui()) {
+            handleRepoResult(result,
+                success = {
+                    view?.updateItemView(venues = venues)
+                }, fail = {
+                    view?.showError((result as RepoResult.Error<*>).throwable)
+                })
+        }
     }
 }
