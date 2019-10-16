@@ -12,11 +12,17 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.replaceText
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.BoundedMatcher
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withTagValue
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.kstor.homeawaytest.di.DaggerTestComponent
@@ -31,18 +37,21 @@ import com.kstor.homeawaytest.fake.FakeStaticMapRepository
 import com.kstor.homeawaytest.utils.StringContainsIgnoringCase.Companion.containsStringIgnoreCase
 import com.kstor.homeawaytest.view.di.AppModule
 import com.kstor.homeawaytest.view.di.mock.FakeVenuesRepository
-import com.kstor.homeawaytest.view.mainscreen.*
+import com.kstor.homeawaytest.view.mainscreen.VenuesListAdapter
+import com.kstor.homeawaytest.view.mainscreen.VenuesListFragment
+import com.kstor.homeawaytest.view.mainscreen.VenuesListFragmentDirections
 import com.kstor.homeawaytest.view.utils.FavoriteImageRes
 import com.kstor.homeawaytest.view.utils.VenuesMapper
-import org.hamcrest.CoreMatchers.*
+import junit.framework.Assert.assertEquals
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Description
 import org.hamcrest.Matcher
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito.*
+import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 
 /**
@@ -156,7 +165,6 @@ class VenuesListTest : VenuesMapper {
                 )
             )
         )
-
     }
 
     @Test

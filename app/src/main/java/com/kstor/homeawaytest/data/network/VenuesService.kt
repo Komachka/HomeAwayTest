@@ -1,6 +1,13 @@
 package com.kstor.homeawaytest.data.network
 
-import com.kstor.homeawaytest.data.*
+import com.kstor.homeawaytest.data.CLIENT_ID_QUERY_PARAM
+import com.kstor.homeawaytest.data.CLIENT_SECRET_QUERY_PARAM
+import com.kstor.homeawaytest.data.DETAIL_URL
+import com.kstor.homeawaytest.data.LIMIT_QUERY_PARAM
+import com.kstor.homeawaytest.data.NEAR_QUERY_PARAM
+import com.kstor.homeawaytest.data.SEARCH_QUERY_PARAM
+import com.kstor.homeawaytest.data.SEARCH_URL
+import com.kstor.homeawaytest.data.VERSION_QUERY_PARAM
 import com.kstor.homeawaytest.data.network.model.NetworkDetailsModel
 import com.kstor.homeawaytest.data.network.model.NetworkVenuesModel
 import io.reactivex.Single

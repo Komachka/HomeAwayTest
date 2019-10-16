@@ -6,14 +6,13 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.*
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.kstor.homeawaytest.App
 import com.kstor.homeawaytest.R
-import com.kstor.homeawaytest.data.*
+import com.kstor.homeawaytest.data.LOADING_TIMEOUT
 import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.view.base.BaseFragment
 import com.kstor.homeawaytest.view.customview.CustomSnackBar
@@ -23,20 +22,24 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import kotlinx.android.synthetic.main.venues_list_fragment.*
+import kotlinx.android.synthetic.main.venues_list_fragment.fab
+import kotlinx.android.synthetic.main.venues_list_fragment.list
+import kotlinx.android.synthetic.main.venues_list_fragment.no_res_img
+import kotlinx.android.synthetic.main.venues_list_fragment.no_res_text
+import kotlinx.android.synthetic.main.venues_list_fragment.progressBar
+import kotlinx.android.synthetic.main.venues_list_fragment.queryEditText
 
 class VenuesListFragment : BaseFragment(), VenuesListView {
 
     override fun showNoResult() {
-        no_res_img.visibility = VISIBLE
-        no_res_text.visibility = VISIBLE
+        no_res_img.visibility = View.VISIBLE
+        no_res_text.visibility = View.VISIBLE
     }
 
     override fun hideNoResult() {
-        no_res_img.visibility = GONE
-        no_res_text.visibility = GONE
+        no_res_img.visibility = View.GONE
+        no_res_text.visibility = View.GONE
     }
-
 
     override fun updateItemView(venues: Venue) {
         if (queryEditText.text.isEmpty()) {
@@ -139,19 +142,19 @@ class VenuesListFragment : BaseFragment(), VenuesListView {
     }
 
     override fun showProgress() {
-        progressBar.visibility = VISIBLE
+        progressBar.visibility = View.VISIBLE
     }
 
     override fun hideProgress() {
-        progressBar.visibility = GONE
+        progressBar.visibility = View.GONE
     }
 
     override fun showMupButn() {
-        fab.visibility = VISIBLE
+        fab.visibility = View.VISIBLE
     }
 
     override fun hideMupButn() {
-        fab.visibility = INVISIBLE
+        fab.visibility = View.INVISIBLE
     }
 
     private fun createTextChangeObservable(): Observable<String> {

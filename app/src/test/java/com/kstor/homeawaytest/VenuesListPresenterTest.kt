@@ -144,7 +144,6 @@ class VenuesListPresenterTest {
         verify(view).hideNoResult()
         verify(view).displayVenues(venuesList)
         verifyZeroInteractions(view)
-
     }
 
     @Test

@@ -9,7 +9,6 @@ import com.kstor.homeawaytest.domain.model.VenueDetails
 import com.kstor.homeawaytest.view.detailscreen.DetailsPresenter
 import com.kstor.homeawaytest.view.detailscreen.DetailsPresenterImpl
 import com.kstor.homeawaytest.view.detailscreen.DetailsView
-import com.kstor.homeawaytest.view.utils.FavoriteImageRes
 import com.kstor.homeawaytest.view.utils.SchedulerProvider
 import com.kstor.homeawaytest.view.utils.TestSchedulerProvider
 import com.nhaarman.mockito_kotlin.verify

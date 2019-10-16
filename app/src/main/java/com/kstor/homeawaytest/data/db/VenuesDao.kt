@@ -1,6 +1,11 @@
 package com.kstor.homeawaytest.data.db
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
 import com.kstor.homeawaytest.data.VENUES_TABLE_NAME
 import com.kstor.homeawaytest.data.db.model.DBVenuesModel
 import io.reactivex.Single

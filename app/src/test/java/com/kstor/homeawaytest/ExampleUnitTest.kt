@@ -1,6 +1,6 @@
 package com.kstor.homeawaytest
 
-import org.junit.Assert.*
+import junit.framework.Assert.assertEquals
 import org.junit.Test
 
 /**

@@ -1,6 +1,12 @@
 package com.kstor.homeawaytest.domain.di
 
-import com.kstor.homeawaytest.domain.*
+import com.kstor.homeawaytest.domain.FavoriteUseCase
+import com.kstor.homeawaytest.domain.GenerateStaticMapUrlUseCase
+import com.kstor.homeawaytest.domain.StaticMapRepository
+import com.kstor.homeawaytest.domain.VenueDetailsRepository
+import com.kstor.homeawaytest.domain.VenueDetailsUseCase
+import com.kstor.homeawaytest.domain.VenuesRepository
+import com.kstor.homeawaytest.domain.VenuesUseCase
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

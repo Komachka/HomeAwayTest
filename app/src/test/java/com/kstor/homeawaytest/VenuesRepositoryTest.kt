@@ -1,26 +1,35 @@
 package com.kstor.homeawaytest
 
-import com.kstor.homeawaytest.data.SIZE_32
-import com.kstor.homeawaytest.data.calcDistance
 import com.kstor.homeawaytest.data.db.LocalData
 import com.kstor.homeawaytest.data.db.model.DBVenuesModel
 import com.kstor.homeawaytest.data.network.RemoteData
-import com.kstor.homeawaytest.data.network.model.*
+import com.kstor.homeawaytest.data.network.model.Bounds
+import com.kstor.homeawaytest.data.network.model.Coordinate
+import com.kstor.homeawaytest.data.network.model.Feature
+import com.kstor.homeawaytest.data.network.model.Geocode
+import com.kstor.homeawaytest.data.network.model.Geometry
+import com.kstor.homeawaytest.data.network.model.Icon
+import com.kstor.homeawaytest.data.network.model.Location
+import com.kstor.homeawaytest.data.network.model.NetworkCategory
+import com.kstor.homeawaytest.data.network.model.NetworkVenue
+import com.kstor.homeawaytest.data.network.model.NetworkVenuesModel
+import com.kstor.homeawaytest.data.network.model.Response
 import com.kstor.homeawaytest.data.repos.VenuesRepositoryImp
 import com.kstor.homeawaytest.data.sp.SharedPreferenceData
 import com.kstor.homeawaytest.domain.model.Venue
 import com.kstor.homeawaytest.domain.model.VenuesCategory
 import io.reactivex.Observable
 import io.reactivex.Single
+import java.util.concurrent.TimeUnit
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.doNothing
 import org.mockito.junit.MockitoJUnitRunner
-import java.util.concurrent.TimeUnit
 
 @RunWith(MockitoJUnitRunner::class)
 class VenuesRepositoryTest {
@@ -51,7 +60,7 @@ class VenuesRepositoryTest {
         `when`(remoteData.closedVenues(LIMIT, QUERY)).thenReturn(correctData)
         doNothing().`when`(localData).removeANdSaveVenues(ArgumentMatchers.anyList())
         `when`(localData.getAllVenues()).thenReturn(getDBVenuesModelList())
-        lenient().`when`(preferenceData.setCityCenterInfo(lat, lng)).thenReturn(true)
+        `when`(preferenceData.setCityCenterInfo(lat, lng)).thenReturn(true)
         return VenuesRepositoryImp(remoteData, preferenceData, localData)
     }
 
@@ -183,7 +192,7 @@ class VenuesRepositoryTest {
         val observable = repo.getClosestVenuses(LIMIT, QUERY).test()
             observable.awaitDone(5, TimeUnit.SECONDS)
             observable.assertNoErrors().assertComplete()
-                .assertResult( dataFromDb(), dataFromDb() )
+                .assertResult(dataFromDb(), dataFromDb())
     }
 
     private fun dataFromDb(): List<Venue> {

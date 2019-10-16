@@ -3,10 +3,23 @@ package com.kstor.homeawaytest.data
 import android.util.Log
 import com.kstor.homeawaytest.data.db.model.DBFavoriteModel
 import com.kstor.homeawaytest.data.db.model.DBVenuesModel
-import com.kstor.homeawaytest.data.network.model.*
-import com.kstor.homeawaytest.domain.model.*
+import com.kstor.homeawaytest.data.network.model.BestPhoto
+import com.kstor.homeawaytest.data.network.model.NetworkCategory
+import com.kstor.homeawaytest.data.network.model.NetworkDetailsModel
+import com.kstor.homeawaytest.data.network.model.NetworkVenue
+import com.kstor.homeawaytest.data.network.model.NetworkVenuesModel
+import com.kstor.homeawaytest.data.network.model.Timeframe
+import com.kstor.homeawaytest.domain.model.HoursPerDay
+import com.kstor.homeawaytest.domain.model.Venue
+import com.kstor.homeawaytest.domain.model.VenueDetails
+import com.kstor.homeawaytest.domain.model.VenuesCategory
+import com.kstor.homeawaytest.domain.model.VenuesData
 import java.lang.Exception
-import kotlin.math.*
+import java.lang.Math.atan2
+import java.lang.Math.cos
+import java.lang.Math.sin
+import java.lang.Math.sqrt
+import kotlin.math.roundToInt
 
 fun NetworkVenuesModel.mapToVenuesData(): VenuesData {
     val centerLat = response?.geocode?.feature?.geometry?.center?.lat ?: CENTER_LAT

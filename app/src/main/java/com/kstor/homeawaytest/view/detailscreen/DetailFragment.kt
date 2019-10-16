@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.navigation.Navigation
 import com.google.android.material.appbar.AppBarLayout
@@ -19,12 +20,9 @@ import javax.inject.Inject
 import kotlin.math.abs
 import kotlinx.android.synthetic.main.detail_fragment.*
 import kotlinx.android.synthetic.main.details.*
-import android.view.animation.Animation
-
 
 class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
     VenuesMapper {
-
 
     @Inject
     lateinit var presenter: DetailsPresenterImpl
@@ -61,7 +59,6 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
             val venuesParselize = DetailFragmentArgs.fromBundle(bundle).venues
             mapToVenues(venuesParselize)?.let { venues ->
                 presenter.fillDetailsScreen(venues)
-
             }
         }
     }
@@ -93,7 +90,7 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
                 presenter.getVenueDetails(venues)
                 setAdditionalFieldsVisible()
                 turnOffMoreAnimation()
-            } else if (abs(verticalOffset) ==  0) {
+            } else if (abs(verticalOffset) == 0) {
                 // Expanded
                 setAdditionalFieldsInvisible()
             } else if (abs(verticalOffset) - appBarLayout.totalScrollRange == 0 && wasCollapsed) {
@@ -187,22 +184,16 @@ class DetailFragment : BaseFragment(), ImageLoader, DetailsView,
     }
 
     private fun View.setVisible() {
-        if (visibility == View.INVISIBLE)
-        {
+        if (visibility == View.INVISIBLE) {
             startAnimation(setVisibleAnimation)
             visibility = View.VISIBLE
         }
-
     }
 
     private fun View.setInvisible() {
-        if (visibility == View.VISIBLE)
-        {
+        if (visibility == View.VISIBLE) {
             startAnimation(setInvisibleAnimation)
             visibility = View.INVISIBLE
         }
-
     }
 }
-
-

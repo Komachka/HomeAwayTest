@@ -1,7 +1,9 @@
 package com.kstor.homeawaytest
 
 import android.content.SharedPreferences
-import com.kstor.homeawaytest.data.*
+import com.kstor.homeawaytest.data.PERSISTENT_STORAGE_DEF_VAL
+import com.kstor.homeawaytest.data.PERSISTENT_STORAGE_KEY_LAT
+import com.kstor.homeawaytest.data.PERSISTENT_STORAGE_KEY_LNG
 import com.kstor.homeawaytest.data.sp.SharedPreferenceData
 import org.junit.Assert
 import org.junit.Before

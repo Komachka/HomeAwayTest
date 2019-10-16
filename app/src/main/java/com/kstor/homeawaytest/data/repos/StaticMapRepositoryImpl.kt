@@ -1,6 +1,16 @@
 package com.kstor.homeawaytest.data.repos
 
-import com.kstor.homeawaytest.data.*
+import com.kstor.homeawaytest.data.API_KEY
+import com.kstor.homeawaytest.data.CENTER
+import com.kstor.homeawaytest.data.IMAGE_SIZE
+import com.kstor.homeawaytest.data.KEY
+import com.kstor.homeawaytest.data.MAPTYPE
+import com.kstor.homeawaytest.data.MAP_TYPE_TERRIAN
+import com.kstor.homeawaytest.data.MARKERS
+import com.kstor.homeawaytest.data.SIZE
+import com.kstor.homeawaytest.data.STATIC_MAP_BASE_URL
+import com.kstor.homeawaytest.data.colour1
+import com.kstor.homeawaytest.data.colour2
 import com.kstor.homeawaytest.data.sp.SharedPreferenceData
 import com.kstor.homeawaytest.domain.StaticMapRepository
 import com.kstor.homeawaytest.domain.model.Venue

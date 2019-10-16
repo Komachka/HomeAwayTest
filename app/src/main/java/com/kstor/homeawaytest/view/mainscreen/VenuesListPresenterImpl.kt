@@ -2,7 +2,6 @@ package com.kstor.homeawaytest.view.mainscreen
 
 import androidx.navigation.NavController
 import com.kstor.homeawaytest.data.NO_FAVORITE_MESSAGE
-import com.kstor.homeawaytest.data.log
 import com.kstor.homeawaytest.domain.FavoriteUseCase
 import com.kstor.homeawaytest.domain.VenuesUseCase
 import com.kstor.homeawaytest.domain.model.Venue

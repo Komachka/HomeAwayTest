@@ -1,7 +1,9 @@
 package com.kstor.homeawaytest.data.sp
 
 import android.content.SharedPreferences
-import com.kstor.homeawaytest.data.*
+import com.kstor.homeawaytest.data.PERSISTENT_STORAGE_DEF_VAL
+import com.kstor.homeawaytest.data.PERSISTENT_STORAGE_KEY_LAT
+import com.kstor.homeawaytest.data.PERSISTENT_STORAGE_KEY_LNG
 import javax.inject.Inject
 
 class SharedPreferenceData @Inject constructor (private val preference: SharedPreferences) {
